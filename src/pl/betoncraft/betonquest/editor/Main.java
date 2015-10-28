@@ -21,16 +21,16 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import javafx.application.Application;
-import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
+import pl.betoncraft.betonquest.editor.view.Root;
 
 /**
  * Main class for the application.
@@ -39,13 +39,13 @@ import javafx.scene.layout.Priority;
  */
 public class Main extends Application {
 	
-	private Stage stage;
+	private static Stage stage;
 	
 	@Override
 	public void start(Stage primaryStage) {
-		this.stage = primaryStage;
+		stage = primaryStage;
 		try {
-			BorderPane root = new BorderPane();
+			Root root = new Root();
 			Scene scene = new Scene(root, 800, 600);
 			scene.getStylesheets().add(getClass().getResource("resource/style.css").toExternalForm());
 			stage.setScene(scene);
@@ -63,7 +63,7 @@ public class Main extends Application {
 	/**
 	 * @return the primary stage of this application
 	 */
-	public Stage getPrimaryStage() {
+	public static Stage getPrimaryStage() {
 		return stage;
 	}
 

@@ -1,3 +1,11 @@
 .root {
 	-fx-background-color: #333333;
 }
+
+.menu-bar {
+	-fx-background-color: #777777;
+}
+
+.menu:hover {
+	-fx-background-color: #AAAAAA;
+}
