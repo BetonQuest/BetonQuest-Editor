@@ -1,5 +1,5 @@
 .root {
-	-fx-background-color: #333333;
+	-fx-background-color: #999999;
 }
 
 .menu-bar {
@@ -8,4 +8,9 @@
 
 .menu:hover {
 	-fx-background-color: #AAAAAA;
+}
+
+#mainText {
+	-fx-font-size: 20;
+	-fx-font-weight: bold;
 }

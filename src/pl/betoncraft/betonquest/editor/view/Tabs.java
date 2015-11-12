@@ -18,6 +18,7 @@
 package pl.betoncraft.betonquest.editor.view;
 
 import javafx.geometry.Side;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import pl.betoncraft.betonquest.editor.view.tab.ConditionTab;
 import pl.betoncraft.betonquest.editor.view.tab.ConversationTab;
@@ -26,6 +27,7 @@ import pl.betoncraft.betonquest.editor.view.tab.ItemTab;
 import pl.betoncraft.betonquest.editor.view.tab.JournalTab;
 import pl.betoncraft.betonquest.editor.view.tab.MainTab;
 import pl.betoncraft.betonquest.editor.view.tab.ObjectiveTab;
+import pl.betoncraft.betonquest.editor.view.tab.QuestTab;
 import pl.betoncraft.betonquest.editor.view.tab.TranslationTab;
 
 /**
@@ -42,27 +44,24 @@ public class Tabs extends TabPane {
 	public final ObjectiveTab objectives;
 	public final JournalTab journal;
 	public final ItemTab items;
+	public final QuestTab quests;
 	public final TranslationTab translations;
 
 	public Tabs(Root root) {
 		mainTab = new MainTab(this);
-		mainTab.setClosable(false);
 		conversations = new ConversationTab(this);
-		conversations.setClosable(false);
 		events = new EventTab(this);
-		events.setClosable(false);
 		conditions = new ConditionTab(this);
-		conditions.setClosable(false);
 		objectives = new ObjectiveTab(this);
-		objectives.setClosable(false);
 		journal = new JournalTab(this);
-		journal.setClosable(false);
 		items = new ItemTab(this);
-		items.setClosable(false);
+		quests = new QuestTab(this);
 		translations = new TranslationTab(this);
-		translations.setClosable(false);
 		setSide(Side.RIGHT);
 		getTabs().addAll(mainTab, conversations, events, conditions, objectives, journal, items, translations);
+		for (Tab tab : getTabs()) {
+			tab.setClosable(false);
+		}
 		//setDisable(true); // this will disable interactions with empty view; the user must load a package first
 	}
 }
