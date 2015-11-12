@@ -1,16 +1,55 @@
 .root {
-	-fx-background-color: #999999;
+	-fx-background-color: #996633;
 }
 
 .menu-bar {
-	-fx-background-color: #777777;
+	-fx-background-color: #4c331a;
 }
 
-.menu:hover {
-	-fx-background-color: #AAAAAA;
+.label {
+	-fx-text-fill: #ecd9c6;
+}
+
+.menu:hover, .menu-item:hover, .menu:showing, .menu-item:showing, .menu-item:focused {
+	-fx-background-color: #c68c53;
+}
+
+.context-menu {
+	-fx-background-color: #4c331a;
 }
 
 #mainText {
-	-fx-font-size: 20;
+	-fx-font-size: 16;
 	-fx-font-weight: bold;
+	-fx-fill: #ecd9c6;
+}
+
+.tab-header-background {
+	-fx-background-color: #4c331a;
+}
+
+.tab-header-area {
+	-fx-padding: 0 2 0 0;
+}
+
+.tab {
+	-fx-background-color: #996633;
+	-fx-focus-color: transparent;
+}
+
+.tab:selected {
+	-fx-background-color: #ac7339;
+}
+
+.tab-label {
+	-fx-font-weight: bold;
+	-fx-text-fill: #ecd9c6;
+}
+
+.list-view {
+	-fx-background-color: #ecd9c6;
+}
+
+.table-view {
+	-fx-background-color: #ecd9c6;
 }

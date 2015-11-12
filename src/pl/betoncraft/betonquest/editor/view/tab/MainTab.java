@@ -20,6 +20,7 @@ package pl.betoncraft.betonquest.editor.view.tab;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.ColumnConstraints;
@@ -28,7 +29,10 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import pl.betoncraft.betonquest.editor.model.GlobalLocation;
 import pl.betoncraft.betonquest.editor.model.NPC;
+import pl.betoncraft.betonquest.editor.model.StaticEvent;
+import pl.betoncraft.betonquest.editor.model.Variable;
 import pl.betoncraft.betonquest.editor.view.Tabs;
 
 /**
@@ -42,6 +46,21 @@ public class MainTab extends Tab {
 	public final Button npcAdd;
 	public final Button npcEdit;
 	public final Button npcRemove;
+	
+	public final ListView<GlobalLocation> globLocList;
+	public final Button globLocAdd;
+	public final Button globLocEdit;
+	public final Button globLocRemove;
+	
+	public final TableView<StaticEvent> staticTable;
+	public final Button staticAdd;
+	public final Button staticEdit;
+	public final Button staticRemove;
+	
+	public final TableView<Variable> variableTable;
+	public final Button variableAdd;
+	public final Button variableEdit;
+	public final Button variableRemove;
 
 	/**
 	 * Creates main tab.
@@ -74,10 +93,13 @@ public class MainTab extends Tab {
 		grid.getRowConstraints().addAll(row1, row2);
 		grid.setHgap(5);
 		GridPane.setMargin(npcs, new Insets(5));
+		GridPane.setMargin(globLocs, new Insets(5));
+		GridPane.setMargin(statics, new Insets(5));
+		GridPane.setMargin(variables, new Insets(5));
 		
 		// npcs list
-		VBox npcList = new VBox();
-		Text npcText = new Text("NPC bindings");
+		VBox npcBox = new VBox();
+		Text npcText = new Text("NPC Bindings");
 		npcText.setId("mainText");
 		npcTable = new TableView<>();
 		ButtonBar npcButtons = new ButtonBar();
@@ -89,10 +111,60 @@ public class MainTab extends Tab {
 		npcRemove = new Button();
 		npcRemove.setText("Remove");
 		npcButtons.getButtons().addAll(npcAdd, npcEdit, npcRemove);
-		npcList.getChildren().addAll(npcText, npcTable, npcButtons);
-		npcs.getChildren().add(npcList);
+		npcBox.getChildren().addAll(npcText, npcTable, npcButtons);
+		npcs.getChildren().add(npcBox);
+		
+		// global locations
+		VBox globLocBox = new VBox();
+		Text globLocText = new Text("Global Locations");
+		globLocText.setId("mainText");
+		globLocList = new ListView<>();
+		ButtonBar globLocButtons = new ButtonBar();
+		globLocButtons.setPadding(new Insets(5, 0, 0, 0));
+		globLocAdd = new Button();
+		globLocAdd.setText("Add");
+		globLocEdit = new Button();
+		globLocEdit.setText("Edit");
+		globLocRemove = new Button();
+		globLocRemove.setText("Remove");
+		globLocButtons.getButtons().addAll(globLocAdd, globLocEdit, globLocRemove);
+		globLocBox.getChildren().addAll(globLocText, globLocList, globLocButtons);
+		globLocs.getChildren().add(globLocBox);
+		
+		// static events
+		VBox staticBox = new VBox();
+		Text staticText = new Text("Static Events");
+		staticText.setId("mainText");
+		staticTable = new TableView<>();
+		ButtonBar staticButtons = new ButtonBar();
+		staticButtons.setPadding(new Insets(5, 0, 0, 0));
+		staticAdd = new Button();
+		staticAdd.setText("Add");
+		staticEdit = new Button();
+		staticEdit.setText("Edit");
+		staticRemove = new Button();
+		staticRemove.setText("Remove");
+		staticButtons.getButtons().addAll(staticAdd, staticEdit, staticRemove);
+		staticBox.getChildren().addAll(staticText, staticTable, staticButtons);
+		statics.getChildren().add(staticBox);
+		
+		// variables
+		VBox variableBox = new VBox();
+		Text variableText = new Text("Variables");
+		variableText.setId("mainText");
+		variableTable = new TableView<>();
+		ButtonBar variableButtons = new ButtonBar();
+		variableButtons.setPadding(new Insets(5, 0, 0, 0));
+		variableAdd = new Button();
+		variableAdd.setText("Add");
+		variableEdit = new Button();
+		variableEdit.setText("Edit");
+		variableRemove = new Button();
+		variableRemove.setText("Remove");
+		variableButtons.getButtons().addAll(variableAdd, variableEdit, variableRemove);
+		variableBox.getChildren().addAll(variableText, variableTable, variableButtons);
+		variables.getChildren().add(variableBox);
 		
 		setContent(grid);
 	}
-
 }

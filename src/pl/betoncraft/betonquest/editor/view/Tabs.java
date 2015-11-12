@@ -58,7 +58,7 @@ public class Tabs extends TabPane {
 		quests = new QuestTab(this);
 		translations = new TranslationTab(this);
 		setSide(Side.RIGHT);
-		getTabs().addAll(mainTab, conversations, events, conditions, objectives, journal, items, translations);
+		getTabs().addAll(mainTab, conversations, events, conditions, objectives, journal, items, quests, translations);
 		for (Tab tab : getTabs()) {
 			tab.setClosable(false);
 		}
