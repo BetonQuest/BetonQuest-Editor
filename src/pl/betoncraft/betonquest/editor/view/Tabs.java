@@ -63,5 +63,6 @@ public class Tabs extends TabPane {
 			tab.setClosable(false);
 		}
 		//setDisable(true); // this will disable interactions with empty view; the user must load a package first
+		getSelectionModel().select(conversations); // for view debugging only
 	}
 }

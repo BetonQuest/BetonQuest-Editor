@@ -21,7 +21,7 @@
 #mainText {
 	-fx-font-size: 16;
 	-fx-font-weight: bold;
-	-fx-fill: #ecd9c6;
+	-fx-fill: #4c331a;
 }
 
 .tab-header-background {
@@ -35,6 +35,7 @@
 .tab {
 	-fx-background-color: #996633;
 	-fx-focus-color: transparent;
+	-fx-background-radius: 0;
 }
 
 .tab:selected {
@@ -46,10 +47,27 @@
 	-fx-text-fill: #ecd9c6;
 }
 
-.list-view {
+.list-view, .table-view {
 	-fx-background-color: #ecd9c6;
 }
 
-.table-view {
-	-fx-background-color: #ecd9c6;
+.button {
+	-fx-background-color: #4c331a;
+	-fx-font-weight: bold;
+	-fx-text-fill: #ecd9c6;
+	-fx-background-radius: 0;
+}
+
+.button:hover {
+	-fx-background-color: #c68c53;
+}
+
+#option-label {
+	-fx-font-size: 20;
+	-fx-font-weight: bold;
+}
+
+.separator .line {
+	-fx-background-color: #4c331a;
+	-fx-border-color: transparent;
 }

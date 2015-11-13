@@ -109,7 +109,7 @@ public class MainTab extends Tab {
 		npcEdit = new Button();
 		npcEdit.setText("Edit");
 		npcRemove = new Button();
-		npcRemove.setText("Remove");
+		npcRemove.setText("Delete");
 		npcButtons.getButtons().addAll(npcAdd, npcEdit, npcRemove);
 		npcBox.getChildren().addAll(npcText, npcTable, npcButtons);
 		npcs.getChildren().add(npcBox);
@@ -126,7 +126,7 @@ public class MainTab extends Tab {
 		globLocEdit = new Button();
 		globLocEdit.setText("Edit");
 		globLocRemove = new Button();
-		globLocRemove.setText("Remove");
+		globLocRemove.setText("Delete");
 		globLocButtons.getButtons().addAll(globLocAdd, globLocEdit, globLocRemove);
 		globLocBox.getChildren().addAll(globLocText, globLocList, globLocButtons);
 		globLocs.getChildren().add(globLocBox);
@@ -143,7 +143,7 @@ public class MainTab extends Tab {
 		staticEdit = new Button();
 		staticEdit.setText("Edit");
 		staticRemove = new Button();
-		staticRemove.setText("Remove");
+		staticRemove.setText("Delete");
 		staticButtons.getButtons().addAll(staticAdd, staticEdit, staticRemove);
 		staticBox.getChildren().addAll(staticText, staticTable, staticButtons);
 		statics.getChildren().add(staticBox);
@@ -160,7 +160,7 @@ public class MainTab extends Tab {
 		variableEdit = new Button();
 		variableEdit.setText("Edit");
 		variableRemove = new Button();
-		variableRemove.setText("Remove");
+		variableRemove.setText("Delete");
 		variableButtons.getButtons().addAll(variableAdd, variableEdit, variableRemove);
 		variableBox.getChildren().addAll(variableText, variableTable, variableButtons);
 		variables.getChildren().add(variableBox);
