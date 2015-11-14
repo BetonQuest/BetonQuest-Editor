@@ -15,26 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pl.betoncraft.betonquest.editor.view.tab;
-
-import javafx.scene.control.Tab;
-import pl.betoncraft.betonquest.editor.view.Tabs;
+package pl.betoncraft.betonquest.editor.model;
 
 /**
- * The "conditions" tab of the package.
+ * Represents an NPC binding with a conversation.
  *
  * @author Jakub Sapalski
  */
-public class ConditionTab extends Tab {
-
-	/**
-	 * Creates conditions tab.
-	 * 
-	 * @param tabs
-	 *            instance of Tabs pane
-	 */
-	public ConditionTab(Tabs tabs) {
-		setText("Conditions");
-	}
+public class NpcBinding {
 
 }

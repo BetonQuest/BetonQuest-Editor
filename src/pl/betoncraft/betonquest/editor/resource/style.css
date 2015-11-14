@@ -18,18 +18,12 @@
 	-fx-background-color: #4c331a;
 }
 
-#mainText {
-	-fx-font-size: 16;
-	-fx-font-weight: bold;
-	-fx-fill: #4c331a;
-}
-
 .tab-header-background {
 	-fx-background-color: #4c331a;
 }
 
 .tab-header-area {
-	-fx-padding: 0 2 0 0;
+	-fx-padding: 0;
 }
 
 .tab {
@@ -65,6 +59,7 @@
 #option-label {
 	-fx-font-size: 20;
 	-fx-font-weight: bold;
+	-fx-text-fill: #4c331a;
 }
 
 .separator .line {

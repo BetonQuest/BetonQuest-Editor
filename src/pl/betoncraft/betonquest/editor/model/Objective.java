@@ -15,26 +15,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pl.betoncraft.betonquest.editor.view.tab;
-
-import javafx.scene.control.Tab;
-import pl.betoncraft.betonquest.editor.view.Tabs;
+package pl.betoncraft.betonquest.editor.model;
 
 /**
- * The "objectives" tab of the package.
+ * Represents a BetonQuest objective.
  *
  * @author Jakub Sapalski
  */
-public class ObjectiveTab extends Tab {
-
-	/**
-	 * Creates objectives tab.
-	 * 
-	 * @param tabs
-	 *            instance of Tabs pane
-	 */
-	public ObjectiveTab(Tabs tabs) {
-		setText("Objectives");
-	}
+public class Objective {
 
 }

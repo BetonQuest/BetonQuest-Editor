@@ -21,20 +21,20 @@ import javafx.scene.control.Tab;
 import pl.betoncraft.betonquest.editor.view.Tabs;
 
 /**
- * The "quests" tab of the package. Here you will be able to edit quest cancelers.
+ * The "Other Stuff" tab.
  *
  * @author Jakub Sapalski
  */
-public class QuestTab extends Tab {
+public class OtherTab extends Tab {
 
 	/**
-	 * Creates quests tab.
+	 * Creates a tab with journal, items and quest cancelers.
 	 * 
 	 * @param tabs
 	 *            instance of Tabs pane
 	 */
-	public QuestTab(Tabs tabs) {
-		setText("Quests");
+	public OtherTab(Tabs tabs) {
+		setText("Other Stuff");
 	}
 
 }

@@ -20,6 +20,7 @@ package pl.betoncraft.betonquest.editor.view.tab;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
@@ -28,9 +29,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import pl.betoncraft.betonquest.editor.model.GlobalLocation;
-import pl.betoncraft.betonquest.editor.model.NPC;
+import pl.betoncraft.betonquest.editor.model.NpcBinding;
 import pl.betoncraft.betonquest.editor.model.StaticEvent;
 import pl.betoncraft.betonquest.editor.model.Variable;
 import pl.betoncraft.betonquest.editor.view.Tabs;
@@ -42,7 +42,7 @@ import pl.betoncraft.betonquest.editor.view.Tabs;
  */
 public class MainTab extends Tab {
 	
-	public final TableView<NPC> npcTable;
+	public final TableView<NpcBinding> npcTable;
 	public final Button npcAdd;
 	public final Button npcEdit;
 	public final Button npcRemove;
@@ -99,8 +99,8 @@ public class MainTab extends Tab {
 		
 		// npcs list
 		VBox npcBox = new VBox();
-		Text npcText = new Text("NPC Bindings");
-		npcText.setId("mainText");
+		Label npcText = new Label("NPC Bindings");
+		npcText.setId("option-label");
 		npcTable = new TableView<>();
 		ButtonBar npcButtons = new ButtonBar();
 		npcButtons.setPadding(new Insets(5, 0, 0, 0));
@@ -116,8 +116,8 @@ public class MainTab extends Tab {
 		
 		// global locations
 		VBox globLocBox = new VBox();
-		Text globLocText = new Text("Global Locations");
-		globLocText.setId("mainText");
+		Label globLocText = new Label("Global Locations");
+		globLocText.setId("option-label");
 		globLocList = new ListView<>();
 		ButtonBar globLocButtons = new ButtonBar();
 		globLocButtons.setPadding(new Insets(5, 0, 0, 0));
@@ -133,8 +133,8 @@ public class MainTab extends Tab {
 		
 		// static events
 		VBox staticBox = new VBox();
-		Text staticText = new Text("Static Events");
-		staticText.setId("mainText");
+		Label staticText = new Label("Static Events");
+		staticText.setId("option-label");
 		staticTable = new TableView<>();
 		ButtonBar staticButtons = new ButtonBar();
 		staticButtons.setPadding(new Insets(5, 0, 0, 0));
@@ -150,8 +150,8 @@ public class MainTab extends Tab {
 		
 		// variables
 		VBox variableBox = new VBox();
-		Text variableText = new Text("Variables");
-		variableText.setId("mainText");
+		Label variableText = new Label("Variables");
+		variableText.setId("option-label");
 		variableTable = new TableView<>();
 		ButtonBar variableButtons = new ButtonBar();
 		variableButtons.setPadding(new Insets(5, 0, 0, 0));

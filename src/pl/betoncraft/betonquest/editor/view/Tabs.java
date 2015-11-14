@@ -20,14 +20,10 @@ package pl.betoncraft.betonquest.editor.view;
 import javafx.geometry.Side;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import pl.betoncraft.betonquest.editor.view.tab.ConditionTab;
 import pl.betoncraft.betonquest.editor.view.tab.ConversationTab;
-import pl.betoncraft.betonquest.editor.view.tab.EventTab;
-import pl.betoncraft.betonquest.editor.view.tab.ItemTab;
-import pl.betoncraft.betonquest.editor.view.tab.JournalTab;
+import pl.betoncraft.betonquest.editor.view.tab.ECOTab;
 import pl.betoncraft.betonquest.editor.view.tab.MainTab;
-import pl.betoncraft.betonquest.editor.view.tab.ObjectiveTab;
-import pl.betoncraft.betonquest.editor.view.tab.QuestTab;
+import pl.betoncraft.betonquest.editor.view.tab.OtherTab;
 import pl.betoncraft.betonquest.editor.view.tab.TranslationTab;
 
 /**
@@ -39,30 +35,22 @@ public class Tabs extends TabPane {
 	
 	public final MainTab mainTab;
 	public final ConversationTab conversations;
-	public final EventTab events;
-	public final ConditionTab conditions;
-	public final ObjectiveTab objectives;
-	public final JournalTab journal;
-	public final ItemTab items;
-	public final QuestTab quests;
+	public final ECOTab eco;
+	public final OtherTab other;
 	public final TranslationTab translations;
 
 	public Tabs(Root root) {
 		mainTab = new MainTab(this);
 		conversations = new ConversationTab(this);
-		events = new EventTab(this);
-		conditions = new ConditionTab(this);
-		objectives = new ObjectiveTab(this);
-		journal = new JournalTab(this);
-		items = new ItemTab(this);
-		quests = new QuestTab(this);
+		eco = new ECOTab(this);
+		other = new OtherTab(this);
 		translations = new TranslationTab(this);
 		setSide(Side.RIGHT);
-		getTabs().addAll(mainTab, conversations, events, conditions, objectives, journal, items, quests, translations);
+		getTabs().addAll(mainTab, conversations, eco, other, translations);
 		for (Tab tab : getTabs()) {
 			tab.setClosable(false);
 		}
 		//setDisable(true); // this will disable interactions with empty view; the user must load a package first
-		getSelectionModel().select(conversations); // for view debugging only
+		getSelectionModel().select(eco); // for view debugging only
 	}
 }

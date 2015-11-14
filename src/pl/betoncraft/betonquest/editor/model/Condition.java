@@ -18,10 +18,10 @@
 package pl.betoncraft.betonquest.editor.model;
 
 /**
- * Represents an NPC binding with a conversation.
+ * Represents a BetonQuest condition. 
  *
  * @author Jakub Sapalski
  */
-public class NPC {
+public class Condition {
 
 }
