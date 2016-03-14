@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+
+<MenuBar fx:controller="pl.betoncraft.betonquest.editor.controller.MainMenuController"
+	xmlns:fx="http://javafx.com/fxml/1">
+
+	<Menu text="%file">
+		<MenuItem text="%new" onAction="#newPackage" />
+		<MenuItem text="%load" onAction="#load" />
+		<SeparatorMenuItem />
+		<MenuItem text="%save" onAction="#save" />
+		<MenuItem text="%export" onAction="#export" />
+		<SeparatorMenuItem />
+		<MenuItem text="%quit" onAction="#quit" />
+	</Menu>
+
+	<Menu text="%edit">
+
+	</Menu>
+
+	<Menu text="%help">
+		<MenuItem text="%about" onAction="#about" />
+		<MenuItem text="%docs" onAction="#docs" />
+	</Menu>
+
+</MenuBar>
+

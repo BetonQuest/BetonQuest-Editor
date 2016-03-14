@@ -24,37 +24,24 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.zip.ZipFile;
 
-import pl.betoncraft.betonquest.editor.Main;
-import pl.betoncraft.betonquest.editor.model.QuestPackage;
-import pl.betoncraft.betonquest.editor.view.MainMenu;
+import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import pl.betoncraft.betonquest.editor.Main;
+import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
 /**
- * Controlls main menu
+ * Controls main menu.
  *
  * @author Jakub Sapalski
  */
 public class MainMenuController {
-	
-	public MainMenuController(MainMenu menu) {
-		// file menu
-		menu.newPackage.setOnAction(e -> newPackage());
-		menu.load.setOnAction(e -> load());
-		menu.save.setOnAction(e -> save());
-		menu.export.setOnAction(e -> export());
-		menu.quit.setOnAction(e -> quit());
-		
-		// help menu
-		menu.about.setOnAction(e -> about());
-		menu.docs.setOnAction(e -> docs());
-	}
-	
-	private void newPackage() {
+
+	@FXML private void newPackage() {
 		// TODO create new package
 	}
-	
-	private void load() {
+
+	@FXML private void load() {
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Select package...");
 		ExtensionFilter filter = new ExtensionFilter("ZIP Files", "*.zip");
@@ -72,23 +59,23 @@ public class MainMenuController {
 		}
 	}
 	
-	private void save() {
+	@FXML private void save() {
 		// TODO save package
 	}
 	
-	private void export() {
+	@FXML private void export() {
 		// TODO export package to the server
 	}
 	
-	private void quit() {
+	@FXML private void quit() {
 		System.exit(0);
 	}
 	
-	private void about() {
+	@FXML private void about() {
 		// TODO open about window
 	}
 	
-	private void docs() {
+	@FXML private void docs() {
 		try {
 			Desktop.getDesktop().browse(new URI("http://betonquest.betoncraft.pl/BetonQuestDocumentation.pdf"));
 		} catch (IOException | URISyntaxException e) {

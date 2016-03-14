@@ -19,18 +19,22 @@ package pl.betoncraft.betonquest.editor;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
-import pl.betoncraft.betonquest.editor.view.Root;
 
 /**
  * Main class for the application.
@@ -43,16 +47,20 @@ public class Main extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
+		Locale.setDefault(Locale.US);
 		stage = primaryStage;
 		try {
-			Root root = new Root();
-			Scene scene = new Scene(root, 800, 600);
+			URL location = getClass().getResource("view/Root.fxml");
+			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
+			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
+			BorderPane root = (BorderPane) fxmlLoader.load();
+			Scene scene = new Scene(root, 1280, 720);
 			scene.getStylesheets().add(getClass().getResource("resource/style.css").toExternalForm());
 			stage.setScene(scene);
-			stage.setTitle("BetonQuest Editor");
+			stage.setTitle(resources.getString("betonquest-editor"));
 			stage.getIcons().add(new Image(getClass().getResourceAsStream("resource/icon.png")));
-			stage.setMinHeight(600);
-			stage.setMinWidth(800);
+			stage.setMinHeight(720);
+			stage.setMinWidth(1280);
 			stage.setMaximized(true);
 			stage.show();
 		} catch (Exception e) {

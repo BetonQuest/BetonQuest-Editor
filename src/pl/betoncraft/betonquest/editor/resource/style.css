@@ -2,6 +2,14 @@
 	-fx-background-color: #996633;
 }
 
+.hbox {
+	-fx-spacing: 5px;
+}
+
+.vbox {
+	-fx-spacing: 5px;
+}
+
 .menu-bar {
 	-fx-background-color: #4c331a;
 }
@@ -50,6 +58,8 @@
 	-fx-font-weight: bold;
 	-fx-text-fill: #ecd9c6;
 	-fx-background-radius: 0;
+	-fx-pref-width: 80;
+	-fx-text-overrun: ellipsis;
 }
 
 .button:hover {

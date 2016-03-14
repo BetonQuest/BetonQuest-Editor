@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+
+<TabPane xmlns:fx="http://javafx.com/fxml/1" side="RIGHT" tabClosingPolicy="UNAVAILABLE">
+	<fx:include source="tab/MainTab.fxml" />
+	<fx:include source="tab/ConversationTab.fxml" />
+	<fx:include source="tab/EcoTab.fxml" />
+	<fx:include source="tab/OtherTab.fxml" />
+	<fx:include source="tab/TranslationTab.fxml" />
+</TabPane>
+
