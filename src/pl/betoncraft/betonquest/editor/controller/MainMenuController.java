@@ -27,7 +27,7 @@ import java.util.zip.ZipFile;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import pl.betoncraft.betonquest.editor.Main;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
 /**
@@ -49,12 +49,12 @@ public class MainMenuController {
 		fc.setSelectedExtensionFilter(filter);
 		File desktop = new File(System.getProperty("user.home") + File.separator + "Desktop");
 		if (desktop != null) fc.setInitialDirectory(desktop);
-		File selectedFile = fc.showOpenDialog(Main.getPrimaryStage());
+		File selectedFile = fc.showOpenDialog(BetonQuestEditor.getPrimaryStage());
 		if (selectedFile != null) {
 			try {
 				new QuestPackage(new ZipFile(selectedFile));
 			} catch (Exception e) {
-				Main.showStackTrace(e);
+				BetonQuestEditor.showStackTrace(e);
 			}
 		}
 	}
@@ -79,7 +79,7 @@ public class MainMenuController {
 		try {
 			Desktop.getDesktop().browse(new URI("http://betonquest.betoncraft.pl/BetonQuestDocumentation.pdf"));
 		} catch (IOException | URISyntaxException e) {
-			Main.showStackTrace(e);
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 }
