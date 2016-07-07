@@ -1,7 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 
 <Tab xmlns:fx="http://javafx.com/fxml/1" text="%other">
-	<!-- TODO Add Nodes -->
+	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true"
+		fitToWidth="true">
+		<GridPane hgap="10">
+			<padding>
+				<Insets bottom="5" top="5" left="5" right="5" />
+			</padding>
+			<columnConstraints>
+				<ColumnConstraints percentWidth="33.3" />
+				<ColumnConstraints percentWidth="33.3" />
+				<ColumnConstraints percentWidth="33.3" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints percentHeight="50" />
+				<RowConstraints percentHeight="50" />
+			</rowConstraints>
+
+			<!-- items -->
+			<VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.fillHeight="true">
+				<Label text="%items" id="option-label" />
+				<ListView VBox.vgrow="ALWAYS" />
+				<ButtonBar>
+					<buttons>
+						<Button text="%add" />
+						<Button text="%edit" />
+						<Button text="%del" />
+					</buttons>
+				</ButtonBar>
+			</VBox>
+
+			<!-- journal entries -->
+			<VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.fillHeight="true">
+				<Label text="%journal-entries" id="option-label" />
+				<ListView VBox.vgrow="ALWAYS" />
+				<ButtonBar>
+					<buttons>
+						<Button text="%add" />
+						<Button text="%edit" />
+						<Button text="%del" />
+					</buttons>
+				</ButtonBar>
+			</VBox>
+
+			<!-- entry text -->
+			<VBox spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="0">
+				<Label text="%entry-text" id="option-label" />
+				<TextArea editable="false" wrapText="true" GridPane.fillHeight="true" id="entry-text" VBox.vgrow="ALWAYS" />
+			</VBox>
+
+		</GridPane>
+	</ScrollPane>
 </Tab>

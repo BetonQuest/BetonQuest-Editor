@@ -1,14 +1,16 @@
 .root {
 	-fx-background-color: #996633;
 	-fx-background: #996633;
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
 }
 
 .hbox {
-	-fx-spacing: 5px;
+	-fx-spacing: 5.0px;
 }
 
 .vbox {
-	-fx-spacing: 5px;
+	-fx-spacing: 5.0px;
 }
 
 .menu-bar {
@@ -32,13 +34,12 @@
 }
 
 .tab-header-area {
-	-fx-padding: 0;
+	-fx-padding: 0.0;
 }
 
 .tab {
 	-fx-background-color: #996633;
-	-fx-focus-color: transparent;
-	-fx-background-radius: 0;
+	-fx-background-radius: 0.0;
 }
 
 .tab:selected {
@@ -58,8 +59,8 @@
 	-fx-background-color: #4c331a;
 	-fx-font-weight: bold;
 	-fx-text-fill: #ecd9c6;
-	-fx-background-radius: 0;
-	-fx-pref-width: 80;
+	-fx-background-radius: 0.0;
+	-fx-pref-width: 80.0;
 	-fx-text-overrun: ellipsis;
 }
 
@@ -67,8 +68,47 @@
 	-fx-background-color: #c68c53;
 }
 
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+	-fx-background-color:#996633;
+	-fx-border-color: #4c331a transparent #4c331a transparent;
+	-fx-background-radius: 0.0em;
+	-fx-border-radius:0.0em;
+}
+
+.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .decrement-button {
+	-fx-background-color:#996633;
+	-fx-background-radius: 0.0em;
+	-fx-padding:0.0 0.0 10.0 0.0;
+}
+
+.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .decrement-button {
+	-fx-background-color:#996633;
+	-fx-background-radius: 0.0em;
+	-fx-padding:0.0 10.0 0.0 0.0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+	-fx-shape: " ";
+	-fx-padding:0.0;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+	-fx-background-color:#4c331a;
+	-fx-background-insets: 2.0, 0.0, 0.0;
+	-fx-background-radius: 2.0em;
+}
+
+#entry-text .content {
+	-fx-background-color: #996633;
+}
+
 #option-label {
-	-fx-font-size: 20;
+	-fx-font-size: 20.0;
 	-fx-font-weight: bold;
 	-fx-text-fill: #4c331a;
 }

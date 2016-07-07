@@ -10,59 +10,63 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.ScrollPane?>
 
 <Tab xmlns:fx="http://javafx.com/fxml/1" text="%eco">
-	<GridPane hgap="10">
-		<padding>
-			<Insets bottom="5" top="5" left="5" right="5" />
-		</padding>
-		<columnConstraints>
-			<ColumnConstraints percentWidth="33.3" />
-			<ColumnConstraints percentWidth="33.3" />
-			<ColumnConstraints percentWidth="33.3" />
-		</columnConstraints>
-		<rowConstraints>
-			<RowConstraints percentHeight="100" />
-		</rowConstraints>
+	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true"
+		fitToWidth="true">
+		<GridPane hgap="10">
+			<padding>
+				<Insets bottom="5" top="5" left="5" right="5" />
+			</padding>
+			<columnConstraints>
+				<ColumnConstraints percentWidth="33.3" />
+				<ColumnConstraints percentWidth="33.3" />
+				<ColumnConstraints percentWidth="33.3" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints percentHeight="100" />
+			</rowConstraints>
 
-		<!-- events -->
-		<VBox spacing="5" GridPane.columnIndex="0" GridPane.fillHeight="true">
-			<Label text="%events" id="option-label" />
-			<ListView VBox.vgrow="ALWAYS" />
-			<ButtonBar>
-				<buttons>
-					<Button text="%add" />
-					<Button text="%edit" />
-					<Button text="%del" />
-				</buttons>
-			</ButtonBar>
-		</VBox>
+			<!-- events -->
+			<VBox spacing="5" GridPane.columnIndex="0" GridPane.fillHeight="true">
+				<Label text="%events" id="option-label" />
+				<ListView VBox.vgrow="ALWAYS" />
+				<ButtonBar>
+					<buttons>
+						<Button text="%add" />
+						<Button text="%edit" />
+						<Button text="%del" />
+					</buttons>
+				</ButtonBar>
+			</VBox>
 
-		<!-- conditions -->
-		<VBox spacing="5" GridPane.columnIndex="1" GridPane.fillHeight="true">
-			<Label text="%conditions" id="option-label" />
-			<ListView VBox.vgrow="ALWAYS" />
-			<ButtonBar>
-				<buttons>
-					<Button text="%add" />
-					<Button text="%edit" />
-					<Button text="%del" />
-				</buttons>
-			</ButtonBar>
-		</VBox>
+			<!-- conditions -->
+			<VBox spacing="5" GridPane.columnIndex="1" GridPane.fillHeight="true">
+				<Label text="%conditions" id="option-label" />
+				<ListView VBox.vgrow="ALWAYS" />
+				<ButtonBar>
+					<buttons>
+						<Button text="%add" />
+						<Button text="%edit" />
+						<Button text="%del" />
+					</buttons>
+				</ButtonBar>
+			</VBox>
 
-		<!-- objectives -->
-		<VBox spacing="5" GridPane.columnIndex="2" GridPane.fillHeight="true">
-			<Label text="%objectives" id="option-label" />
-			<ListView VBox.vgrow="ALWAYS" />
-			<ButtonBar>
-				<buttons>
-					<Button text="%add" />
-					<Button text="%edit" />
-					<Button text="%del" />
-				</buttons>
-			</ButtonBar>
-		</VBox>
+			<!-- objectives -->
+			<VBox spacing="5" GridPane.columnIndex="2" GridPane.fillHeight="true">
+				<Label text="%objectives" id="option-label" />
+				<ListView VBox.vgrow="ALWAYS" />
+				<ButtonBar>
+					<buttons>
+						<Button text="%add" />
+						<Button text="%edit" />
+						<Button text="%del" />
+					</buttons>
+				</ButtonBar>
+			</VBox>
 
-	</GridPane>
+		</GridPane>
+	</ScrollPane>
 </Tab>

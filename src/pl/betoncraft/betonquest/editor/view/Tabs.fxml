@@ -8,6 +8,6 @@
 	<fx:include source="tab/ConversationTab.fxml" />
 	<fx:include source="tab/EcoTab.fxml" />
 	<fx:include source="tab/OtherTab.fxml" />
-	<fx:include source="tab/TranslationTab.fxml" />
+	<!-- <fx:include source="tab/TranslationTab.fxml" /> -->
 </TabPane>
 
