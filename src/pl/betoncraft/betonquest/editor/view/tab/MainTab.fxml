@@ -17,7 +17,7 @@
 <Tab xmlns:fx="http://javafx.com/fxml/1" text="%main">
 	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true"
 		fitToWidth="true">
-		<GridPane hgap="5" vgap="5">
+		<GridPane hgap="10">
 
 			<columnConstraints>
 				<ColumnConstraints percentWidth="33" />
@@ -32,90 +32,80 @@
 				<Insets bottom="5" left="5" right="5" top="5" />
 			</padding>
 
-			<StackPane GridPane.rowIndex="0" GridPane.columnIndex="0">
-				<VBox>
-					<Label text="%npc-bindings" id="option-label" />
-					<TableView />
-					<ButtonBar>
-						<padding>
-							<Insets top="5" />
-						</padding>
-						<buttons>
-							<Button text="%add" />
-							<Button text="%edit" />
-							<Button text="%del" />
-						</buttons>
-					</ButtonBar>
-				</VBox>
-			</StackPane>
+			<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="0">
+				<Label text="%npc-bindings" id="option-label" />
+				<TableView />
+				<ButtonBar>
+					<padding>
+						<Insets top="5" />
+					</padding>
+					<buttons>
+						<Button text="%add" />
+						<Button text="%edit" />
+						<Button text="%del" />
+					</buttons>
+				</ButtonBar>
+			</VBox>
 
-			<StackPane GridPane.rowIndex="0" GridPane.columnIndex="1">
-				<VBox>
-					<Label text="%global-locations" id="option-label" />
-					<ListView />
-					<ButtonBar>
-						<padding>
-							<Insets top="5" />
-						</padding>
-						<buttons>
-							<Button text="%add" />
-							<Button text="%edit" />
-							<Button text="%del" />
-						</buttons>
-					</ButtonBar>
-				</VBox>
-			</StackPane>
+			<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="1">
+				<Label text="%global-locations" id="option-label" />
+				<ListView />
+				<ButtonBar>
+					<padding>
+						<Insets top="5" />
+					</padding>
+					<buttons>
+						<Button text="%add" />
+						<Button text="%edit" />
+						<Button text="%del" />
+					</buttons>
+				</ButtonBar>
+			</VBox>
 
-			<StackPane GridPane.rowIndex="0" GridPane.columnIndex="2">
-				<VBox>
-					<Label text="%static-events" id="option-label" />
-					<TableView />
-					<ButtonBar>
-						<padding>
-							<Insets top="5" />
-						</padding>
-						<buttons>
-							<Button text="%add" />
-							<Button text="%edit" />
-							<Button text="%del" />
-						</buttons>
-					</ButtonBar>
-				</VBox>
-			</StackPane>
+			<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="2">
+				<Label text="%static-events" id="option-label" />
+				<TableView />
+				<ButtonBar>
+					<padding>
+						<Insets top="5" />
+					</padding>
+					<buttons>
+						<Button text="%add" />
+						<Button text="%edit" />
+						<Button text="%del" />
+					</buttons>
+				</ButtonBar>
+			</VBox>
 
-			<StackPane GridPane.rowIndex="1" GridPane.columnIndex="0">
-				<VBox>
-					<Label text="%global-variables" id="option-label" />
-					<TableView />
-					<ButtonBar>
-						<padding>
-							<Insets top="5" />
-						</padding>
-						<buttons>
-							<Button text="%add" />
-							<Button text="%edit" />
-							<Button text="%del" />
-						</buttons>
-					</ButtonBar>
-				</VBox>
-			</StackPane>
+			<VBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="0">
+				<Label text="%global-variables" id="option-label" />
+				<TableView />
+				<ButtonBar>
+					<padding>
+						<Insets top="5" />
+					</padding>
+					<buttons>
+						<Button text="%add" />
+						<Button text="%edit" />
+						<Button text="%del" />
+					</buttons>
+				</ButtonBar>
+			</VBox>
 
-			<StackPane GridPane.rowIndex="1" GridPane.columnIndex="1">
-				<VBox>
-					<Label text="%quest-cancelers" id="option-label" />
-					<TableView />
-					<ButtonBar>
-						<padding>
-							<Insets top="5" />
-						</padding>
-						<buttons>
-							<Button text="%add" />
-							<Button text="%edit" />
-							<Button text="%del" />
-						</buttons>
-					</ButtonBar>
-				</VBox>
-			</StackPane>
+			<VBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
+				<Label text="%quest-cancelers" id="option-label" />
+				<TableView />
+				<ButtonBar>
+					<padding>
+						<Insets top="5" />
+					</padding>
+					<buttons>
+						<Button text="%add" />
+						<Button text="%edit" />
+						<Button text="%del" />
+					</buttons>
+				</ButtonBar>
+			</VBox>
 
 		</GridPane>
 	</ScrollPane>
