@@ -55,7 +55,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>pl.betoncraft.betonquest.editor.Main</mainClass>
+							<mainClass>pl.betoncraft.betonquest.editor.BetonQuestEditor</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

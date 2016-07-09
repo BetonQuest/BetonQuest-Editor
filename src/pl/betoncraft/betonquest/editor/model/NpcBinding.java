@@ -17,11 +17,30 @@
  */
 package pl.betoncraft.betonquest.editor.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  * Represents an NPC binding with a conversation.
  *
  * @author Jakub Sapalski
  */
 public class NpcBinding {
+	
+	private StringProperty id;
+	private StringProperty conversation;
+	
+	public NpcBinding(String id, String conversation) {
+		this.id = new SimpleStringProperty(id);
+		this.conversation = new SimpleStringProperty(conversation);
+	}
+
+	public StringProperty getId() {
+		return id;
+	}
+
+	public StringProperty getConversation() {
+		return conversation;
+	}
 
 }

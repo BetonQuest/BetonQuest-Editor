@@ -13,28 +13,35 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
 
-<Tab xmlns:fx="http://javafx.com/fxml/1" text="%main">
+<Tab fx:controller="pl.betoncraft.betonquest.editor.controller.MainController"
+	xmlns:fx="http://javafx.com/fxml/1" text="%main">
 	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true"
 		fitToWidth="true">
 		<GridPane hgap="10">
 
+			<padding>
+				<Insets bottom="5" left="5" right="5" top="5" />
+			</padding>
 			<columnConstraints>
-				<ColumnConstraints percentWidth="33" />
-				<ColumnConstraints percentWidth="33" />
-				<ColumnConstraints percentWidth="33" />
+				<ColumnConstraints percentWidth="33.3" />
+				<ColumnConstraints percentWidth="33.3" />
+				<ColumnConstraints percentWidth="33.3" />
 			</columnConstraints>
 			<rowConstraints>
 				<RowConstraints percentHeight="50" />
 				<RowConstraints percentHeight="50" />
 			</rowConstraints>
-			<padding>
-				<Insets bottom="5" left="5" right="5" top="5" />
-			</padding>
 
 			<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="0">
 				<Label text="%npc-bindings" id="option-label" />
-				<TableView />
+				<TableView fx:id="npcTable">
+					<columns>
+						<TableColumn text="%npc" fx:id="npcName" />
+						<TableColumn text="%conversation" fx:id="conversation" />
+					</columns>
+				</TableView>
 				<ButtonBar>
 					<padding>
 						<Insets top="5" />
@@ -48,8 +55,13 @@
 			</VBox>
 
 			<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="1">
-				<Label text="%global-locations" id="option-label" />
-				<ListView />
+				<Label text="%global-variables" id="option-label" />
+				<TableView fx:id="globVarTable">
+					<columns>
+						<TableColumn text="%variable" fx:id="varName" />
+						<TableColumn text="%value" fx:id="varValue" />
+					</columns>
+				</TableView>
 				<ButtonBar>
 					<padding>
 						<Insets top="5" />
@@ -64,7 +76,12 @@
 
 			<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="2">
 				<Label text="%static-events" id="option-label" />
-				<TableView />
+				<TableView fx:id="staticEventsTable">
+					<columns>
+						<TableColumn text="%time" fx:id="time" />
+						<TableColumn text="%event" fx:id="event" />
+					</columns>
+				</TableView>
 				<ButtonBar>
 					<padding>
 						<Insets top="5" />
@@ -78,8 +95,8 @@
 			</VBox>
 
 			<VBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="0">
-				<Label text="%global-variables" id="option-label" />
-				<TableView />
+				<Label text="%global-locations" id="option-label" />
+				<ListView fx:id="globLocList" />
 				<ButtonBar>
 					<padding>
 						<Insets top="5" />
@@ -94,7 +111,7 @@
 
 			<VBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
 				<Label text="%quest-cancelers" id="option-label" />
-				<TableView />
+				<ListView fx:id="cancelList" />
 				<ButtonBar>
 					<padding>
 						<Insets top="5" />

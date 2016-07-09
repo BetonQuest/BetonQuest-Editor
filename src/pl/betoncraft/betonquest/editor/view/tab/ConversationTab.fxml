@@ -18,25 +18,32 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.ScrollPane?>
 
-<Tab xmlns:fx="http://javafx.com/fxml/1" text="%conv">
-	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true" fitToWidth="true">
+<Tab fx:controller="pl.betoncraft.betonquest.editor.controller.ConversationController"
+	xmlns:fx="http://javafx.com/fxml/1" text="%conv">
+	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true"
+		fitToWidth="true">
 		<VBox>
 
 			<!-- conversation choosing -->
-			<HBox spacing="5">
+			<HBox spacing="5" alignment="CENTER_LEFT">
 				<padding>
 					<Insets bottom="5" top="5" left="5" right="5" />
 				</padding>
 				<Label text="%conversation" id="option-label" />
-				<ComboBox editable="true" />
+				<ComboBox editable="true" fx:id="conversation" />
 				<Button text="%add" />
 				<Button text="%rename" />
 				<Button text="%del" />
+				<!-- stop option -->
+				<HBox spacing="5" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+					<Label text="%stop-option" id="option-label" />
+					<CheckBox fx:id="stop" />
+				</HBox>
 			</HBox>
 
 			<Separator />
 
-			<GridPane vgap="5" VBox.vgrow="ALWAYS">
+			<GridPane VBox.vgrow="ALWAYS">
 				<columnConstraints>
 					<ColumnConstraints percentWidth="49.5" />
 					<ColumnConstraints percentWidth="1" />
@@ -59,29 +66,24 @@
 						<!-- NPC name -->
 						<Label text="%npc-name" id="option-label" GridPane.rowIndex="0"
 							GridPane.columnIndex="0" />
-						<TextField GridPane.rowIndex="0" GridPane.columnIndex="1" />
-
-						<!-- stop option -->
-						<Label text="%stop-option" id="option-label"
-							GridPane.rowIndex="1" GridPane.columnIndex="0" />
-						<CheckBox GridPane.rowIndex="1" GridPane.columnIndex="1" />
+						<TextField GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="npc" />
 
 						<!-- starting options -->
 						<Label text="%start-options" id="option-label"
-							GridPane.rowIndex="2" GridPane.columnIndex="0" />
-						<HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
-							<ChoiceBox HBox.hgrow="ALWAYS" />
-							<ComboBox editable="true" />
+							GridPane.rowIndex="1" GridPane.columnIndex="0" />
+						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
+							<ChoiceBox fx:id="startingOptionsChoice" />
+							<ComboBox editable="true" fx:id="startingOptionsCombo" />
 							<Button text="%add" />
 							<Button text="%del" />
 						</HBox>
 
 						<!-- final events -->
 						<Label text="%final-events" id="option-label"
-							GridPane.rowIndex="3" GridPane.columnIndex="0" />
-						<HBox spacing="5" GridPane.rowIndex="3" GridPane.columnIndex="1">
-							<ChoiceBox />
-							<ComboBox editable="true" />
+							GridPane.rowIndex="2" GridPane.columnIndex="0" />
+						<HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
+							<ChoiceBox fx:id="finalEventsChoice" />
+							<ComboBox editable="true" fx:id="finalEventsCombo" />
 							<Button text="%add" />
 							<Button text="%del" />
 						</HBox>
@@ -93,8 +95,8 @@
 						<!-- npc options -->
 						<VBox spacing="5" HBox.hgrow="ALWAYS">
 							<Label text="%npc-options" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" />
-							<TextField />
+							<ListView VBox.vgrow="ALWAYS" fx:id="npcList" />
+							<TextField fx:id="npcField" />
 							<ButtonBar>
 								<buttons>
 									<Button text="%add" />
@@ -107,8 +109,8 @@
 						<!-- player options -->
 						<VBox spacing="5" HBox.hgrow="ALWAYS">
 							<Label text="%player-options" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" />
-							<TextField />
+							<ListView VBox.vgrow="ALWAYS" fx:id="playerList" />
+							<TextField fx:id="playerField" />
 							<ButtonBar>
 								<buttons>
 									<Button text="%add" />
@@ -137,20 +139,20 @@
 						</columnConstraints>
 						<Label text="%text" id="option-label" GridPane.rowIndex="0"
 							GridPane.columnIndex="0" />
-						<TextField GridPane.rowIndex="0" GridPane.columnIndex="1" />
+						<TextField GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="option" />
 						<Label text="%events" id="option-label" GridPane.rowIndex="1"
 							GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
-							<ChoiceBox />
-							<ComboBox editable="true" maxWidth="9000" />
+							<ChoiceBox fx:id="eventChoice" />
+							<ComboBox editable="true" fx:id="eventCombo" />
 							<Button text="%add" />
 							<Button text="%del" />
 						</HBox>
 						<Label text="%conditions" id="option-label"
 							GridPane.rowIndex="2" GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
-							<ChoiceBox />
-							<ComboBox editable="true" />
+							<ChoiceBox fx:id="conditionChoice" />
+							<ComboBox editable="true" fx:id="conditionCombo" />
 							<Button text="%add" />
 							<Button text="%del" />
 						</HBox>
@@ -167,8 +169,8 @@
 						<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="0"
 							GridPane.vgrow="ALWAYS">
 							<Label text="%points-to" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" />
-							<ComboBox editable="true" maxWidth="9000" />
+							<ListView VBox.vgrow="ALWAYS" fx:id="pointsToList" />
+							<ComboBox editable="true" maxWidth="9000" fx:id="pointsToCombo" />
 							<Button text="%add" maxWidth="9000" />
 							<Button text="%del" maxWidth="9000" />
 						</VBox>
@@ -177,7 +179,7 @@
 						<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="1"
 							GridPane.vgrow="ALWAYS">
 							<Label text="%pointed-by" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" />
+							<ListView VBox.vgrow="ALWAYS" fx:id="pointedByList" />
 						</VBox>
 					</GridPane>
 				</VBox>

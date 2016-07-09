@@ -1,6 +1,6 @@
 /**
  * BetonQuest Editor - advanced quest creating tool for BetonQuest
- * Copyright (C) 2015  Jakub "Co0sh" Sapalski
+ * Copyright (C) 2016  Jakub "Co0sh" Sapalski
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,32 +15,51 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pl.betoncraft.betonquest.editor.model;
+
+package pl.betoncraft.betonquest.editor.data;
+
+import java.util.HashMap;
+import java.util.Set;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 /**
- * Represents a variable defined in main.yml file.
+ * Stores Strings in different languages.
  *
  * @author Jakub Sapalski
  */
-public class GlobalVariable {
+public class TranslatableText {
 	
-	private StringProperty id;
-	private StringProperty value;
+	private HashMap<String, StringProperty> text = new HashMap<>();
+	private StringProperty def = null;
 	
-	public GlobalVariable(String id, String value) {
-		this.id = new SimpleStringProperty(id);
-		this.value = new SimpleStringProperty(value);
+	public void setDef(String def) {
+		this.def = new SimpleStringProperty(def);
 	}
-
-	public StringProperty getId() {
-		return id;
+	
+	public void addLang(String lang, String text) {
+		this.text.put(lang, new SimpleStringProperty(text));
 	}
-
-	public StringProperty getValue() {
-		return value;
+	
+	public StringProperty get(String lang) {
+		if (def != null) {
+			return def;
+		} else {
+			return text.get(lang);
+		}
+	}
+	
+	public StringProperty getDef() {
+		return def;
+	}
+	
+	public StringProperty getLang(String lang) {
+		return text.get(lang);
+	}
+	
+	public Set<String> getLanguages() {
+		return text.keySet();
 	}
 	
 }

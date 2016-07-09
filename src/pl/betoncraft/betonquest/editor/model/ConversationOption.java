@@ -17,11 +17,56 @@
  */
 package pl.betoncraft.betonquest.editor.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.data.TranslatableText;
+
 /**
  * Abstract class representing an option in the conversation.
  *
  * @author Jakub Sapalski
  */
 public abstract class ConversationOption {
+	
+	private StringProperty id;
+	private TranslatableText text = new TranslatableText();
+	private ObservableList<String> events = FXCollections.observableArrayList();
+	private ObservableList<String> conditions = FXCollections.observableArrayList();
+	private ObservableList<String> pointers = FXCollections.observableArrayList();
+
+	public ConversationOption(String id) {
+		this.id = new SimpleStringProperty(id);
+	}
+
+	public String getId() {
+		return id.get();
+	}
+
+	public void setId(String id) {
+		this.id.set(id);
+	}
+
+	public TranslatableText getText() {
+		return text;
+	}
+
+	public ObservableList<String> getEvents() {
+		return events;
+	}
+
+	public ObservableList<String> getConditions() {
+		return conditions;
+	}
+
+	public ObservableList<String> getPointers() {
+		return pointers;
+	}
+	
+	@Override
+	public String toString() {
+		return id.get();
+	}
 
 }

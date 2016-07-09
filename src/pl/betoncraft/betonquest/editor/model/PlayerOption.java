@@ -18,10 +18,14 @@
 package pl.betoncraft.betonquest.editor.model;
 
 /**
- * Represents a player's option.
+ * Represents a player's option in a conversation.
  *
  * @author Jakub Sapalski
  */
 public class PlayerOption extends ConversationOption {
+
+	public PlayerOption(String id) {
+		super(id);
+	}
 
 }

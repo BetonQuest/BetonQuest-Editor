@@ -42,6 +42,7 @@ public class MainMenuController {
 	}
 
 	@FXML private void load() {
+		BetonQuestEditor instance = BetonQuestEditor.getInstance();
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Select package...");
 		ExtensionFilter filter = new ExtensionFilter("ZIP Files", "*.zip");
@@ -49,10 +50,12 @@ public class MainMenuController {
 		fc.setSelectedExtensionFilter(filter);
 		File desktop = new File(System.getProperty("user.home") + File.separator + "Desktop");
 		if (desktop != null) fc.setInitialDirectory(desktop);
-		File selectedFile = fc.showOpenDialog(BetonQuestEditor.getPrimaryStage());
+		File selectedFile = fc.showOpenDialog(instance.getPrimaryStage());
 		if (selectedFile != null) {
 			try {
-				new QuestPackage(new ZipFile(selectedFile));
+				QuestPackage pack = QuestPackage.loadFromZip(new ZipFile(selectedFile));
+				instance.getPackages().put(pack.getName(), pack);
+				instance.display(pack.getName());
 			} catch (Exception e) {
 				BetonQuestEditor.showStackTrace(e);
 			}

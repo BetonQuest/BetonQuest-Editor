@@ -12,10 +12,12 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.ScrollPane?>
 
-<Tab xmlns:fx="http://javafx.com/fxml/1" text="%eco">
+<Tab fx:controller="pl.betoncraft.betonquest.editor.controller.EcoController"
+	xmlns:fx="http://javafx.com/fxml/1" text="%eco">
 	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true"
 		fitToWidth="true">
 		<GridPane hgap="10">
+
 			<padding>
 				<Insets bottom="5" top="5" left="5" right="5" />
 			</padding>
@@ -29,9 +31,9 @@
 			</rowConstraints>
 
 			<!-- events -->
-			<VBox spacing="5" GridPane.columnIndex="0" GridPane.fillHeight="true">
+			<VBox spacing="5" GridPane.columnIndex="0">
 				<Label text="%events" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="eventsList" />
 				<ButtonBar>
 					<buttons>
 						<Button text="%add" />
@@ -42,9 +44,9 @@
 			</VBox>
 
 			<!-- conditions -->
-			<VBox spacing="5" GridPane.columnIndex="1" GridPane.fillHeight="true">
+			<VBox spacing="5" GridPane.columnIndex="1">
 				<Label text="%conditions" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="conditionsList" />
 				<ButtonBar>
 					<buttons>
 						<Button text="%add" />
@@ -55,9 +57,9 @@
 			</VBox>
 
 			<!-- objectives -->
-			<VBox spacing="5" GridPane.columnIndex="2" GridPane.fillHeight="true">
+			<VBox spacing="5" GridPane.columnIndex="2">
 				<Label text="%objectives" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="objectivesList" />
 				<ButtonBar>
 					<buttons>
 						<Button text="%add" />

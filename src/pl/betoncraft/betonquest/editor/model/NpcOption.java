@@ -18,10 +18,14 @@
 package pl.betoncraft.betonquest.editor.model;
 
 /**
- * 
+ * Represents an NPC option in a conversation.
  *
  * @author Jakub Sapalski
  */
 public class NpcOption extends ConversationOption {
 
+	public NpcOption(String id) {
+		super(id);
+	}
+	
 }

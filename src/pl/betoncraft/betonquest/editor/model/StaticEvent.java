@@ -17,11 +17,30 @@
  */
 package pl.betoncraft.betonquest.editor.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  * Represents a static event, which is fired at exact hour each day.
  *
  * @author Jakub Sapalski
  */
 public class StaticEvent {
+	
+	private StringProperty time;
+	private StringProperty event;
+	
+	public StaticEvent(String time, String event) {
+		this.time = new SimpleStringProperty(time);
+		this.event = new SimpleStringProperty(event);
+	}
+
+	public StringProperty getTime() {
+		return time;
+	}
+
+	public StringProperty getEvent() {
+		return event;
+	}
 
 }

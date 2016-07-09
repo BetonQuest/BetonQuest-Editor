@@ -1,6 +1,6 @@
 /**
  * BetonQuest Editor - advanced quest creating tool for BetonQuest
- * Copyright (C) 2015  Jakub "Co0sh" Sapalski
+ * Copyright (C) 2016  Jakub "Co0sh" Sapalski
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,32 +15,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pl.betoncraft.betonquest.editor.model;
-
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+package pl.betoncraft.betonquest.editor.model.exception;
 
 /**
- * Represents a variable defined in main.yml file.
+ * Thrown when the package could not be found in the provided file.
  *
  * @author Jakub Sapalski
  */
-public class GlobalVariable {
+public class PackageNotFoundException extends Exception {
+
+	private static final long serialVersionUID = -3825269103860183870L;
+	private final String message;
 	
-	private StringProperty id;
-	private StringProperty value;
+	public PackageNotFoundException(String message) {
+		this.message = message;
+	}
 	
-	public GlobalVariable(String id, String value) {
-		this.id = new SimpleStringProperty(id);
-		this.value = new SimpleStringProperty(value);
+	@Override
+	public String getMessage() {
+		return message;
 	}
 
-	public StringProperty getId() {
-		return id;
-	}
-
-	public StringProperty getValue() {
-		return value;
-	}
-	
 }

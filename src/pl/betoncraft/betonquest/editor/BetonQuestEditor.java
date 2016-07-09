@@ -1,6 +1,6 @@
 /**
  * BetonQuest Editor - advanced quest creating tool for BetonQuest
- * Copyright (C) 2015  Jakub "Co0sh" Sapalski
+ * Copyright (C) 2016  Jakub "Co0sh" Sapalski
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,11 +17,14 @@
  */
 package pl.betoncraft.betonquest.editor;
 
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.zip.ZipFile;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -35,6 +38,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+import pl.betoncraft.betonquest.editor.controller.ConversationController;
+import pl.betoncraft.betonquest.editor.controller.EcoController;
+import pl.betoncraft.betonquest.editor.controller.MainController;
+import pl.betoncraft.betonquest.editor.controller.OtherController;
+import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
 /**
  * Main class for the application.
@@ -42,11 +50,15 @@ import javafx.stage.Stage;
  * @author Jakub Sapalski
  */
 public class BetonQuestEditor extends Application {
+
+	private static BetonQuestEditor instance;
+	private Stage stage;
 	
-	private static Stage stage;
+	private HashMap<String, QuestPackage> loadedPackages = new HashMap<>();
 	
 	@Override
 	public void start(Stage primaryStage) {
+		instance = this;
 		Locale.setDefault(Locale.US);
 		stage = primaryStage;
 		try {
@@ -63,16 +75,58 @@ public class BetonQuestEditor extends Application {
 			stage.setMinWidth(800);
 			stage.setMaximized(true);
 			stage.show();
+			// load package for debugging
+			try {
+				File file = new File("C:\\Users\\Co0sh\\Desktop\\the_hole.zip");
+				QuestPackage pack = QuestPackage.loadFromZip(new ZipFile(file));
+				instance.getPackages().put(pack.getName(), pack);
+				instance.display(pack.getName());
+			} catch (Exception e) {
+				BetonQuestEditor.showStackTrace(e);
+			}
 		} catch (Exception e) {
 			showStackTrace(e);
 		}
 	}
 	
 	/**
+	 * @return the instance of the editor
+	 */
+	public static BetonQuestEditor getInstance() {
+		return instance;
+	}
+	
+	/**
 	 * @return the primary stage of this application
 	 */
-	public static Stage getPrimaryStage() {
+	public Stage getPrimaryStage() {
 		return stage;
+	}
+	
+	/**
+	 * @return the list of loaded packages
+	 */
+	public HashMap<String, QuestPackage> getPackages() {
+		return loadedPackages;
+	}
+	
+	/**
+	 * Displays a package in the view.
+	 */
+	public void display(String packName) {
+		// TODO display package
+		 QuestPackage pack = loadedPackages.get(packName);
+		 MainController.setNpcBindings(pack.getNpcBindings());
+		 MainController.setGlobVariables(pack.getVariables());
+		 MainController.setStaticEvents(pack.getStaticEvents());
+		 MainController.setGlobalLocations(pack.getLocations());
+		 MainController.setQuestCancelers(pack.getCancelers());
+		 ConversationController.setConversations(pack.getConversations());
+		 EcoController.setConditions(pack.getConditions());
+		 EcoController.setEvents(pack.getEvents());
+		 EcoController.setObjectives(pack.getObjectives());
+		 OtherController.setItems(pack.getItems());
+		 OtherController.setJournal(pack.getJournal());
 	}
 
 	public static void main(String[] args) {

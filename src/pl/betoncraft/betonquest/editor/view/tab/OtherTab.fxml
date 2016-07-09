@@ -13,7 +13,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 
-<Tab xmlns:fx="http://javafx.com/fxml/1" text="%other">
+<Tab fx:controller="pl.betoncraft.betonquest.editor.controller.OtherController"
+	xmlns:fx="http://javafx.com/fxml/1" text="%other">
 	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true"
 		fitToWidth="true">
 		<GridPane hgap="10">
@@ -31,9 +32,10 @@
 			</rowConstraints>
 
 			<!-- items -->
-			<VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.fillHeight="true">
+			<VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0"
+				GridPane.rowSpan="2" GridPane.fillHeight="true">
 				<Label text="%items" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="itemsList" />
 				<ButtonBar>
 					<buttons>
 						<Button text="%add" />
@@ -44,9 +46,10 @@
 			</VBox>
 
 			<!-- journal entries -->
-			<VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="2" GridPane.fillHeight="true">
+			<VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0"
+				GridPane.rowSpan="2" GridPane.fillHeight="true">
 				<Label text="%journal-entries" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="journalList" />
 				<ButtonBar>
 					<buttons>
 						<Button text="%add" />
@@ -59,7 +62,8 @@
 			<!-- entry text -->
 			<VBox spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="0">
 				<Label text="%entry-text" id="option-label" />
-				<TextArea editable="false" wrapText="true" GridPane.fillHeight="true" id="entry-text" VBox.vgrow="ALWAYS" />
+				<TextArea editable="false" wrapText="true" fx:id="entryText"
+					GridPane.fillHeight="true" id="entry-text" VBox.vgrow="ALWAYS" />
 			</VBox>
 
 		</GridPane>
