@@ -30,7 +30,7 @@
 					<Insets bottom="5" top="5" left="5" right="5" />
 				</padding>
 				<Label text="%conversation" id="option-label" />
-				<ComboBox editable="true" fx:id="conversation" />
+				<ComboBox editable="true" fx:id="conversation" onAction="#selectConversation" />
 				<Button text="%add" />
 				<Button text="%rename" />
 				<Button text="%del" />
@@ -95,7 +95,7 @@
 						<!-- npc options -->
 						<VBox spacing="5" HBox.hgrow="ALWAYS">
 							<Label text="%npc-options" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" fx:id="npcList" />
+							<ListView VBox.vgrow="ALWAYS" fx:id="npcList" onMouseClicked="#clickNpcOption" />
 							<TextField fx:id="npcField" />
 							<ButtonBar>
 								<buttons>
@@ -109,7 +109,7 @@
 						<!-- player options -->
 						<VBox spacing="5" HBox.hgrow="ALWAYS">
 							<Label text="%player-options" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" fx:id="playerList" />
+							<ListView VBox.vgrow="ALWAYS" fx:id="playerList" onMouseClicked="#clickPlayerOption" />
 							<TextField fx:id="playerField" />
 							<ButtonBar>
 								<buttons>
