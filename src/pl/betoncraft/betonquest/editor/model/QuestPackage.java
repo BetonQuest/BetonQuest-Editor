@@ -113,7 +113,7 @@ public class QuestPackage {
 							switch (parts[2]) {
 							case "name":
 								if (parts.length > 3) {
-									String lang = parts[2];
+									String lang = parts[3];
 									if (languages.containsKey(lang)) {
 										languages.put(lang, 1);
 									} else {
@@ -266,7 +266,7 @@ public class QuestPackage {
 									switch (parts[2]) {
 									case "text":
 										if (parts.length > 3) {
-											String lang = parts[2];
+											String lang = parts[3];
 											if (!languages.containsKey(lang)) {
 												languages.put(lang, 1);
 											} else {
@@ -321,7 +321,7 @@ public class QuestPackage {
 									switch (parts[2]) {
 									case "text":
 										if (parts.length > 3) {
-											String lang = parts[2];
+											String lang = parts[3];
 											if (!languages.containsKey(lang)) {
 												languages.put(lang, 1);
 											} else {
