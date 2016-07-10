@@ -18,6 +18,7 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -123,6 +124,24 @@ public class ConversationController {
 			conditionChoice.getSelectionModel().select(0);
 		}
 		pointsToList.setItems(option.getPointers());
+
+		ObservableList<String> list =FXCollections.observableArrayList();
+		if(option instanceof NpcOption){
+
+			for(PlayerOption po: currentConversation.getPlayerOptions())
+			{
+				if(po.getPointers().contains(option.getId()))
+					list.add(po.getId());
+			}
+		}else
+		{
+			for(NpcOption no: currentConversation.getNpcOptions())
+			{
+				if(no.getPointers().contains(option.getId()))
+					list.add(no.getId());
+			}
+		}
+		pointedByList.setItems(list);
 	}
 	
 	@FXML private void selectConversation() {
