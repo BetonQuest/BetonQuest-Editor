@@ -55,6 +55,7 @@ public class BetonQuestEditor extends Application {
 	private Stage stage;
 	
 	private HashMap<String, QuestPackage> loadedPackages = new HashMap<>();
+	private static File autoLoadPackage;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -76,9 +77,8 @@ public class BetonQuestEditor extends Application {
 			stage.setMaximized(true);
 			stage.show();
 			// load package for debugging
-			try {
-				File file = new File("C:\\Users\\Co0sh\\Desktop\\the_hole.zip");
-				QuestPackage pack = QuestPackage.loadFromZip(new ZipFile(file));
+			if (autoLoadPackage != null) try {
+				QuestPackage pack = QuestPackage.loadFromZip(new ZipFile(autoLoadPackage));
 				instance.getPackages().put(pack.getName(), pack);
 				instance.display(pack.getName());
 			} catch (Exception e) {
@@ -130,6 +130,12 @@ public class BetonQuestEditor extends Application {
 	}
 
 	public static void main(String[] args) {
+		if (args.length > 0) {
+			autoLoadPackage = new File(args[0]);
+			if (!autoLoadPackage.exists() || !autoLoadPackage.getName().endsWith(".zip")) {
+				autoLoadPackage = null;
+			}
+		}
 		launch(args);
 	}
 	
