@@ -18,6 +18,7 @@
 package pl.betoncraft.betonquest.editor;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
@@ -55,7 +56,9 @@ public class BetonQuestEditor extends Application {
 	private Stage stage;
 	
 	private HashMap<String, QuestPackage> loadedPackages = new HashMap<>();
+	private QuestPackage currentPackage;
 	private static File autoLoadPackage;
+	private static File autoSavePackage;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -109,6 +112,13 @@ public class BetonQuestEditor extends Application {
 	public HashMap<String, QuestPackage> getPackages() {
 		return loadedPackages;
 	}
+
+	/**
+	 * @return the package currently displayed in the view
+	 */
+	public QuestPackage getDisplayedPackage() {
+		return currentPackage;
+	}
 	
 	/**
 	 * Displays a package in the view.
@@ -116,6 +126,7 @@ public class BetonQuestEditor extends Application {
 	public void display(String packName) {
 		// TODO display package
 		 QuestPackage pack = loadedPackages.get(packName);
+		 currentPackage = pack;
 		 MainController.setNpcBindings(pack.getNpcBindings());
 		 MainController.setGlobVariables(pack.getVariables());
 		 MainController.setStaticEvents(pack.getStaticEvents());
@@ -130,10 +141,14 @@ public class BetonQuestEditor extends Application {
 	}
 
 	public static void main(String[] args) {
-		if (args.length > 0) {
+		if (args.length > 1) {
 			autoLoadPackage = new File(args[0]);
 			if (!autoLoadPackage.exists() || !autoLoadPackage.getName().endsWith(".zip")) {
 				autoLoadPackage = null;
+			}
+			autoSavePackage = new File(args[1]);
+			if (!autoSavePackage.getName().endsWith(".zip")) {
+				autoSavePackage = null;
 			}
 		}
 		launch(args);
@@ -177,5 +192,16 @@ public class BetonQuestEditor extends Application {
 		alert.getDialogPane().setExpandableContent(expContent);
 
 		alert.showAndWait();
+	}
+
+	@Override
+	public void stop() throws Exception {
+		if (autoSavePackage != null) try {
+			autoSavePackage.createNewFile();
+			currentPackage.saveToZip(autoSavePackage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		super.stop();
 	}
 }

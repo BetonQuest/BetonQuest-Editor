@@ -17,16 +17,22 @@
  */
 package pl.betoncraft.betonquest.editor.model;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -34,6 +40,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.TranslatableText;
 import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
@@ -515,6 +522,296 @@ public class QuestPackage {
 			}
 		}
 		return new QuestPackage(packName, values);
+	}
+	
+	public void printMainYAML(OutputStream out) throws IOException {
+		YAMLFactory yf = new YAMLFactory();
+		YAMLMapper mapper = new YAMLMapper();
+		ObjectNode root = mapper.createObjectNode();
+		// save NPCs
+		if (!npcBindings.isEmpty()) {
+			ObjectNode npcs = mapper.createObjectNode();
+			for (NpcBinding binding : npcBindings) {
+				npcs.put(binding.getId().get(), binding.getConversation().get());
+			}
+			root.set("npcs", npcs);
+		}
+		// save global variables
+		if (!variables.isEmpty()) {
+			ObjectNode variables = mapper.createObjectNode();
+			for (GlobalVariable var : this.variables) {
+				variables.put(var.getId().get(), var.getValue().get());
+			}
+			root.set("variables", variables);
+		}
+		// save static events
+		if (!staticEvents.isEmpty()) {
+			ObjectNode staticEvents = mapper.createObjectNode();
+			for (StaticEvent event : this.staticEvents) {
+				staticEvents.put(event.getTime().get(), event.getEvent().get());
+			}
+			root.set("static", staticEvents);
+		}
+		// save global locations
+		if (!locations.isEmpty()) {
+			StringBuilder builder = new StringBuilder();
+			for (GlobalLocation loc : locations) {
+				builder.append(loc.getObjective() + ",");
+			}
+			root.put("global_locations", builder.toString().substring(0, builder.length() - 1));
+		}
+		// save quest cancelers
+		if (!cancelers.isEmpty()) {
+			ObjectNode cancelers = mapper.createObjectNode();
+			for (QuestCanceler canceler : this.cancelers) {
+				ObjectNode cancelerNode = mapper.createObjectNode();
+				addTranslatedNode(mapper, cancelerNode, "name", canceler.getName());
+				if (!canceler.getEvents().isEmpty()) {
+					StringBuilder events = new StringBuilder();
+					for (String event : canceler.getEvents()) {
+						events.append(event + ',');
+					}
+					cancelerNode.put("events", events.toString().substring(0, events.length() - 1));
+				}
+				if (!canceler.getConditions().isEmpty()) {
+					StringBuilder conditions = new StringBuilder();
+					for (String condition : canceler.getConditions()) {
+						conditions.append(condition + ',');
+					}
+					cancelerNode.put("conditions", conditions.toString().substring(0, conditions.length() - 1));
+				}
+				if (!canceler.getObjectives().isEmpty()) {
+					StringBuilder objectives = new StringBuilder();
+					for (String objective : canceler.getObjectives()) {
+						objectives.append(objective + ',');
+					}
+					cancelerNode.put("objectives", objectives.toString().substring(0, objectives.length() - 1));
+				}
+				if (!canceler.getTags().isEmpty()) {
+					StringBuilder tags = new StringBuilder();
+					for (String tag : canceler.getTags()) {
+						tags.append(tag + ',');
+					}
+					cancelerNode.put("tags", tags.toString().substring(0, tags.length() - 1));
+				}
+				if (!canceler.getPoints().isEmpty()) {
+					StringBuilder points = new StringBuilder();
+					for (String point : canceler.getPoints()) {
+						points.append(point + ',');
+					}
+					cancelerNode.put("points", points.toString().substring(0, points.length() - 1));
+				}
+				if (!canceler.getJournal().isEmpty()) {
+					StringBuilder journals = new StringBuilder();
+					for (String journal : canceler.getJournal()) {
+						journals.append(journal + ',');
+					}
+					cancelerNode.put("journals", journals.toString().substring(0, journals.length() - 1));
+				}
+				if (canceler.getLocation() != null) {
+					cancelerNode.put("loc", canceler.getLocation());
+				}
+				cancelers.set(canceler.getId(), cancelerNode);
+			}
+			root.set("cancel", cancelers);
+		}
+		yf.createGenerator(out).setCodec(mapper).writeObject(root);
+	}
+	
+	public void printEventsYaml(OutputStream out) throws IOException {
+		YAMLFactory yf = new YAMLFactory();
+		YAMLMapper mapper = new YAMLMapper();
+		ObjectNode root = mapper.createObjectNode();
+		for (Event event : events) {
+			root.put(event.getId(), event.getInstruction());
+		}
+		yf.createGenerator(out).setCodec(mapper).writeObject(root);
+	}
+	
+	public void printConditionsYaml(OutputStream out) throws IOException {
+		YAMLFactory yf = new YAMLFactory();
+		YAMLMapper mapper = new YAMLMapper();
+		ObjectNode root = mapper.createObjectNode();
+		for (Condition condition : conditions) {
+			root.put(condition.getId(), condition.getInstruction());
+		}
+		yf.createGenerator(out).setCodec(mapper).writeObject(root);
+	}
+	
+	public void printObjectivesYaml(OutputStream out) throws IOException {
+		YAMLFactory yf = new YAMLFactory();
+		YAMLMapper mapper = new YAMLMapper();
+		ObjectNode root = mapper.createObjectNode();
+		for (Objective objective : objectives) {
+			root.put(objective.getId(), objective.getInstruction());
+		}
+		yf.createGenerator(out).setCodec(mapper).writeObject(root);
+	}
+	
+	public void printItemsYaml(OutputStream out) throws IOException {
+		YAMLFactory yf = new YAMLFactory();
+		YAMLMapper mapper = new YAMLMapper();
+		ObjectNode root = mapper.createObjectNode();
+		for (Item item : items) {
+			root.put(item.getId(), item.getInstruction());
+		}
+		yf.createGenerator(out).setCodec(mapper).writeObject(root);
+	}
+	
+	public void printJournalYaml(OutputStream out) throws IOException {
+		YAMLFactory yf = new YAMLFactory();
+		YAMLMapper mapper = new YAMLMapper();
+		ObjectNode root = mapper.createObjectNode();
+		for (JournalEntry entry : journal) {
+			addTranslatedNode(mapper, root, entry.getId(), entry.getText());
+		}
+		yf.createGenerator(out).setCodec(mapper).writeObject(root);
+	}
+
+	public void printConversationYaml(OutputStream out, Conversation conv) throws IOException {
+		YAMLFactory yf = new YAMLFactory();
+		YAMLMapper mapper = new YAMLMapper();
+		ObjectNode root = mapper.createObjectNode();
+		addTranslatedNode(mapper, root, "quester", conv.getNPC());
+		root.put("stop", String.valueOf(conv.getStop().get()));
+		StringBuilder first = new StringBuilder();
+		for (String option : conv.getStartingOptions()) {
+			first.append(option + ',');
+		}
+		root.put("first", first.substring(0, first.length() - 1));
+		if (!conv.getFinalEvents().isEmpty()) {
+			StringBuilder finalEvents = new StringBuilder();
+			for (String event : conv.getFinalEvents()) {
+				finalEvents.append(event + ',');
+			}
+			root.put("final", finalEvents.substring(0, finalEvents.length() - 1));
+		}
+		if (!conv.getNpcOptions().isEmpty()) {
+			ObjectNode npcOptions = mapper.createObjectNode();
+			for (NpcOption option : conv.getNpcOptions()) {
+				ObjectNode npcOption = mapper.createObjectNode();
+				addTranslatedNode(mapper, npcOption, "text", option.getText());
+				if (!option.getEvents().isEmpty()) {
+					StringBuilder events = new StringBuilder();
+					for (String event : option.getEvents()) {
+						events.append(event + ',');
+					}
+					npcOption.put("events", events.substring(0, events.length() - 1));
+				}
+				if (!option.getConditions().isEmpty()) {
+					StringBuilder conditions = new StringBuilder();
+					for (String condition : option.getConditions()) {
+						conditions.append(condition + ',');
+					}
+					npcOption.put("conditions", conditions.substring(0, conditions.length() - 1));
+				}
+				if (!option.getPointers().isEmpty()) {
+					StringBuilder pointers = new StringBuilder();
+					for (String pointer : option.getPointers()) {
+						pointers.append(pointer + ',');
+					}
+					npcOption.put("pointers", pointers.substring(0, pointers.length() - 1));
+				}
+				npcOptions.set(option.getId(), npcOption);
+			}
+			root.set("NPC_options", npcOptions);
+		}
+		if (!conv.getPlayerOptions().isEmpty()) {
+			ObjectNode playerOptions = mapper.createObjectNode();
+			for (PlayerOption option : conv.getPlayerOptions()) {
+				ObjectNode playerOption = mapper.createObjectNode();
+				addTranslatedNode(mapper, playerOption, "text", option.getText());
+				if (!option.getEvents().isEmpty()) {
+					StringBuilder events = new StringBuilder();
+					for (String event : option.getEvents()) {
+						events.append(event + ',');
+					}
+					playerOption.put("events", events.substring(0, events.length() - 1));
+				}
+				if (!option.getConditions().isEmpty()) {
+					StringBuilder conditions = new StringBuilder();
+					for (String condition : option.getConditions()) {
+						conditions.append(condition + ',');
+					}
+					playerOption.put("conditions", conditions.substring(0, conditions.length() - 1));
+				}
+				if (!option.getPointers().isEmpty()) {
+					StringBuilder pointers = new StringBuilder();
+					for (String pointer : option.getPointers()) {
+						pointers.append(pointer + ',');
+					}
+					playerOption.put("pointers", pointers.substring(0, pointers.length() - 1));
+				}
+				playerOptions.set(option.getId(), playerOption);
+			}
+			root.set("player_options", playerOptions);
+		}
+		yf.createGenerator(out).setCodec(mapper).writeObject(root);
+	}
+	
+	private void addTranslatedNode(YAMLMapper mapper, ObjectNode root, String name, TranslatableText text) {
+		if (text.getDef() != null) {
+			root.put(name, text.getDef().get());
+		} else {
+			ObjectNode node = mapper.createObjectNode();
+			for (String lang : text.getLanguages()) {
+				node.put(lang, text.get(lang).get());
+			}
+			root.set(name, node);
+		}
+	}
+
+	/**
+	 * Saves the package to a .zip file.
+	 * 
+	 * @param zipFile
+	 */
+	public void saveToZip(File zip) {
+		try {
+			ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zip));
+			String prefix = packName.get() + File.separator;
+			// save main.yml file
+			ZipEntry main = new ZipEntry(prefix + "main.yml");
+			out.putNextEntry(main);
+			printMainYAML(out);
+			out.closeEntry();
+			// save conversation files
+			for (Conversation conv : conversations) {
+				ZipEntry conversation = new ZipEntry(prefix + "conversations" + File.separator + conv.getName() + ".yml");
+				out.putNextEntry(conversation);
+				printConversationYaml(out, conv);
+				out.closeEntry();
+			}
+			// save events.yml file
+			ZipEntry events = new ZipEntry(prefix + "events.yml");
+			out.putNextEntry(events);
+			printEventsYaml(out);
+			out.closeEntry();
+			// save conditions.yml file
+			ZipEntry conditions = new ZipEntry(prefix + "conditions.yml");
+			out.putNextEntry(conditions);
+			printConditionsYaml(out);
+			out.closeEntry();
+			// save objectives.yml file
+			ZipEntry objectives = new ZipEntry(prefix + "objectives.yml");
+			out.putNextEntry(objectives);
+			printObjectivesYaml(out);
+			out.closeEntry();
+			// save items.yml file
+			ZipEntry items = new ZipEntry(prefix + "items.yml");
+			out.putNextEntry(items);
+			printItemsYaml(out);
+			out.closeEntry();
+			// save journal.yml file
+			ZipEntry journal = new ZipEntry(prefix + "journal.yml");
+			out.putNextEntry(journal);
+			printJournalYaml(out);
+			out.closeEntry();
+			// done
+			out.close();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 
 }

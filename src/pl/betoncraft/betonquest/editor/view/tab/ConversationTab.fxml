@@ -17,6 +17,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SelectionModel?>
 
 <Tab fx:controller="pl.betoncraft.betonquest.editor.controller.ConversationController"
 	xmlns:fx="http://javafx.com/fxml/1" text="%conv">
@@ -66,7 +67,8 @@
 						<!-- NPC name -->
 						<Label text="%npc-name" id="option-label" GridPane.rowIndex="0"
 							GridPane.columnIndex="0" />
-						<TextField GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="npc" />
+						<TextField GridPane.rowIndex="0" GridPane.columnIndex="1"
+							fx:id="npc" />
 
 						<!-- starting options -->
 						<Label text="%start-options" id="option-label"
@@ -95,7 +97,8 @@
 						<!-- npc options -->
 						<VBox spacing="5" HBox.hgrow="ALWAYS">
 							<Label text="%npc-options" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" fx:id="npcList" onMouseClicked="#clickNpcOption" />
+							<ListView VBox.vgrow="ALWAYS" fx:id="npcList"
+								onMouseClicked="#clickNpcOption" onKeyReleased="#clickNpcOption" />
 							<TextField fx:id="npcField" />
 							<ButtonBar>
 								<buttons>
@@ -109,7 +112,8 @@
 						<!-- player options -->
 						<VBox spacing="5" HBox.hgrow="ALWAYS">
 							<Label text="%player-options" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" fx:id="playerList" onMouseClicked="#clickPlayerOption" />
+							<ListView VBox.vgrow="ALWAYS" fx:id="playerList"
+								onMouseClicked="#clickPlayerOption" onKeyReleased="#clickPlayerOption" />
 							<TextField fx:id="playerField" />
 							<ButtonBar>
 								<buttons>
@@ -139,7 +143,8 @@
 						</columnConstraints>
 						<Label text="%text" id="option-label" GridPane.rowIndex="0"
 							GridPane.columnIndex="0" />
-						<TextField GridPane.rowIndex="0" GridPane.columnIndex="1" fx:id="option" />
+						<TextField GridPane.rowIndex="0" GridPane.columnIndex="1"
+							fx:id="option" />
 						<Label text="%events" id="option-label" GridPane.rowIndex="1"
 							GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">

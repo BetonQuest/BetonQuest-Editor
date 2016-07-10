@@ -63,7 +63,26 @@ public class MainMenuController {
 	}
 	
 	@FXML private void save() {
-		// TODO save package
+		BetonQuestEditor instance = BetonQuestEditor.getInstance();
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Select package...");
+		ExtensionFilter filter = new ExtensionFilter("ZIP Files", "*.zip");
+		fc.getExtensionFilters().add(filter);
+		fc.setSelectedExtensionFilter(filter);
+		File desktop = new File(System.getProperty("user.home") + File.separator + "Desktop");
+		if (desktop != null) fc.setInitialDirectory(desktop);
+		File selectedFile = fc.showSaveDialog(instance.getPrimaryStage());
+		if (selectedFile != null) {
+			try {
+				QuestPackage pack = BetonQuestEditor.getInstance().getDisplayedPackage();
+				if (pack == null) {
+					return; // TODO show error, no package loaded
+				}
+				pack.saveToZip(selectedFile);
+			} catch (Exception e) {
+				BetonQuestEditor.showStackTrace(e);
+			}
+		}
 	}
 	
 	@FXML private void export() {
