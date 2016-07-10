@@ -85,7 +85,15 @@ public class ConversationController {
 		finalEventsChoice.setItems(conversation.getFinalEvents());
 		// TODO list of choosable final events
 		npcList.setItems(conversation.getNpcOptions());
+		//Update displayed option if user selects one
+		npcList.getSelectionModel().selectedItemProperty().addListener(
+				(observable, oldValue, newValue) -> displayOption(newValue)
+		);
 		playerList.setItems(conversation.getPlayerOptions());
+		//Update displayed option if user selects one
+		playerList.getSelectionModel().selectedItemProperty().addListener(
+				(observable, oldValue, newValue) -> displayOption(newValue)
+		);
 		displayOption(conversation.getNpcOptions().get(0));
 	}
 	
