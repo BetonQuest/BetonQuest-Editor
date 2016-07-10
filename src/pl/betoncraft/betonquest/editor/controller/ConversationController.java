@@ -64,7 +64,8 @@ public class ConversationController {
 	@FXML private ListView<String> pointedByList;
 	
 	private Conversation currentConversation;
-	// private ConversationOption currentOption;
+	private ConversationOption currentOption;
+	private boolean firstSelection = true;
 	
 	public ConversationController() {
 		instance = this;
@@ -75,14 +76,30 @@ public class ConversationController {
 		instance.displayConversation(conversations.get(0));
 	}
 	
-	public void displayConversation(Conversation conversation) {
+	public synchronized void displayConversation(Conversation conversation) {
+		if (firstSelection) {
+			firstSelection = false;
+			this.conversation.getSelectionModel().select(conversation);
+			return;
+		}
+		if (currentConversation != null) {
+			npc.textProperty().unbindBidirectional(currentConversation.getNPC().get(
+					currentConversation.getPack().getDefLang()));
+			stop.selectedProperty().unbindBidirectional(currentConversation.getStop());
+		}
 		currentConversation = conversation;
-		this.conversation.getSelectionModel().select(conversation);
-		npc.textProperty().bindBidirectional(conversation.getNPC().get(conversation.getPack().getDefLang()));
+		String lang = conversation.getPack().getDefLang();
+		npc.textProperty().bindBidirectional(conversation.getNPC().get(lang));
 		stop.selectedProperty().bindBidirectional(conversation.getStop());
 		startingOptionsChoice.setItems(conversation.getStartingOptions());
+		if (currentConversation.getStartingOptions().size() > 0) {
+			startingOptionsChoice.getSelectionModel().select(0);
+		}
 		// TODO list of choosable starting options
 		finalEventsChoice.setItems(conversation.getFinalEvents());
+		if (currentConversation.getFinalEvents().size() > 0) {
+			finalEventsChoice.getSelectionModel().select(0);
+		}
 		// TODO list of choosable final events
 		npcList.setItems(conversation.getNpcOptions());
 		//Update displayed option if user selects one
@@ -99,11 +116,51 @@ public class ConversationController {
 	}
 	
 	public void displayOption(ConversationOption option) {
-		// currentOption = option;
-		this.option.textProperty().bindBidirectional(option.getText().get(currentConversation.getPack().getDefLang()));
+		String lang = currentConversation.getPack().getDefLang();
+		if (currentOption != null) {
+			this.option.textProperty().unbindBidirectional(currentOption.getText().get(lang));
+		}
+		currentOption = option;
+		this.option.textProperty().bindBidirectional(option.getText().get(lang));
 		eventChoice.setItems(option.getEvents());
+		if (option.getEvents().size() > 0) {
+			eventChoice.getSelectionModel().select(0);
+		}
 		conditionChoice.setItems(option.getConditions());
+		if (option.getConditions().size() > 0) {
+			conditionChoice.getSelectionModel().select(0);
+		}
 		pointsToList.setItems(option.getPointers());
+	}
+	
+	@FXML private void selectConversation() {
+		Conversation selected = conversation.getSelectionModel().getSelectedItem();
+		if (selected == null) {
+			return;
+		}
+		displayConversation(selected);
+	}
+	
+	@FXML private void clickNpcOption() {
+		playerList.getSelectionModel().clearSelection();
+		playerField.clear();
+		NpcOption option = npcList.getSelectionModel().getSelectedItem();
+		if (option == null) {
+			return;
+		}
+		npcField.setText(option.getId());
+		displayOption(option);
+	}
+	
+	@FXML private void clickPlayerOption() {
+		npcList.getSelectionModel().clearSelection();
+		npcField.clear();
+		PlayerOption option = playerList.getSelectionModel().getSelectedItem();
+		if (option == null) {
+			return;
+		}
+		playerField.setText(option.getId());
+		displayOption(option);
 	}
 
 }

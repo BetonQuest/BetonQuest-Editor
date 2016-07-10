@@ -67,17 +67,44 @@
 	-fx-background-radius: 0;
 }
 
-.table-cell:odd, .list-cell:odd {
+.table-view {
+	-fx-padding: 0;
+}
+
+.table-row-cell:odd, .list-cell:odd {
 	-fx-background-color: -fx-light;
 }
 
-.table-cell:even, .list-cell:even {
+.table-row-cell:even, .list-cell:even {
 	-fx-background-color: derive(-fx-light, 20%);
+}
+
+.table-row-cell:focused {
+	-fx-background-color: -fx-medium-light;
+}
+
+.table-row-cell .table-cell {
+	-fx-border-color: transparent -fx-dark transparent transparent;
+	-fx-text-fill: -fx-dark;
 }
 
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
 	-fx-background-color: -fx-medium-light;
-	-fx-text-fill: black;
+	-fx-text-fill: -fx-dark;
+}
+
+.table-view .filler, .table-view .column-header {
+	-fx-background-color: -fx-dark;
+}
+
+.table-view .scroll-bar .track, .list-view .scroll-bar .track {
+	-fx-background-color: -fx-light;
+}
+
+.table-view .scroll-bar .increment-button, .list-view .scroll-bar .increment-button,
+.table-view .scroll-bar .decrement-button, .list-view .scroll-bar .decrement-button,
+.table-view .scroll-bar .thumb, .list-view .scroll-bar .thumb {
+	-fx-background-color: -fx-dark;
 }
 
 .button {
@@ -117,7 +144,7 @@
 	-fx-background-color: -fx-light;
 }
 
-.list-view:focused, .table-view:focused, text-field:focused, .button:focused {
+.list-view:focused, .table-view:focused, .text-field:focused, .button:focused {
 	-fx-background-insets: 0, 0, 1, 2;
     -fx-background-radius: 0;
 }
