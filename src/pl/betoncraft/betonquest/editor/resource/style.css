@@ -61,7 +61,9 @@
 	-fx-font-weight: bold;
 	-fx-text-fill: -fx-light;
 }
-
+.table-view .column-header .label {
+	-fx-text-fill: -fx-dark;
+}
 .list-view, .table-view, .text-field {
 	-fx-background-color: -fx-light;
 	-fx-background-radius: 0;
