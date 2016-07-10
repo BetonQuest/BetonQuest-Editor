@@ -114,7 +114,7 @@ public class QuestPackage {
 							case "name":
 								if (parts.length > 3) {
 									String lang = parts[3];
-									if (languages.containsKey(lang)) {
+									if (!languages.containsKey(lang)) {
 										languages.put(lang, 1);
 									} else {
 										languages.put(lang, languages.get(lang) + 1);
