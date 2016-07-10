@@ -94,7 +94,8 @@ public class ConversationController {
 		playerList.getSelectionModel().selectedItemProperty().addListener(
 				(observable, oldValue, newValue) -> displayOption(newValue)
 		);
-		displayOption(conversation.getNpcOptions().get(0));
+		if(conversation.getNpcOptions().size()>0) //Bugfix empty Conversation
+			displayOption(conversation.getNpcOptions().get(0));
 	}
 	
 	public void displayOption(ConversationOption option) {
