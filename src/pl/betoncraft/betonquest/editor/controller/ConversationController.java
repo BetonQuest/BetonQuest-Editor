@@ -123,7 +123,7 @@ public class ConversationController {
 		playerList.setItems(conversation.getPlayerOptions());
 		if (currentOption != null && (conversation.getNpcOptions().contains(currentOption) || conversation.getPlayerOptions().contains(currentOption))) {
 			displayOption(currentOption);
-		} else {
+		} else if(conversation.getNpcOptions().size()>0){
 			displayOption(conversation.getNpcOptions().get(0));
 		}
 	}
