@@ -127,20 +127,20 @@ public class ConversationController {
 		}
 		pointsToList.setItems(option.getPointers());
 
-		ObservableList<String> list =FXCollections.observableArrayList();
+		ObservableList<ConversationOption> list =FXCollections.observableArrayList();
 		if(option instanceof NpcOption){
 
 			for(PlayerOption po: currentConversation.getPlayerOptions())
 			{
-				if(po.getPointers().contains(option.getId()))
-					list.add(po.getId());
+				if(po.getPointers().contains(option))
+					list.add(po);
 			}
 		}else
 		{
 			for(NpcOption no: currentConversation.getNpcOptions())
 			{
-				if(no.getPointers().contains(option.getId()))
-					list.add(no.getId());
+				if(no.getPointers().contains(option))
+					list.add(no);
 			}
 		}
 		pointedByList.setItems(list);
