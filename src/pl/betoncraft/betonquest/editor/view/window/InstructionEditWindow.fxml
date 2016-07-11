@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Button?>
+
+<GridPane
+	fx:controller="pl.betoncraft.betonquest.editor.controller.InstructionEditController"
+	xmlns:fx="http://javafx.com/fxml/1" hgap="10" vgap="10">
+
+	<padding>
+		<Insets bottom="10" top="10" left="10" right="10" />
+	</padding>
+	<columnConstraints>
+		<ColumnConstraints percentWidth="30" />
+		<ColumnConstraints percentWidth="70" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints percentHeight="33.3" />
+		<RowConstraints percentHeight="33.3" />
+		<RowConstraints percentHeight="33.3" />
+	</rowConstraints>
+
+	<Label id="option-label" GridPane.rowIndex="0"
+		GridPane.columnIndex="0" text="%id" />
+	<TextField GridPane.rowIndex="0" GridPane.columnIndex="1"
+		fx:id="id" />
+
+	<Label id="option-label" GridPane.rowIndex="1"
+		GridPane.columnIndex="0" text="%instruction" />
+	<TextField GridPane.rowIndex="1" GridPane.columnIndex="1"
+		fx:id="instruction" />
+
+	<ButtonBar GridPane.rowIndex="2" GridPane.columnIndex="0"
+		GridPane.columnSpan="2">
+		<buttons>
+			<Button text="%ok" onAction="#ok" />
+			<Button text="%cancel" onAction="#cancel" />
+		</buttons>
+	</ButtonBar>
+
+</GridPane>
+

@@ -24,6 +24,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
@@ -31,11 +32,11 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
  *
  * @author Jakub Sapalski
  */
-public class MainPageLine {
+public class MainPageLine implements ID {
 	
 	private StringProperty id;
 	private TranslatableText text = new TranslatableText();
-	private ObservableList<String> conditions = FXCollections.observableArrayList();
+	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
 	private IntegerProperty priority = new SimpleIntegerProperty();
 	
 	public MainPageLine(String id) {
@@ -49,7 +50,7 @@ public class MainPageLine {
 	public TranslatableText getText() {
 		return text;
 	}
-	public ObservableList<String> getConditions() {
+	public ObservableList<Condition> getConditions() {
 		return conditions;
 	}
 	public IntegerProperty getPriority() {

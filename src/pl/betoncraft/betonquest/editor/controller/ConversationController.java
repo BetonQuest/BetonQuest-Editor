@@ -25,8 +25,10 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Conversation;
 import pl.betoncraft.betonquest.editor.model.ConversationOption;
+import pl.betoncraft.betonquest.editor.model.Event;
 import pl.betoncraft.betonquest.editor.model.NpcOption;
 import pl.betoncraft.betonquest.editor.model.PlayerOption;
 
@@ -43,10 +45,10 @@ public class ConversationController {
 	
 	@FXML private TextField npc;
 	@FXML private CheckBox stop;
-	@FXML private ChoiceBox<String> startingOptionsChoice;
-	@FXML private ComboBox<String> startingOptionsCombo;
-	@FXML private ChoiceBox<String> finalEventsChoice;
-	@FXML private ComboBox<String> finalEventsCombo;
+	@FXML private ChoiceBox<NpcOption> startingOptionsChoice;
+	@FXML private ComboBox<NpcOption> startingOptionsCombo;
+	@FXML private ChoiceBox<Event> finalEventsChoice;
+	@FXML private ComboBox<Event> finalEventsCombo;
 	
 	@FXML private ListView<NpcOption> npcList;
 	@FXML private TextField npcField;
@@ -54,14 +56,14 @@ public class ConversationController {
 	@FXML private TextField playerField;
 	
 	@FXML private TextField option;
-	@FXML private ChoiceBox<String> eventChoice;
-	@FXML private ComboBox<String> eventCombo;
-	@FXML private ChoiceBox<String> conditionChoice;
-	@FXML private ComboBox<String> conditionCombo;
+	@FXML private ChoiceBox<Event> eventChoice;
+	@FXML private ComboBox<Event> eventCombo;
+	@FXML private ChoiceBox<Condition> conditionChoice;
+	@FXML private ComboBox<Condition> conditionCombo;
 	
-	@FXML private ListView<String> pointsToList;
-	@FXML private ComboBox<String> pointsToCombo;
-	@FXML private ListView<String> pointedByList;
+	@FXML private ListView<ConversationOption> pointsToList;
+	@FXML private ComboBox<ConversationOption> pointsToCombo;
+	@FXML private ListView<ConversationOption> pointedByList;
 	
 	private Conversation currentConversation;
 	private ConversationOption currentOption;
@@ -139,7 +141,7 @@ public class ConversationController {
 		if (option == null) {
 			return;
 		}
-		npcField.setText(option.getId());
+		npcField.setText(option.getId().get());
 		displayOption(option);
 	}
 	
@@ -150,8 +152,12 @@ public class ConversationController {
 		if (option == null) {
 			return;
 		}
-		playerField.setText(option.getId());
+		playerField.setText(option.getId().get());
 		displayOption(option);
+	}
+	
+	public static void refresh() {
+		// TODO refresh everything
 	}
 
 }

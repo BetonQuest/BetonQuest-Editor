@@ -23,6 +23,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import pl.betoncraft.betonquest.editor.model.Conversation;
+import pl.betoncraft.betonquest.editor.model.Event;
 import pl.betoncraft.betonquest.editor.model.GlobalLocation;
 import pl.betoncraft.betonquest.editor.model.GlobalVariable;
 import pl.betoncraft.betonquest.editor.model.MainPageLine;
@@ -41,13 +43,13 @@ public class MainController {
 	
 	@FXML private TableView<NpcBinding> npcTable;
 	@FXML private TableColumn<NpcBinding, String> npcName;
-	@FXML private TableColumn<NpcBinding, String> conversation;
+	@FXML private TableColumn<NpcBinding, Conversation> conversation;
 	@FXML private TableView<GlobalVariable> globVarTable;
 	@FXML private TableColumn<GlobalVariable, String> varName;
 	@FXML private TableColumn<GlobalVariable, String> varValue;
 	@FXML private TableView<StaticEvent> staticEventsTable;
 	@FXML private TableColumn<StaticEvent, String> time;
-	@FXML private TableColumn<StaticEvent, String> event;
+	@FXML private TableColumn<StaticEvent, Event> event;
 	@FXML private ListView<GlobalLocation> globLocList;
 	@FXML private ListView<QuestCanceler> cancelList;
 	@FXML private ListView<MainPageLine> mainPageList;
@@ -65,12 +67,12 @@ public class MainController {
 	public static void setGlobVariables(ObservableList<GlobalVariable> globalVariables) {
 		instance.globVarTable.setItems(globalVariables);
 		instance.varName.setCellValueFactory(cell -> cell.getValue().getId());
-		instance.varValue.setCellValueFactory(cell -> cell.getValue().getValue());
+		instance.varValue.setCellValueFactory(cell -> cell.getValue().getInstruction());
 	}
 	
 	public static void setStaticEvents(ObservableList<StaticEvent> staticEvents) {
 		instance.staticEventsTable.setItems(staticEvents);
-		instance.time.setCellValueFactory(cell -> cell.getValue().getTime());
+		instance.time.setCellValueFactory(cell -> cell.getValue().getId());
 		instance.event.setCellValueFactory(cell -> cell.getValue().getEvent());
 	}
 	
@@ -84,6 +86,10 @@ public class MainController {
 	
 	public static void setMainPageLines(ObservableList<MainPageLine> mainPageLines) {
 		instance.mainPageList.setItems(mainPageLines);
+	}
+	
+	public static void refresh() {
+		// TODO refresh everything
 	}
 	
 }

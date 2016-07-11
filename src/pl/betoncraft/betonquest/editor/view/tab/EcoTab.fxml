@@ -37,7 +37,7 @@
 				<ButtonBar>
 					<buttons>
 						<Button text="%add" />
-						<Button text="%edit" />
+						<Button text="%edit" onAction="#editEvent" />
 						<Button text="%del" />
 					</buttons>
 				</ButtonBar>

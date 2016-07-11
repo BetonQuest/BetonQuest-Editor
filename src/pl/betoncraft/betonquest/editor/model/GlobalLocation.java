@@ -17,8 +17,8 @@
  */
 package pl.betoncraft.betonquest.editor.model;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 /**
  * Represents a location objective which is in the "global locations" list. 
@@ -27,23 +27,19 @@ import javafx.beans.property.StringProperty;
  */
 public class GlobalLocation {
 	
-	private StringProperty objective;
+	private ObjectProperty<Objective> objective = new SimpleObjectProperty<>();
 	
-	public GlobalLocation(String objective) {
-		this.objective = new SimpleStringProperty(objective);
-	}
-	
-	public String getObjective() {
-		return objective.get();
-	}
-	
-	public void setObjective(String objective) {
+	public GlobalLocation(Objective objective) {
 		this.objective.set(objective);
+	}
+	
+	public ObjectProperty<Objective> getObjective() {
+		return objective;
 	}
 	
 	@Override
 	public String toString() {
-		return objective.get();
+		return objective.get().getId().get();
 	}
 
 }

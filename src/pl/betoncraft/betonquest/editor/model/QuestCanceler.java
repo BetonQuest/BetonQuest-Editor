@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
@@ -14,28 +15,24 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
  *
  * @author Jakub Sapalski
  */
-public class QuestCanceler {
+public class QuestCanceler implements ID {
 	
 	private StringProperty id;
 	private TranslatableText name = new TranslatableText();
-	private ObservableList<String> conditions = FXCollections.observableArrayList();
-	private ObservableList<String> events = FXCollections.observableArrayList();
-	private ObservableList<String> objectives = FXCollections.observableArrayList();
+	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
+	private ObservableList<Event> events = FXCollections.observableArrayList();
+	private ObservableList<Objective> objectives = FXCollections.observableArrayList();
 	private ObservableList<String> tags = FXCollections.observableArrayList();
 	private ObservableList<String> points = FXCollections.observableArrayList();
-	private ObservableList<String> journal = FXCollections.observableArrayList();
+	private ObservableList<JournalEntry> journal = FXCollections.observableArrayList();
 	private StringProperty location = new SimpleStringProperty();
 	
 	public QuestCanceler(String id) {
 		this.id = new SimpleStringProperty(id);
 	}
 
-	public String getId() {
-		return id.get();
-	}
-
-	public void setId(String id) {
-		this.id.set(id);
+	public StringProperty getId() {
+		return id;
 	}
 
 	public String getLocation() {
@@ -50,15 +47,15 @@ public class QuestCanceler {
 		return name;
 	}
 
-	public ObservableList<String> getConditions() {
+	public ObservableList<Condition> getConditions() {
 		return conditions;
 	}
 
-	public ObservableList<String> getEvents() {
+	public ObservableList<Event> getEvents() {
 		return events;
 	}
 
-	public ObservableList<String> getObjectives() {
+	public ObservableList<Objective> getObjectives() {
 		return objectives;
 	}
 
@@ -70,7 +67,7 @@ public class QuestCanceler {
 		return points;
 	}
 
-	public ObservableList<String> getJournal() {
+	public ObservableList<JournalEntry> getJournal() {
 		return journal;
 	}
 	

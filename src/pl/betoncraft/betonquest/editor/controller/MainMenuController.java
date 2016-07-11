@@ -54,8 +54,8 @@ public class MainMenuController {
 		if (selectedFile != null) {
 			try {
 				QuestPackage pack = QuestPackage.loadFromZip(new ZipFile(selectedFile));
-				instance.getPackages().put(pack.getName(), pack);
-				instance.display(pack.getName());
+				instance.getPackages().put(pack.getName().get(), pack);
+				instance.display(pack);
 			} catch (Exception e) {
 				BetonQuestEditor.showStackTrace(e);
 			}

@@ -50,4 +50,8 @@ public class OtherController {
 		instance.journalList.setItems(journal);
 	}
 	
+	public static void refresh() {
+		// TODO refresh everything
+	}
+	
 }

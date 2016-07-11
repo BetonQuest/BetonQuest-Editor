@@ -21,6 +21,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
@@ -28,39 +29,35 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
  *
  * @author Jakub Sapalski
  */
-public abstract class ConversationOption {
+public abstract class ConversationOption implements ID {
 	
 	private StringProperty id;
 	private TranslatableText text = new TranslatableText();
-	private ObservableList<String> events = FXCollections.observableArrayList();
-	private ObservableList<String> conditions = FXCollections.observableArrayList();
-	private ObservableList<String> pointers = FXCollections.observableArrayList();
+	private ObservableList<Event> events = FXCollections.observableArrayList();
+	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
+	private ObservableList<ConversationOption> pointers = FXCollections.observableArrayList();
 
 	public ConversationOption(String id) {
 		this.id = new SimpleStringProperty(id);
 	}
 
-	public String getId() {
-		return id.get();
-	}
-
-	public void setId(String id) {
-		this.id.set(id);
+	public StringProperty getId() {
+		return id;
 	}
 
 	public TranslatableText getText() {
 		return text;
 	}
 
-	public ObservableList<String> getEvents() {
+	public ObservableList<Event> getEvents() {
 		return events;
 	}
 
-	public ObservableList<String> getConditions() {
+	public ObservableList<Condition> getConditions() {
 		return conditions;
 	}
 
-	public ObservableList<String> getPointers() {
+	public ObservableList<ConversationOption> getPointers() {
 		return pointers;
 	}
 	

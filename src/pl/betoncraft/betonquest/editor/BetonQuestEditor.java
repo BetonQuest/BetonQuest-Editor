@@ -82,8 +82,8 @@ public class BetonQuestEditor extends Application {
 			// load package for debugging
 			if (autoLoadPackage != null) try {
 				QuestPackage pack = QuestPackage.loadFromZip(new ZipFile(autoLoadPackage));
-				instance.getPackages().put(pack.getName(), pack);
-				instance.display(pack.getName());
+				loadedPackages.put(pack.getName().get(), pack);
+				display(pack);
 			} catch (Exception e) {
 				BetonQuestEditor.showStackTrace(e);
 			}
@@ -123,9 +123,7 @@ public class BetonQuestEditor extends Application {
 	/**
 	 * Displays a package in the view.
 	 */
-	public void display(String packName) {
-		// TODO display package
-		 QuestPackage pack = loadedPackages.get(packName);
+	public void display(QuestPackage pack) {
 		 currentPackage = pack;
 		 MainController.setNpcBindings(pack.getNpcBindings());
 		 MainController.setGlobVariables(pack.getVariables());
@@ -139,6 +137,16 @@ public class BetonQuestEditor extends Application {
 		 EcoController.setObjectives(pack.getObjectives());
 		 OtherController.setItems(pack.getItems());
 		 OtherController.setJournal(pack.getJournal());
+	}
+	
+	/**
+	 * Refreshes all controlers.
+	 */
+	public void refresh() {
+		MainController.refresh();
+		ConversationController.refresh();
+		EcoController.refresh();
+		OtherController.refresh();
 	}
 
 	public static void main(String[] args) {
