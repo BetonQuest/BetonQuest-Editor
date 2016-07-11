@@ -32,9 +32,9 @@
 				</padding>
 				<Label text="%conversation" id="option-label" />
 				<ComboBox editable="true" fx:id="conversation" onAction="#selectConversation" />
-				<Button text="%add" />
-				<Button text="%rename" />
-				<Button text="%del" />
+				<Button text="%add" onAction="#addConversation" />
+				<Button text="%rename" onAction="#renameConversation" />
+				<Button text="%del" onAction="#delConversation" />
 				<!-- stop option -->
 				<HBox spacing="5" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
 					<Label text="%stop-option" id="option-label" />
@@ -76,8 +76,8 @@
 						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="startingOptionsChoice" onAction="#clickStartingOptions" />
 							<ComboBox editable="true" fx:id="startingOptionsCombo" />
-							<Button text="%add" />
-							<Button text="%del" />
+							<Button text="%add" onAction="#addStartingOption" />
+							<Button text="%del" onAction="#delStartingOption" />
 						</HBox>
 
 						<!-- final events -->
@@ -86,8 +86,8 @@
 						<HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="finalEventsChoice" />
 							<ComboBox editable="true" fx:id="finalEventsCombo" />
-							<Button text="%add" />
-							<Button text="%del" />
+							<Button text="%add" onAction="#addFinalEvent" />
+							<Button text="%del" onAction="#delFinalEvent" />
 						</HBox>
 					</GridPane>
 
@@ -102,9 +102,9 @@
 							<TextField fx:id="npcField" />
 							<ButtonBar>
 								<buttons>
-									<Button text="%add" />
-									<Button text="%rename" />
-									<Button text="%del" />
+									<Button text="%add" onAction="#addNpcOption" />
+									<Button text="%rename" onAction="#renameNpcOption" />
+									<Button text="%del" onAction="#delNpcOption" />
 								</buttons>
 							</ButtonBar>
 						</VBox>
@@ -117,9 +117,9 @@
 							<TextField fx:id="playerField" />
 							<ButtonBar>
 								<buttons>
-									<Button text="%add" />
-									<Button text="%rename" />
-									<Button text="%del" />
+									<Button text="%add" onAction="#addPlayerOption" />
+									<Button text="%rename" onAction="#renamePlayerOption" />
+									<Button text="%del" onAction="#delPlayerOption" />
 								</buttons>
 							</ButtonBar>
 						</VBox>
@@ -150,16 +150,16 @@
 						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="eventChoice" />
 							<ComboBox editable="true" fx:id="eventCombo" />
-							<Button text="%add" />
-							<Button text="%del" />
+							<Button text="%add" onAction="#addEvent" />
+							<Button text="%del" onAction="#delEvent" />
 						</HBox>
 						<Label text="%conditions" id="option-label"
 							GridPane.rowIndex="2" GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="conditionChoice" />
 							<ComboBox editable="true" fx:id="conditionCombo" />
-							<Button text="%add" />
-							<Button text="%del" />
+							<Button text="%add" onAction="#addCondition" />
+							<Button text="%del" onAction="#delCondition" />
 						</HBox>
 					</GridPane>
 
@@ -177,8 +177,8 @@
 							<ListView VBox.vgrow="ALWAYS" fx:id="pointsToList"
 								onMouseClicked="#clickPointsTo" onKeyReleased="#clickPointsTo" />
 							<ComboBox editable="true" maxWidth="9000" fx:id="pointsToCombo" />
-							<Button text="%add" maxWidth="9000" />
-							<Button text="%del" maxWidth="9000" />
+							<Button text="%add" maxWidth="9000" onAction="#addPointer" />
+							<Button text="%del" maxWidth="9000" onAction="#delPointer" />
 						</VBox>
 
 						<!-- pointed by -->

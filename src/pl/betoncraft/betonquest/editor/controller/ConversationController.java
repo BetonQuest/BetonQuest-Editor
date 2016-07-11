@@ -21,11 +21,15 @@ package pl.betoncraft.betonquest.editor.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.Editable;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Conversation;
 import pl.betoncraft.betonquest.editor.model.ConversationOption;
@@ -124,11 +128,27 @@ public class ConversationController {
 		if (currentOption != null && (conversation.getNpcOptions().contains(currentOption) || conversation.getPlayerOptions().contains(currentOption))) {
 			displayOption(currentOption);
 		} else {
+			if (conversation.getNpcOptions().isEmpty()) {
+				NpcOption option = conversation.newNpcOption("start");
+				conversation.getStartingOptions().add(option);
+				
+			}
 			displayOption(conversation.getNpcOptions().get(0));
 		}
 	}
 	
 	public void displayOption(ConversationOption option) {
+		if (option instanceof NpcOption) {
+			playerList.getSelectionModel().clearSelection();
+			playerField.clear();
+			npcList.getSelectionModel().select((NpcOption) option);
+			npcField.setText(option.getId().get());
+		} else {
+			npcList.getSelectionModel().clearSelection();
+			npcField.clear();
+			playerList.getSelectionModel().select((PlayerOption) option);
+			playerField.setText(option.getId().get());
+		}
 		String lang = currentConversation.getPack().getDefLang();
 		if (currentOption != null) {
 			this.option.textProperty().unbindBidirectional(currentOption.getText().get(lang));
@@ -170,20 +190,6 @@ public class ConversationController {
 		pointedByList.setItems(pointedByOptions);
 	}
 	
-	private void select(ConversationOption option) {
-		if (option instanceof NpcOption) {
-			playerList.getSelectionModel().clearSelection();
-			playerField.clear();
-			npcList.getSelectionModel().select((NpcOption) option);
-			npcField.setText(option.getId().get());
-		} else {
-			npcList.getSelectionModel().clearSelection();
-			npcField.clear();
-			playerList.getSelectionModel().select((PlayerOption) option);
-			playerField.setText(option.getId().get());
-		}
-	}
-	
 	@FXML private void selectConversation() {
 		Conversation selected = conversation.getSelectionModel().getSelectedItem();
 		if (selected == null) {
@@ -197,7 +203,6 @@ public class ConversationController {
 		if (option == null) {
 			return;
 		}
-		select(option);
 		displayOption(option);
 	}
 	
@@ -206,7 +211,6 @@ public class ConversationController {
 		if (option == null) {
 			return;
 		}
-		select(option);
 		displayOption(option);
 	}
 	
@@ -215,7 +219,6 @@ public class ConversationController {
 		if (option == null) {
 			return;
 		}
-		select(option);
 		displayOption(option);
 	}
 	
@@ -224,16 +227,210 @@ public class ConversationController {
 		if (option == null) {
 			return;
 		}
-		select(option);
 		displayOption(option);
 	}
+	
 	@FXML private void clickStartingOptions() {
 		ConversationOption option = startingOptionsChoice.getSelectionModel().getSelectedItem();
 		if (option == null) {
 			return;
 		}
-		select(option);
 		displayOption(option);
+	}
+	
+	@FXML private void addStartingOption() {
+		NpcOption option = getObjectFromComboBox(startingOptionsCombo, e -> currentConversation.newNpcOption(e));
+		if (option != null && !startingOptionsChoice.getItems().contains(option)) {
+			startingOptionsChoice.getItems().add(option);
+			BetonQuestEditor.refresh();
+			displayOption(option);
+		}
+	}
+	
+	@FXML private void delStartingOption() {
+		NpcOption option = startingOptionsChoice.getValue();
+		if (option != null) {
+			if (startingOptionsChoice.getItems().size() == 1) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setHeaderText("Cannot delete last starting option");
+				alert.show();
+				return;
+			}
+			startingOptionsChoice.getItems().remove(option);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void addFinalEvent() {
+		Event event = getObjectFromComboBox(finalEventsCombo, e -> currentConversation.getPack().newEvent(e));
+		if (event != null && !finalEventsChoice.getItems().contains(event)) {
+			finalEventsChoice.getItems().add(event);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void delFinalEvent() {
+		Event event = finalEventsChoice.getValue();
+		if (event != null) {
+			finalEventsChoice.getItems().remove(event);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void addEvent() {
+		Event event = getObjectFromComboBox(eventCombo, e -> currentConversation.getPack().newEvent(e));
+		if (event != null && !eventChoice.getItems().contains(event)) {
+			eventChoice.getItems().add(event);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void delEvent() {
+		Event event = eventChoice.getValue();
+		if (event != null) {
+			eventChoice.getItems().remove(event);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void addCondition() {
+		Condition condition = getObjectFromComboBox(conditionCombo, e -> currentConversation.getPack().newCondition(e));
+		if (condition != null && !conditionChoice.getItems().contains(condition)) {
+			conditionChoice.getItems().add(condition);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void delCondition() {
+		Condition condition = conditionChoice.getValue();
+		if (condition != null) {
+			conditionChoice.getItems().remove(condition);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void addPointer() {
+		ConversationOption option;
+		if (currentOption instanceof NpcOption) {
+			option = getObjectFromComboBox(pointsToCombo, e -> currentConversation.newPlayerOption(e));
+		} else {
+			option = getObjectFromComboBox(pointsToCombo, e -> currentConversation.newNpcOption(e));
+		}
+		if (option != null) {
+			pointsToList.getItems().add(option);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void delPointer() {
+		ConversationOption option = pointsToCombo.getValue();
+		if (option != null) {
+			pointsToList.getItems().remove(option);
+		}
+	}
+	
+	@FXML private void addNpcOption() {
+		String name = npcField.getText();
+		if (currentConversation.getNpcOption(name) == null) {
+			NpcOption option = currentConversation.newNpcOption(name);
+			BetonQuestEditor.refresh();
+			displayOption(option);
+		}
+	}
+	
+	@FXML private void renameNpcOption() {
+		NpcOption option = npcList.getSelectionModel().getSelectedItem();
+		String text = npcField.getText();
+		if (option != null && text != null) {
+			option.getId().set(text);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void delNpcOption() {
+		NpcOption option = npcList.getSelectionModel().getSelectedItem();
+		if (option != null) {
+			if (npcList.getItems().size() == 1) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setHeaderText("Cannot delete last NPC option");
+				alert.show();
+				return;
+			}
+			npcList.getItems().remove(option);
+			displayOption((npcList.getItems().get(0)));
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void addPlayerOption() {
+		String name = playerField.getText();
+		if (currentConversation.getPlayerOption(name) == null) {
+			PlayerOption option = currentConversation.newPlayerOption(name);
+			BetonQuestEditor.refresh();
+			displayOption(option);
+		}
+	}
+	
+	@FXML private void renamePlayerOption() {
+		PlayerOption option = playerList.getSelectionModel().getSelectedItem();
+		String text = playerField.getText();
+		if (option != null && text != null) {
+			option.getId().set(text);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void delPlayerOption() {
+		PlayerOption option = playerList.getSelectionModel().getSelectedItem();
+		if (option != null) {
+			playerList.getItems().remove(option);
+			displayOption((playerList.getItems().get(0))); // TODO fix error when the list is empty
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void addConversation() {
+		Conversation conversation = getObjectFromComboBox(this.conversation,
+				e -> currentConversation.getPack().newConversation(e));
+		if (conversation != null) {
+			displayConversation(conversation);
+		}
+	}
+	
+	@FXML private void renameConversation() {
+		String name = conversation.getEditor().getText();
+		if (name != null) {
+			currentConversation.getId().set(name);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void delConversation() {
+		Conversation conv = conversation.getValue();
+		if (conv != null) {
+			conversation.getItems().remove(conv); // TODO add confirmation dialog
+			displayConversation(conversation.getItems().get(0)); // TODO fix error when the list is empty
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	private <T> T getObjectFromComboBox(ComboBox<T> combo, Converter<T> converter) {
+		T object = combo.getValue();
+		String text = combo.getEditor().getText();
+		if (text == null) {
+			return null;
+		}
+		if (object == null || !object.toString().equals(text)) {
+			object = converter.convert(text);
+			if (object instanceof Editable) {
+				((Editable) object).edit();
+			}
+		}
+		return object;
+	}
+	
+	private interface Converter<T> {
+		T convert(String id);
 	}
 
 }

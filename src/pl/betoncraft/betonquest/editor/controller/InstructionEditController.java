@@ -25,7 +25,9 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -53,8 +55,20 @@ public class InstructionEditController {
 	}
 	
 	@FXML private void ok() {
-		data.getId().set(id.getText().trim());
-		data.getInstruction().set(instruction.getText().trim());
+		String text1 = id.getText();
+		if (text1 == null) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("ID cannot be null"); // TODO make this alert better and translated
+			alert.showAndWait();
+			stage.close();
+			return;
+		}
+		data.getId().set(text1.trim());
+		String text2 = instruction.getText();
+		if (text2 != null) {
+			data.getInstruction().set(text2.trim());
+		}
 		BetonQuestEditor.refresh();
 		stage.close();
 	}
