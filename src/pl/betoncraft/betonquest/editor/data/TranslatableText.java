@@ -46,7 +46,12 @@ public class TranslatableText {
 		if (def != null) {
 			return def;
 		} else {
-			return text.get(lang);
+			StringProperty value = text.get(lang);
+			if (value == null) {
+				value = new SimpleStringProperty();
+				text.put(lang, value);
+			}
+			return value;
 		}
 	}
 	
