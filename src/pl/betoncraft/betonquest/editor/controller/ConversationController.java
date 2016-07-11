@@ -18,6 +18,7 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -74,8 +75,14 @@ public class ConversationController {
 	}
 	
 	public static void setConversations(ObservableList<Conversation> conversations) {
+		instance.firstSelection = true;
+		instance.conversation.setItems(null);
 		instance.conversation.setItems(conversations);
-		instance.displayConversation(conversations.get(0));
+		if (instance.currentConversation != null && conversations.contains(instance.currentConversation)) {
+			instance.displayConversation(instance.currentConversation);
+		} else {
+			instance.displayConversation(conversations.get(0));
+		}
 	}
 	
 	public synchronized void displayConversation(Conversation conversation) {
@@ -97,15 +104,28 @@ public class ConversationController {
 		if (currentConversation.getStartingOptions().size() > 0) {
 			startingOptionsChoice.getSelectionModel().select(0);
 		}
-		// TODO list of choosable starting options
+		ObservableList<NpcOption> notStartingOptions = FXCollections.observableArrayList(conversation.getNpcOptions());
+		for (NpcOption option : conversation.getStartingOptions()) {
+			notStartingOptions.remove(option);
+		}
+		startingOptionsCombo.setItems(notStartingOptions);
 		finalEventsChoice.setItems(conversation.getFinalEvents());
 		if (currentConversation.getFinalEvents().size() > 0) {
 			finalEventsChoice.getSelectionModel().select(0);
 		}
-		// TODO list of choosable final events
+		ObservableList<Event> notFinalEvents = FXCollections.observableArrayList(conversation.getPack().getEvents());
+		for (Event event : conversation.getFinalEvents()) {
+			notFinalEvents.remove(event);
+		}
+		finalEventsCombo.setItems(notFinalEvents);
+		startingOptionsCombo.setItems(notStartingOptions);
 		npcList.setItems(conversation.getNpcOptions());
 		playerList.setItems(conversation.getPlayerOptions());
-		displayOption(conversation.getNpcOptions().get(0));
+		if (currentOption != null && (conversation.getNpcOptions().contains(currentOption) || conversation.getPlayerOptions().contains(currentOption))) {
+			displayOption(currentOption);
+		} else {
+			displayOption(conversation.getNpcOptions().get(0));
+		}
 	}
 	
 	public void displayOption(ConversationOption option) {
@@ -119,11 +139,49 @@ public class ConversationController {
 		if (option.getEvents().size() > 0) {
 			eventChoice.getSelectionModel().select(0);
 		}
+		ObservableList<Event> notEvents = FXCollections.observableArrayList(currentConversation.getPack().getEvents()); 
+		for (Event event : option.getEvents()) {
+			notEvents.remove(event);
+		}
+		eventCombo.setItems(notEvents);
 		conditionChoice.setItems(option.getConditions());
 		if (option.getConditions().size() > 0) {
 			conditionChoice.getSelectionModel().select(0);
 		}
+		ObservableList<Condition> notConditions = FXCollections.observableArrayList(currentConversation.getPack().getConditions());
+		for (Condition condition : option.getConditions()) {
+			notConditions.remove(condition);
+		}
+		conditionCombo.setItems(notConditions);
 		pointsToList.setItems(option.getPointers());
+		ObservableList<? extends ConversationOption> oppositeOptions;
+		if (option instanceof NpcOption) {
+			oppositeOptions = currentConversation.getPlayerOptions();
+		} else {
+			oppositeOptions = currentConversation.getNpcOptions();
+		}
+		pointsToCombo.setItems(FXCollections.observableArrayList(oppositeOptions));
+		ObservableList<ConversationOption> pointedByOptions = FXCollections.observableArrayList();
+		for (ConversationOption opposite : oppositeOptions) {
+			if (opposite.getPointers().contains(option)) {
+				pointedByOptions.add(opposite);
+			}
+		}
+		pointedByList.setItems(pointedByOptions);
+	}
+	
+	private void select(ConversationOption option) {
+		if (option instanceof NpcOption) {
+			playerList.getSelectionModel().clearSelection();
+			playerField.clear();
+			npcList.getSelectionModel().select((NpcOption) option);
+			npcField.setText(option.getId().get());
+		} else {
+			npcList.getSelectionModel().clearSelection();
+			npcField.clear();
+			playerList.getSelectionModel().select((PlayerOption) option);
+			playerField.setText(option.getId().get());
+		}
 	}
 	
 	@FXML private void selectConversation() {
@@ -135,29 +193,47 @@ public class ConversationController {
 	}
 	
 	@FXML private void clickNpcOption() {
-		playerList.getSelectionModel().clearSelection();
-		playerField.clear();
 		NpcOption option = npcList.getSelectionModel().getSelectedItem();
 		if (option == null) {
 			return;
 		}
-		npcField.setText(option.getId().get());
+		select(option);
 		displayOption(option);
 	}
 	
 	@FXML private void clickPlayerOption() {
-		npcList.getSelectionModel().clearSelection();
-		npcField.clear();
 		PlayerOption option = playerList.getSelectionModel().getSelectedItem();
 		if (option == null) {
 			return;
 		}
-		playerField.setText(option.getId().get());
+		select(option);
 		displayOption(option);
 	}
 	
-	public static void refresh() {
-		// TODO refresh everything
+	@FXML private void clickPointsTo() {
+		ConversationOption option = pointsToList.getSelectionModel().getSelectedItem();
+		if (option == null) {
+			return;
+		}
+		select(option);
+		displayOption(option);
+	}
+	
+	@FXML private void clickPointedBy() {
+		ConversationOption option = pointedByList.getSelectionModel().getSelectedItem();
+		if (option == null) {
+			return;
+		}
+		select(option);
+		displayOption(option);
+	}
+	@FXML private void clickStartingOptions() {
+		ConversationOption option = startingOptionsChoice.getSelectionModel().getSelectedItem();
+		if (option == null) {
+			return;
+		}
+		select(option);
+		displayOption(option);
 	}
 
 }

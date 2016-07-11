@@ -74,7 +74,7 @@
 						<Label text="%start-options" id="option-label"
 							GridPane.rowIndex="1" GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
-							<ChoiceBox fx:id="startingOptionsChoice" />
+							<ChoiceBox fx:id="startingOptionsChoice" onAction="#clickStartingOptions" />
 							<ComboBox editable="true" fx:id="startingOptionsCombo" />
 							<Button text="%add" />
 							<Button text="%del" />
@@ -174,7 +174,8 @@
 						<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="0"
 							GridPane.vgrow="ALWAYS">
 							<Label text="%points-to" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" fx:id="pointsToList" />
+							<ListView VBox.vgrow="ALWAYS" fx:id="pointsToList"
+								onMouseClicked="#clickPointsTo" onKeyReleased="#clickPointsTo" />
 							<ComboBox editable="true" maxWidth="9000" fx:id="pointsToCombo" />
 							<Button text="%add" maxWidth="9000" />
 							<Button text="%del" maxWidth="9000" />
@@ -184,7 +185,8 @@
 						<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="1"
 							GridPane.vgrow="ALWAYS">
 							<Label text="%pointed-by" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" fx:id="pointedByList" />
+							<ListView VBox.vgrow="ALWAYS" fx:id="pointedByList"
+								onMouseClicked="#clickPointedBy" onKeyReleased="#clickPointedBy" />
 						</VBox>
 					</GridPane>
 				</VBox>

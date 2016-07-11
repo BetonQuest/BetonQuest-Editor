@@ -3,10 +3,10 @@
  */
 package pl.betoncraft.betonquest.editor.controller;
 
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Event;
 import pl.betoncraft.betonquest.editor.model.Objective;
@@ -29,28 +29,81 @@ public class EcoController {
 	}
 
 	public static void setEvents(ObservableList<Event> events) {
+		instance.eventsList.setItems(null);
 		instance.eventsList.setItems(events);
 	}
 	
 	public static void setConditions(ObservableList<Condition> conditions) {
+		instance.conditionsList.setItems(null);
 		instance.conditionsList.setItems(conditions);
 	}
 	
 	public static void setObjectives(ObservableList<Objective> objectives) {
+		instance.objectivesList.setItems(null);
 		instance.objectivesList.setItems(objectives);
 	}
 	
-	public static void refresh() {
-		ObservableList<Event> events = instance.eventsList.getItems();
-		instance.eventsList.setItems(FXCollections.observableArrayList());
-		instance.eventsList.setItems(events);
+	@FXML private void addEvent() {
+		Event event = new Event("new_event");
+		eventsList.getItems().add(event);
+		InstructionEditController.display(event);
 	}
 	
-	@FXML public void editEvent() {
+	@FXML private void addCondition() {
+		Condition condition = new Condition("new_condition");
+		conditionsList.getItems().add(condition);
+		InstructionEditController.display(condition);
+	}
+	
+	@FXML private void addObjective() {
+		Objective objective = new Objective("new_objective");
+		objectivesList.getItems().add(objective);
+		InstructionEditController.display(objective);
+	}
+	
+	@FXML private void editEvent() {
 		Event event = eventsList.getSelectionModel().getSelectedItem();
 		if (event != null) {
 			InstructionEditController.display(event);
 		}
+	}
+	
+	@FXML private void editCondition() {
+		Condition condition = conditionsList.getSelectionModel().getSelectedItem();
+		if (condition != null) {
+			InstructionEditController.display(condition);
+		}
+	}
+	
+	@FXML private void editObjective() {
+		Objective objective = objectivesList.getSelectionModel().getSelectedItem();
+		if (objective != null) {
+			InstructionEditController.display(objective);
+		}
+	}
+	
+	@FXML private void delEvent() {
+		Event event = eventsList.getSelectionModel().getSelectedItem();
+		if (event != null) {
+			eventsList.getItems().remove(event);
+		}
+		BetonQuestEditor.refresh();
+	}
+	
+	@FXML private void delCondition() {
+		Condition condition = conditionsList.getSelectionModel().getSelectedItem();
+		if (condition != null) {
+			conditionsList.getItems().remove(condition);
+		}
+		BetonQuestEditor.refresh();
+	}
+	
+	@FXML private void delObjective() {
+		Objective objective = objectivesList.getSelectionModel().getSelectedItem();
+		if (objective != null) {
+			objectivesList.getItems().remove(objective);
+		}
+		BetonQuestEditor.refresh();
 	}
 	
 }

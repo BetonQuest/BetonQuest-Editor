@@ -26,7 +26,7 @@ import pl.betoncraft.betonquest.editor.model.Item;
 import pl.betoncraft.betonquest.editor.model.JournalEntry;
 
 /**
- * Contorls "Other" tab.
+ * Controls "Other" tab.
  *
  * @author Jakub Sapalski
  */
@@ -43,15 +43,13 @@ public class OtherController {
 	}
 	
 	public static void setItems(ObservableList<Item> items) {
+		instance.itemsList.setItems(null);
 		instance.itemsList.setItems(items);
 	}
 	
 	public static void setJournal(ObservableList<JournalEntry> journal) {
+		instance.journalList.setItems(null);
 		instance.journalList.setItems(journal);
-	}
-	
-	public static void refresh() {
-		// TODO refresh everything
 	}
 	
 }

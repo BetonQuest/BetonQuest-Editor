@@ -59,37 +59,39 @@ public class MainController {
 	}
 
 	public static void setNpcBindings(ObservableList<NpcBinding> bindings) {
+		instance.npcTable.setItems(null);
 		instance.npcTable.setItems(bindings);
 		instance.npcName.setCellValueFactory(cell -> cell.getValue().getId());
 		instance.conversation.setCellValueFactory(cell -> cell.getValue().getConversation());
 	}
 	
 	public static void setGlobVariables(ObservableList<GlobalVariable> globalVariables) {
+		instance.globVarTable.setItems(null);
 		instance.globVarTable.setItems(globalVariables);
 		instance.varName.setCellValueFactory(cell -> cell.getValue().getId());
 		instance.varValue.setCellValueFactory(cell -> cell.getValue().getInstruction());
 	}
 	
 	public static void setStaticEvents(ObservableList<StaticEvent> staticEvents) {
+		instance.staticEventsTable.setItems(null);
 		instance.staticEventsTable.setItems(staticEvents);
 		instance.time.setCellValueFactory(cell -> cell.getValue().getId());
 		instance.event.setCellValueFactory(cell -> cell.getValue().getEvent());
 	}
 	
 	public static void setGlobalLocations(ObservableList<GlobalLocation> globalLocations) {
+		instance.globLocList.setItems(null);
 		instance.globLocList.setItems(globalLocations);
 	}
 	
 	public static void setQuestCancelers(ObservableList<QuestCanceler> questCancelers) {
+		instance.cancelList.setItems(null);
 		instance.cancelList.setItems(questCancelers);
 	}
 	
 	public static void setMainPageLines(ObservableList<MainPageLine> mainPageLines) {
+		instance.mainPageList.setItems(null);
 		instance.mainPageList.setItems(mainPageLines);
-	}
-	
-	public static void refresh() {
-		// TODO refresh everything
 	}
 	
 }

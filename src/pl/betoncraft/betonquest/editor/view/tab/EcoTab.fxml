@@ -36,9 +36,9 @@
 				<ListView VBox.vgrow="ALWAYS" fx:id="eventsList" />
 				<ButtonBar>
 					<buttons>
-						<Button text="%add" />
+						<Button text="%add" onAction="#addEvent" />
 						<Button text="%edit" onAction="#editEvent" />
-						<Button text="%del" />
+						<Button text="%del" onAction="#delEvent" />
 					</buttons>
 				</ButtonBar>
 			</VBox>
@@ -49,9 +49,9 @@
 				<ListView VBox.vgrow="ALWAYS" fx:id="conditionsList" />
 				<ButtonBar>
 					<buttons>
-						<Button text="%add" />
-						<Button text="%edit" />
-						<Button text="%del" />
+						<Button text="%add" onAction="#addCondition" />
+						<Button text="%edit" onAction="#editCondition" />
+						<Button text="%del" onAction="#delCondition" />
 					</buttons>
 				</ButtonBar>
 			</VBox>
@@ -62,9 +62,9 @@
 				<ListView VBox.vgrow="ALWAYS" fx:id="objectivesList" />
 				<ButtonBar>
 					<buttons>
-						<Button text="%add" />
-						<Button text="%edit" />
-						<Button text="%del" />
+						<Button text="%add" onAction="#addObjective" />
+						<Button text="%edit" onAction="#editObjective" />
+						<Button text="%del" onAction="#delObjective" />
 					</buttons>
 				</ButtonBar>
 			</VBox>
