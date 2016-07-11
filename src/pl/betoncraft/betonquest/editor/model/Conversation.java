@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
@@ -16,7 +17,7 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
  *
  * @author Jakub Sapalski
  */
-public class Conversation {
+public class Conversation implements ID {
 
 	private QuestPackage pack;
 	private StringProperty convName;
@@ -24,20 +25,16 @@ public class Conversation {
 	private BooleanProperty stop = new SimpleBooleanProperty();
 	private ObservableList<NpcOption> npcOptions = FXCollections.observableArrayList();
 	private ObservableList<PlayerOption> playerOptions = FXCollections.observableArrayList();
-	private ObservableList<String> startingOptions = FXCollections.observableArrayList();
-	private ObservableList<String> finalEvents = FXCollections.observableArrayList();
+	private ObservableList<NpcOption> startingOptions = FXCollections.observableArrayList();
+	private ObservableList<Event> finalEvents = FXCollections.observableArrayList();
 
 	public Conversation(QuestPackage pack, String convName) {
 		this.pack = pack;
 		this.convName = new SimpleStringProperty(convName);
 	}
 	
-	public String getName() {
-		return convName.get();
-	}
-	
-	public void setName(String name) {
-		convName.set(name);
+	public StringProperty getId() {
+		return convName;
 	}
 
 	public QuestPackage getPack() {
@@ -51,39 +48,56 @@ public class Conversation {
 	public TranslatableText getNPC() {
 		return npc;
 	}
+	
+	private static <T extends ConversationOption> T getByID(ObservableList<T> list, String id) {
+		for (T object : list) {
+			if (object.getId().get().equals(id)) {
+				return object;
+			}
+		}
+		return null;
+	}
 
 	public ObservableList<NpcOption> getNpcOptions() {
 		return npcOptions;
+	}
+	
+	public NpcOption newNpcOption(String id) {
+		NpcOption option = getByID(npcOptions, id);
+		if (option == null) {
+			option = new NpcOption(id);
+			npcOptions.add(option);
+		}
+		return option;
 	}
 
 	public ObservableList<PlayerOption> getPlayerOptions() {
 		return playerOptions;
 	}
+	
+	public PlayerOption newPlayerOption(String id) {
+		PlayerOption option = getByID(playerOptions, id);
+		if (option == null) {
+			option = new PlayerOption(id);
+			playerOptions.add(option);
+		}
+		return option;
+	}
 
-	public ObservableList<String> getStartingOptions() {
+	public ObservableList<NpcOption> getStartingOptions() {
 		return startingOptions;
 	}
 
-	public ObservableList<String> getFinalEvents() {
+	public ObservableList<Event> getFinalEvents() {
 		return finalEvents;
 	}
 	
 	public NpcOption getNpcOption(String id) {
-		for (NpcOption option : npcOptions) {
-			if (option.getId().equals(id)) {
-				return option;
-			}
-		}
-		return null;
+		return getByID(npcOptions, id);
 	}
 	
 	public PlayerOption getPlayerOption(String id) {
-		for (PlayerOption option : playerOptions) {
-			if (option.getId().equals(id)) {
-				return option;
-			}
-		}
-		return null;
+		return getByID(playerOptions, id);
 	}
 	
 	@Override

@@ -1,6 +1,6 @@
 /**
  * BetonQuest Editor - advanced quest creating tool for BetonQuest
- * Copyright (C) 2015  Jakub "Co0sh" Sapalski
+ * Copyright (C) 2016  Jakub "Co0sh" Sapalski
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,37 +15,51 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package pl.betoncraft.betonquest.editor.model;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import pl.betoncraft.betonquest.editor.data.Instruction;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
- * Represents a variable defined in main.yml file.
+ * Represents a single line on main page in a journal.
  *
  * @author Jakub Sapalski
  */
-public class GlobalVariable implements Instruction {
+public class MainPageLine implements ID {
 	
 	private StringProperty id;
-	private StringProperty value = new SimpleStringProperty();
+	private TranslatableText text = new TranslatableText();
+	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
+	private IntegerProperty priority = new SimpleIntegerProperty();
 	
-	public GlobalVariable(String id, String value) {
-		this(id);
-		this.value.set(value);
-	}
-	
-	public GlobalVariable(String id) {
+	public MainPageLine(String id) {
 		this.id = new SimpleStringProperty(id);
 	}
-
+	
 	public StringProperty getId() {
 		return id;
 	}
 
-	public StringProperty getInstruction() {
-		return value;
+	public TranslatableText getText() {
+		return text;
+	}
+	public ObservableList<Condition> getConditions() {
+		return conditions;
+	}
+	public IntegerProperty getPriority() {
+		return priority;
 	}
 	
+	@Override
+	public String toString() {
+		return id.get();
+	}
+
 }

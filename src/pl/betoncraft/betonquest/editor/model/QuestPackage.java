@@ -40,6 +40,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
@@ -64,6 +65,7 @@ public class QuestPackage {
 	private final ObservableList<StaticEvent> staticEvents = FXCollections.observableArrayList();
 	private final ObservableList<QuestCanceler> cancelers = FXCollections.observableArrayList();
 	private final ObservableList<NpcBinding> npcBindings = FXCollections.observableArrayList();
+	private final ObservableList<MainPageLine> mainPage = FXCollections.observableArrayList();
 
 	/**
 	 * Loads a package using a hashmap containing all data. The key is a file
@@ -87,34 +89,25 @@ public class QuestPackage {
 				// handling global locations
 				else if (key.startsWith("global_locations")) {
 					for (String globLoc : value.split(",")) {
-						locations.add(new GlobalLocation(globLoc));
+						locations.add(new GlobalLocation(newObjective(globLoc)));
 					}
 				}
 				// handling static events
 				else if (key.startsWith("static_events.")) {
-					staticEvents.add(new StaticEvent(key.substring(14), value));
+					StaticEvent staticEvent = new StaticEvent(key.substring(14));
+					staticEvent.getEvent().set(newEvent(value));
+					staticEvents.add(staticEvent);
 				}
 				// handling NPC-conversation bindings
 				else if (key.startsWith("npcs.")) {
-					npcBindings.add(new NpcBinding(key.substring(5), value));
+					npcBindings.add(new NpcBinding(key.substring(5), newConversation(value)));
 				}
 				// handling quest cancelers
 				else if (key.startsWith("cancel.")) {
 					String[] parts = key.split("\\.");
 					if (parts.length > 1) {
 						// getting the right canceler or creating new one
-						String cancelerName = parts[1];
-						QuestCanceler canceler = null;
-						for (QuestCanceler test : cancelers) {
-							if (test.getId().equals(cancelerName)) {
-								canceler = test;
-								break;
-							}
-						}
-						if (canceler == null) {
-							canceler = new QuestCanceler(cancelerName);
-							cancelers.add(canceler);
-						}
+						QuestCanceler canceler = newQuestCanceler(parts[1]);
 						// handling canceler properties
 						if (parts.length > 2) {
 							switch (parts[2]) {
@@ -132,13 +125,28 @@ public class QuestPackage {
 								}
 								break;
 							case "events":
-								canceler.getEvents().addAll(value.split("\\."));
+								String[] eventNames = value.split("\\.");
+								Event[] events = new Event[eventNames.length];
+								for (int i = 0; i < eventNames.length; i++) {
+									events[i] = newEvent(eventNames[i].trim());
+								}
+								canceler.getEvents().addAll(events);
 								break;
 							case "conditions":
-								canceler.getConditions().addAll(value.split("\\."));
+								String[] conditionNames = value.split("\\.");
+								Condition[] conditions = new Condition[conditionNames.length];
+								for (int i = 0; i < conditionNames.length; i++) {
+									conditions[i] = newCondition(conditionNames[i].trim());
+								}
+								canceler.getConditions().addAll(conditions);
 								break;
 							case "objectives":
-								canceler.getObjectives().addAll(value.split("\\."));
+								String[] objectiveNames = value.split("\\.");
+								Objective[] objectives = new Objective[objectiveNames.length];
+								for (int i = 0; i < objectiveNames.length; i++) {
+									objectives[i] = newObjective(objectiveNames[i].trim());
+								}
+								canceler.getObjectives().addAll(objectives);
 								break;
 							case "tags":
 								canceler.getTags().addAll(value.split("\\."));
@@ -147,7 +155,12 @@ public class QuestPackage {
 								canceler.getPoints().addAll(value.split("\\."));
 								break;
 							case "journal":
-								canceler.getJournal().addAll(value.split("\\."));
+								String[] journalNames = value.split("\\.");
+								JournalEntry[] journal = new JournalEntry[journalNames.length];
+								for (int i = 0; i < journalNames.length; i++) {
+									journal[i] = newJournalEntry(journalNames[i].trim());
+								}
+								canceler.getJournal().addAll(journal);
 								break;
 							case "loc":
 								canceler.setLocation(value);
@@ -155,7 +168,45 @@ public class QuestPackage {
 							}
 						}
 					}
-					// cancelers.add(new QuestCanceler(key.substring(7), config.get(key))); TODO add cancelers
+				}
+				// handling journal main page
+				else if (key.startsWith("journal_main_page")) {
+					String[] parts = key.split("\\.");
+					if (parts.length > 1) {
+						MainPageLine line = newMainPageLine(parts[1]);
+						if (parts.length > 2) {
+							switch (parts[2]) {
+							case "text":
+								if (parts.length > 3) {
+									String lang = parts[3];
+									if (!languages.containsKey(lang)) {
+										languages.put(lang, 1);
+									} else {
+										languages.put(lang, languages.get(lang) + 1);
+									}
+									line.getText().addLang(lang, value);
+								} else {
+									line.getText().setDef(value);
+								}
+								break;
+							case "priority":
+								try {
+									line.getPriority().set(Integer.parseInt(value));
+								} catch (NumberFormatException e) {
+									// TODO error, need a number
+								}
+								break;
+							case "conditions":
+								String[] conditionNames = value.split(",");
+								Condition[] conditions = new Condition[conditionNames.length];
+								for (int i = 0; i < conditionNames.length; i++) {
+									conditions[i] = newCondition(conditionNames[i].trim());
+								}
+								line.getConditions().addAll(conditions);
+								break;
+							}
+						}
+					}
 				}
 				// handling default language
 				else if (key.equalsIgnoreCase("default_language")) {
@@ -188,18 +239,7 @@ public class QuestPackage {
 				String value = entry.getValue();
 				String[] parts = entry.getKey().split("\\.");
 				// getting the right entry
-				String entryName = parts[0];
-				JournalEntry journalEntry = null;
-				for (JournalEntry test : journal) {
-					if (test.getId().equals(entryName)) {
-						journalEntry = test;
-						break;
-					}
-				}
-				if (journalEntry == null) {
-					journalEntry = new JournalEntry(entryName);
-					journal.add(journalEntry);
-				}
+				JournalEntry journalEntry = newJournalEntry(parts[0]);
 				// handling entry data
 				if (parts.length > 1) {
 					String lang = parts[1];
@@ -220,7 +260,7 @@ public class QuestPackage {
 				if (key.startsWith("conversations.")) {
 					HashMap<String, String> convData = value;
 					String convName = key.substring(14);
-					Conversation conv = new Conversation(this, convName);
+					Conversation conv = newConversation(convName);
 					// handling conversation.yml
 					for (Entry<String, String> subEntry : convData.entrySet()) {
 						String subKey = subEntry.getKey();
@@ -243,17 +283,19 @@ public class QuestPackage {
 						}
 						// reading starting options
 						else if (subKey.equals("first")) {
-							String[] options = subValue.split(",");
-							for (int i = 0; i < options.length; i++) {
-								options[i] = options[i].trim();
+							String[] pointerNames = subValue.split(",");
+							NpcOption[] options = new NpcOption[pointerNames.length];
+							for (int i = 0; i < pointerNames.length; i++) {
+								options[i] = conv.newNpcOption(pointerNames[i].trim());
 							}
 							conv.getStartingOptions().addAll(options);
 						}
 						// reading final events
 						else if (subKey.equals("final")) {
-							String[] events = subValue.split(",");
-							for (int i = 0; i < events.length; i++) {
-								events[i] = events[i].trim();
+							String[] eventNames = subValue.split(",");
+							Event[] events = new Event[eventNames.length];
+							for (int i = 0; i < eventNames.length; i++) {
+								events[i] = newEvent(eventNames[i].trim());
 							}
 							conv.getFinalEvents().addAll(events);
 						}
@@ -263,11 +305,7 @@ public class QuestPackage {
 							if (parts.length > 1) {
 								String optionName = parts[1];
 								// resolving an option
-								NpcOption option = conv.getNpcOption(optionName);
-								if (option == null) {
-									option = new NpcOption(optionName);
-									conv.getNpcOptions().add(option);
-								}
+								NpcOption option = conv.newNpcOption(optionName);
 								if (parts.length > 2) {
 									// getting specific values
 									switch (parts[2]) {
@@ -286,27 +324,30 @@ public class QuestPackage {
 										break;
 									case "event":
 									case "events":
-										String[] events = subValue.split(",");
-										for (int i = 0; i < events.length; i++) {
-											events[i] = events[i].trim();
+										String[] eventNames = subValue.split(",");
+										Event[] events = new Event[eventNames.length];
+										for (int i = 0; i < eventNames.length; i++) {
+											events[i] = newEvent(eventNames[i].trim());
 										}
 										option.getEvents().addAll(events);
 										break;
 									case "condition":
 									case "conditions":
-										String[] conditions = subValue.split(",");
-										for (int i = 0; i < conditions.length; i++) {
-											conditions[i] = conditions[i].trim();
+										String[] conditionNames = subValue.split(",");
+										Condition[] conditions = new Condition[conditionNames.length];
+										for (int i = 0; i < conditionNames.length; i++) {
+											conditions[i] = new Condition(conditionNames[i].trim());
 										}
 										option.getConditions().addAll(conditions);
 										break;
 									case "pointer":
 									case "pointers":
-										String[] pointers = subValue.split(",");
-										for (int i = 0; i < pointers.length; i++) {
-											pointers[i] = pointers[i].trim();
+										String[] pointerNames = subValue.split(",");
+										PlayerOption[] options = new PlayerOption[pointerNames.length];
+										for (int i = 0; i < pointerNames.length; i++) {
+											options[i] = conv.newPlayerOption(pointerNames[i].trim());
 										}
-										option.getPointers().addAll(pointers);
+										option.getPointers().addAll(options);
 										break;
 									}
 								}
@@ -318,11 +359,7 @@ public class QuestPackage {
 							if (parts.length > 1) {
 								String optionName = parts[1];
 								// resolving an option
-								PlayerOption option = conv.getPlayerOption(optionName);
-								if (option == null) {
-									option = new PlayerOption(optionName);
-									conv.getPlayerOptions().add(option);
-								}
+								PlayerOption option = conv.newPlayerOption(optionName);
 								if (parts.length > 2) {
 									// getting specific values
 									switch (parts[2]) {
@@ -341,34 +378,36 @@ public class QuestPackage {
 										break;
 									case "event":
 									case "events":
-										String[] events = subValue.split(",");
-										for (int i = 0; i < events.length; i++) {
-											events[i] = events[i].trim();
+										String[] eventNames = subValue.split(",");
+										Event[] events = new Event[eventNames.length];
+										for (int i = 0; i < eventNames.length; i++) {
+											events[i] = newEvent(eventNames[i].trim());
 										}
 										option.getEvents().addAll(events);
 										break;
 									case "condition":
 									case "conditions":
-										String[] conditions = subValue.split(",");
-										for (int i = 0; i < conditions.length; i++) {
-											conditions[i] = conditions[i].trim();
+										String[] conditionNames = subValue.split(",");
+										Condition[] conditions = new Condition[conditionNames.length];
+										for (int i = 0; i < conditionNames.length; i++) {
+											conditions[i] = new Condition(conditionNames[i].trim());
 										}
 										option.getConditions().addAll(conditions);
 										break;
 									case "pointer":
 									case "pointers":
-										String[] pointers = subValue.split(",");
-										for (int i = 0; i < pointers.length; i++) {
-											pointers[i] = pointers[i].trim();
+										String[] pointerNames = subValue.split(",");
+										NpcOption[] options = new NpcOption[pointerNames.length];
+										for (int i = 0; i < pointerNames.length; i++) {
+											options[i] = conv.newNpcOption(pointerNames[i].trim());
 										}
-										option.getPointers().addAll(pointers);
+										option.getPointers().addAll(options);
 										break;
 									}
 								}
 							}
 						}
 					}
-					conversations.add(conv);
 				}
 			}
 			// check which language is used most widely and set it as default
@@ -387,13 +426,48 @@ public class QuestPackage {
 			BetonQuestEditor.showStackTrace(e);
 		}
 	}
+
+//	/**
+//	 * Updates the data across this package.
+//	 * 
+//	 * @param oldId ID of this data before it was changed
+//	 * @param data updated data instance
+//	 */
+//	public void update(String oldId, Instructionable data) {
+//		switch (data.getClass().getSimpleName()) {
+//		case "Event":
+//			for (Conversation conv : conversations) {
+//				ArrayList<ConversationOption> options = new ArrayList<>(conv.getNpcOptions());
+//				options.addAll(conv.getPlayerOptions());
+//				for (ConversationOption option : options) {
+//					if (option.getEvents().contains(oldId)) {
+//						option.getEvents().remove(oldId);
+//						option.getEvents().add(data.getId().get());
+//					}
+//				}
+//				if (conv.getFinalEvents().contains(oldId)) {
+//					conv.getFinalEvents().remove(oldId);
+//					conv.getFinalEvents().add(data.getId().get());
+//				}
+//			}
+//			break;
+//		case "Condition":
+//			for (Conversation conv : conversations) {
+//				ArrayList<ConversationOption> options = new ArrayList<>(conv.getNpcOptions());
+//				options.addAll(conv.getPlayerOptions());
+//				for (ConversationOption option : options) {
+//					if (option.getConditions().contains(oldId)) {
+//						option.getConditions().remove(oldId);
+//						option.getConditions().add(data.getId().get());
+//					}
+//				}
+//			}
+//			break;
+//		}
+//	}
 	
-	public String getName() {
-		return packName.get();
-	}
-	
-	public void setName(String name) {
-		packName.set(name);
+	public StringProperty getName() {
+		return packName;
 	}
 	
 	public String getDefLang() {
@@ -403,33 +477,105 @@ public class QuestPackage {
 	public void setDefLang(String defLang) {
 		this.defLang = defLang;
 	}
+	
+	public static <T extends ID> T getByID(ObservableList<T> list, String id) {
+		for (T object : list) {
+			if (object.getId().get().equals(id)) {
+				return object;
+			}
+		}
+		return null;
+	}
 
 	public ObservableList<Conversation> getConversations() {
 		return conversations;
+	}
+	
+	public Conversation newConversation(String id) {
+		Conversation conv = getByID(conversations, id);
+		if (conv == null) {
+			conv = new Conversation(this, id);
+			conversations.add(conv);
+		}
+		return conv;
 	}
 
 	public ObservableList<Event> getEvents() {
 		return events;
 	}
+	
+	public Event newEvent(String id) {
+		Event event = getByID(events, id);
+		if (event == null) {
+			event = new Event(id);
+			events.add(event);
+		}
+		return event;
+	}
 
 	public ObservableList<Condition> getConditions() {
 		return conditions;
+	}
+	
+	public Condition newCondition(String id) {
+		Condition condition = getByID(conditions, id);
+		if (condition == null) {
+			condition = new Condition(id);
+			conditions.add(condition);
+		}
+		return condition;
 	}
 
 	public ObservableList<Objective> getObjectives() {
 		return objectives;
 	}
+	
+	public Objective newObjective(String id) {
+		Objective objective = getByID(objectives, id);
+		if (objective == null) {
+			objective = new Objective(id);
+			objectives.add(objective);
+		}
+		return objective;
+	}
 
 	public ObservableList<JournalEntry> getJournal() {
 		return journal;
+	}
+	
+	public JournalEntry newJournalEntry(String id) {
+		JournalEntry journalEntry = getByID(journal, id);
+		if (journalEntry == null) {
+			journalEntry = new JournalEntry(id);
+			journal.add(journalEntry);
+		}
+		return journalEntry;
 	}
 
 	public ObservableList<Item> getItems() {
 		return items;
 	}
+	
+	public Item newItem(String id) {
+		Item item = getByID(items, id);
+		if (item == null) {
+			item = new Item(id);
+			items.add(item);
+		}
+		return item;
+	}
 
 	public ObservableList<GlobalVariable> getVariables() {
 		return variables;
+	}
+	
+	public GlobalVariable newGlobalVariable(String id) {
+		GlobalVariable globalVariable = getByID(variables, id);
+		if (globalVariable == null) {
+			globalVariable = new GlobalVariable(id);
+			variables.add(globalVariable);
+		}
+		return globalVariable;
 	}
 
 	public ObservableList<GlobalLocation> getLocations() {
@@ -439,15 +585,55 @@ public class QuestPackage {
 	public ObservableList<StaticEvent> getStaticEvents() {
 		return staticEvents;
 	}
+	
+	public StaticEvent newStaticEvent(String id) {
+		StaticEvent staticEvent = getByID(staticEvents, id);
+		if (staticEvent == null) {
+			staticEvent = new StaticEvent(id);
+			staticEvents.add(staticEvent);
+		}
+		return staticEvent;
+	}
 
 	public ObservableList<QuestCanceler> getCancelers() {
 		return cancelers;
+	}
+	
+	public QuestCanceler newQuestCanceler(String id) {
+		QuestCanceler questCanceler = getByID(cancelers, id);
+		if (questCanceler == null) {
+			questCanceler = new QuestCanceler(id);
+			cancelers.add(questCanceler);
+		}
+		return questCanceler;
 	}
 
 	public ObservableList<NpcBinding> getNpcBindings() {
 		return npcBindings;
 	}
 	
+	public NpcBinding newNpcBinding(String id) {
+		NpcBinding npcBinding = getByID(npcBindings, id);
+		if (npcBinding == null) {
+			npcBinding = new NpcBinding(id);
+			npcBindings.add(npcBinding);
+		}
+		return npcBinding;
+	}
+	
+	public ObservableList<MainPageLine> getMainPage() {
+		return mainPage;
+	}
+	
+	public MainPageLine newMainPageLine(String id) {
+		MainPageLine mainPageLine = getByID(mainPage, id);
+		if (mainPageLine == null) {
+			mainPageLine = new MainPageLine(id);
+			mainPage.add(mainPageLine);
+		}
+		return mainPageLine;
+	}
+
 	@Override
 	public String toString() {
 		return packName.get();
@@ -532,7 +718,7 @@ public class QuestPackage {
 		if (!npcBindings.isEmpty()) {
 			ObjectNode npcs = mapper.createObjectNode();
 			for (NpcBinding binding : npcBindings) {
-				npcs.put(binding.getId().get(), binding.getConversation().get());
+				npcs.put(binding.getId().get(), binding.getConversation().get().getId().get());
 			}
 			root.set("npcs", npcs);
 		}
@@ -540,7 +726,7 @@ public class QuestPackage {
 		if (!variables.isEmpty()) {
 			ObjectNode variables = mapper.createObjectNode();
 			for (GlobalVariable var : this.variables) {
-				variables.put(var.getId().get(), var.getValue().get());
+				variables.put(var.getId().get(), var.getInstruction().get());
 			}
 			root.set("variables", variables);
 		}
@@ -548,7 +734,7 @@ public class QuestPackage {
 		if (!staticEvents.isEmpty()) {
 			ObjectNode staticEvents = mapper.createObjectNode();
 			for (StaticEvent event : this.staticEvents) {
-				staticEvents.put(event.getTime().get(), event.getEvent().get());
+				staticEvents.put(event.getId().get(), event.getEvent().get().getId().get());
 			}
 			root.set("static", staticEvents);
 		}
@@ -568,22 +754,22 @@ public class QuestPackage {
 				addTranslatedNode(mapper, cancelerNode, "name", canceler.getName());
 				if (!canceler.getEvents().isEmpty()) {
 					StringBuilder events = new StringBuilder();
-					for (String event : canceler.getEvents()) {
-						events.append(event + ',');
+					for (Event event : canceler.getEvents()) {
+						events.append(event.toString() + ',');
 					}
 					cancelerNode.put("events", events.toString().substring(0, events.length() - 1));
 				}
 				if (!canceler.getConditions().isEmpty()) {
 					StringBuilder conditions = new StringBuilder();
-					for (String condition : canceler.getConditions()) {
-						conditions.append(condition + ',');
+					for (Condition condition : canceler.getConditions()) {
+						conditions.append(condition.toString() + ',');
 					}
 					cancelerNode.put("conditions", conditions.toString().substring(0, conditions.length() - 1));
 				}
 				if (!canceler.getObjectives().isEmpty()) {
 					StringBuilder objectives = new StringBuilder();
-					for (String objective : canceler.getObjectives()) {
-						objectives.append(objective + ',');
+					for (Objective objective : canceler.getObjectives()) {
+						objectives.append(objective.toString() + ',');
 					}
 					cancelerNode.put("objectives", objectives.toString().substring(0, objectives.length() - 1));
 				}
@@ -603,17 +789,33 @@ public class QuestPackage {
 				}
 				if (!canceler.getJournal().isEmpty()) {
 					StringBuilder journals = new StringBuilder();
-					for (String journal : canceler.getJournal()) {
-						journals.append(journal + ',');
+					for (JournalEntry journal : canceler.getJournal()) {
+						journals.append(journal.toString() + ',');
 					}
 					cancelerNode.put("journals", journals.toString().substring(0, journals.length() - 1));
 				}
 				if (canceler.getLocation() != null) {
 					cancelerNode.put("loc", canceler.getLocation());
 				}
-				cancelers.set(canceler.getId(), cancelerNode);
+				cancelers.set(canceler.getId().get(), cancelerNode);
 			}
 			root.set("cancel", cancelers);
+		}
+		// save main page
+		if (!mainPage.isEmpty()) {
+			ObjectNode lines = mapper.createObjectNode();
+			for (MainPageLine line : mainPage) {
+				ObjectNode node = mapper.createObjectNode();
+				addTranslatedNode(mapper, node, "text", line.getText());
+				node.put("priority", line.getPriority().get());
+				StringBuilder conditions = new StringBuilder();
+				for (Condition condition : line.getConditions()) {
+					conditions.append(condition.toString() + ',');
+				}
+				node.put("conditions", conditions.substring(0, conditions.length() - 1));
+				lines.set(line.getId().get(), node);
+			}
+			root.set("journal_main_page", lines);
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
@@ -623,7 +825,7 @@ public class QuestPackage {
 		YAMLMapper mapper = new YAMLMapper();
 		ObjectNode root = mapper.createObjectNode();
 		for (Event event : events) {
-			root.put(event.getId(), event.getInstruction());
+			root.put(event.getId().get(), event.getInstruction().get());
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
@@ -633,7 +835,7 @@ public class QuestPackage {
 		YAMLMapper mapper = new YAMLMapper();
 		ObjectNode root = mapper.createObjectNode();
 		for (Condition condition : conditions) {
-			root.put(condition.getId(), condition.getInstruction());
+			root.put(condition.getId().get(), condition.getInstruction().get());
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
@@ -643,7 +845,7 @@ public class QuestPackage {
 		YAMLMapper mapper = new YAMLMapper();
 		ObjectNode root = mapper.createObjectNode();
 		for (Objective objective : objectives) {
-			root.put(objective.getId(), objective.getInstruction());
+			root.put(objective.getId().get(), objective.getInstruction().get());
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
@@ -653,7 +855,7 @@ public class QuestPackage {
 		YAMLMapper mapper = new YAMLMapper();
 		ObjectNode root = mapper.createObjectNode();
 		for (Item item : items) {
-			root.put(item.getId(), item.getInstruction());
+			root.put(item.getId().get(), item.getInstruction().get());
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
@@ -663,7 +865,7 @@ public class QuestPackage {
 		YAMLMapper mapper = new YAMLMapper();
 		ObjectNode root = mapper.createObjectNode();
 		for (JournalEntry entry : journal) {
-			addTranslatedNode(mapper, root, entry.getId(), entry.getText());
+			addTranslatedNode(mapper, root, entry.getId().get(), entry.getText());
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
@@ -675,14 +877,14 @@ public class QuestPackage {
 		addTranslatedNode(mapper, root, "quester", conv.getNPC());
 		root.put("stop", String.valueOf(conv.getStop().get()));
 		StringBuilder first = new StringBuilder();
-		for (String option : conv.getStartingOptions()) {
-			first.append(option + ',');
+		for (NpcOption option : conv.getStartingOptions()) {
+			first.append(option.toString() + ',');
 		}
 		root.put("first", first.substring(0, first.length() - 1));
 		if (!conv.getFinalEvents().isEmpty()) {
 			StringBuilder finalEvents = new StringBuilder();
-			for (String event : conv.getFinalEvents()) {
-				finalEvents.append(event + ',');
+			for (Event event : conv.getFinalEvents()) {
+				finalEvents.append(event.toString() + ',');
 			}
 			root.put("final", finalEvents.substring(0, finalEvents.length() - 1));
 		}
@@ -693,26 +895,26 @@ public class QuestPackage {
 				addTranslatedNode(mapper, npcOption, "text", option.getText());
 				if (!option.getEvents().isEmpty()) {
 					StringBuilder events = new StringBuilder();
-					for (String event : option.getEvents()) {
-						events.append(event + ',');
+					for (Event event : option.getEvents()) {
+						events.append(event.toString() + ',');
 					}
 					npcOption.put("events", events.substring(0, events.length() - 1));
 				}
 				if (!option.getConditions().isEmpty()) {
 					StringBuilder conditions = new StringBuilder();
-					for (String condition : option.getConditions()) {
-						conditions.append(condition + ',');
+					for (Condition condition : option.getConditions()) {
+						conditions.append(condition.toString() + ',');
 					}
 					npcOption.put("conditions", conditions.substring(0, conditions.length() - 1));
 				}
 				if (!option.getPointers().isEmpty()) {
 					StringBuilder pointers = new StringBuilder();
-					for (String pointer : option.getPointers()) {
-						pointers.append(pointer + ',');
+					for (ConversationOption pointer : option.getPointers()) {
+						pointers.append(pointer.toString() + ',');
 					}
 					npcOption.put("pointers", pointers.substring(0, pointers.length() - 1));
 				}
-				npcOptions.set(option.getId(), npcOption);
+				npcOptions.set(option.getId().get(), npcOption);
 			}
 			root.set("NPC_options", npcOptions);
 		}
@@ -723,26 +925,26 @@ public class QuestPackage {
 				addTranslatedNode(mapper, playerOption, "text", option.getText());
 				if (!option.getEvents().isEmpty()) {
 					StringBuilder events = new StringBuilder();
-					for (String event : option.getEvents()) {
-						events.append(event + ',');
+					for (Event event : option.getEvents()) {
+						events.append(event.toString() + ',');
 					}
 					playerOption.put("events", events.substring(0, events.length() - 1));
 				}
 				if (!option.getConditions().isEmpty()) {
 					StringBuilder conditions = new StringBuilder();
-					for (String condition : option.getConditions()) {
-						conditions.append(condition + ',');
+					for (Condition condition : option.getConditions()) {
+						conditions.append(condition.toString() + ',');
 					}
 					playerOption.put("conditions", conditions.substring(0, conditions.length() - 1));
 				}
 				if (!option.getPointers().isEmpty()) {
 					StringBuilder pointers = new StringBuilder();
-					for (String pointer : option.getPointers()) {
-						pointers.append(pointer + ',');
+					for (ConversationOption pointer : option.getPointers()) {
+						pointers.append(pointer.toString() + ',');
 					}
 					playerOption.put("pointers", pointers.substring(0, pointers.length() - 1));
 				}
-				playerOptions.set(option.getId(), playerOption);
+				playerOptions.set(option.getId().get(), playerOption);
 			}
 			root.set("player_options", playerOptions);
 		}
@@ -777,7 +979,7 @@ public class QuestPackage {
 			out.closeEntry();
 			// save conversation files
 			for (Conversation conv : conversations) {
-				ZipEntry conversation = new ZipEntry(prefix + "conversations" + File.separator + conv.getName() + ".yml");
+				ZipEntry conversation = new ZipEntry(prefix + "conversations" + File.separator + conv.getId().get() + ".yml");
 				out.putNextEntry(conversation);
 				printConversationYaml(out, conv);
 				out.closeEntry();

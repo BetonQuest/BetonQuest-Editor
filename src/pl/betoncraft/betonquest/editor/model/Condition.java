@@ -19,33 +19,33 @@ package pl.betoncraft.betonquest.editor.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import pl.betoncraft.betonquest.editor.data.Instruction;
 
 /**
  * Represents a BetonQuest condition. 
  *
  * @author Jakub Sapalski
  */
-public class Condition {
+public class Condition implements Instruction {
 	
 	private StringProperty id;
-	private StringProperty instruction;
+	private StringProperty instruction = new SimpleStringProperty();
 	
 	public Condition(String id, String instruction) {
-		this.id = new SimpleStringProperty(id);
-		this.instruction = new SimpleStringProperty(instruction);
+		this(id);
+		this.instruction.set(instruction);
 	}
 	
-	public String getId() {
-		return id.get();
+	public Condition(String id) {
+		this.id = new SimpleStringProperty(id);
 	}
-	public void setId(String id) {
-		this.id.set(id);
+
+	public StringProperty getId() {
+		return id;
 	}
-	public String getInstruction() {
-		return instruction.get();
-	}
-	public void setInstruction(String instruction) {
-		this.instruction.set(instruction);
+
+	public StringProperty getInstruction() {
+		return instruction;
 	}
 
 	@Override
