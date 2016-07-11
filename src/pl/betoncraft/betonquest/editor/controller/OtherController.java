@@ -22,6 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.Item;
 import pl.betoncraft.betonquest.editor.model.JournalEntry;
 
@@ -50,6 +51,55 @@ public class OtherController {
 	public static void setJournal(ObservableList<JournalEntry> journal) {
 		instance.journalList.setItems(null);
 		instance.journalList.setItems(journal);
+	}
+	
+	@FXML private void addItem() {
+		Item item = new Item("new_item");
+		itemsList.getItems().add(item);
+		InstructionEditController.display(item);
+	}
+	
+	@FXML private void renameItem() {
+		Item item = itemsList.getSelectionModel().getSelectedItem();
+		if (item != null) {
+			InstructionEditController.display(item);
+		}
+	}
+	
+	@FXML private void delItem() {
+		Item item = itemsList.getSelectionModel().getSelectedItem();
+		if (item != null) {
+			itemsList.getItems().remove(item);
+		}
+		BetonQuestEditor.refresh();
+	}
+	
+	@FXML private void addEntry() {
+		JournalEntry entry = BetonQuestEditor.getInstance().getDisplayedPackage().newJournalEntry("new_entry");
+		entry.edit();
+		BetonQuestEditor.refresh();
+	}
+	
+	@FXML private void editEntry() {
+		JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
+		if (entry != null) {
+			entry.edit();
+		}
+	}
+	
+	@FXML private void delEntry() {
+		JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
+		if (entry != null) {
+			journalList.getItems().remove(entry);
+			BetonQuestEditor.refresh();
+		}
+	}
+	
+	@FXML private void selectEntry() {
+		JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
+		if (entry != null) {
+			entryText.setText(entry.getText().getLang(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).get());
+		}
 	}
 	
 }

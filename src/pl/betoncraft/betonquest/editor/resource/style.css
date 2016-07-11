@@ -169,7 +169,7 @@
 	-fx-padding: 0;
 }
 
-.scroll-pane .scroll-bar:horizontal .thumb{
+.scroll-pane .scroll-bar:horizontal .thumb {
 	-fx-background-color: -fx-dark;
 	-fx-background-insets: 2 0 0;
 	-fx-background-radius: 2;
@@ -177,6 +177,10 @@
 
 #entry-text .content {
 	-fx-background-color: -fx-medium-dark;
+}
+
+#entry-text {
+	-fx-font-size: 20;
 }
 
 #entry-text:focused {

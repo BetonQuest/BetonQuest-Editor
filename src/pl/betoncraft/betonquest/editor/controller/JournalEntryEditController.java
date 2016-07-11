@@ -26,73 +26,62 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.data.Instruction;
+import pl.betoncraft.betonquest.editor.model.JournalEntry;
 
 /**
- * Controls the pop-up window for editing instruction strings.
+ * Controlls the pop-up window used for editing journal entries.
  *
  * @author Jakub Sapalski
  */
-public class InstructionEditController {
+public class JournalEntryEditController {
 	
 	private Stage stage;
-	private Instruction data;
+	private JournalEntry data;
 	
 	@FXML private TextField id;
-	@FXML private TextField instruction;
+	@FXML private TextArea text;
 	
-	private void setData(Stage stage, Instruction data) {
+	private void setData(Stage stage, JournalEntry data) {
 		this.stage = stage;
 		this.data = data;
-		id.setText(data.getId().get());
-		instruction.setText(data.getInstruction().get());
+		id.textProperty().bindBidirectional(data.getId());
+		text.textProperty().bindBidirectional(data.getText().get(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()));
 	}
 	
 	@FXML private void ok() {
-		String text1 = id.getText();
-		if (text1 == null || text1.isEmpty()) {
+		if (data.getId().get().isEmpty()) {
 			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Error");
-			alert.setHeaderText("ID cannot be null"); // TODO make this alert better and translated
+			alert.setHeaderText("ID must be specified");
 			alert.showAndWait();
+		} else {
+			BetonQuestEditor.refresh();
 			stage.close();
-			return;
 		}
-		data.getId().set(text1.trim());
-		String text2 = instruction.getText();
-		if (text2 != null) {
-			data.getInstruction().set(text2.trim());
-		}
-		BetonQuestEditor.refresh();
-		stage.close();
 	}
 	
-	@FXML private void cancel() {
-		stage.close();
-	}
-	
-	public static void display(Instruction data) {
+	public static void display(JournalEntry data) {
 		try {
 			Stage window = new Stage();
-			URL location = BetonQuestEditor.class.getResource("view/window/InstructionEditWindow.fxml");
+			URL location = BetonQuestEditor.class.getResource("view/window/JournalEditWindow.fxml");
 			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
 			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
 			GridPane root = (GridPane) fxmlLoader.load();
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(BetonQuestEditor.class.getResource("resource/style.css").toExternalForm());
 			window.setScene(scene);
-			window.setTitle(resources.getString("edit-instruction"));
+			window.setTitle(resources.getString("edit-entry"));
 			window.getIcons().add(new Image(BetonQuestEditor.class.getResourceAsStream("resource/icon.png")));
-			window.setHeight(150);
+			window.setHeight(300);
 			window.setWidth(500);
 			window.setResizable(false);
-			InstructionEditController controller = (InstructionEditController) fxmlLoader.getController();
+			JournalEntryEditController controller = (JournalEntryEditController) fxmlLoader.getController();
 			controller.setData(window, data);
 			window.show();
 		} catch (IOException e) {

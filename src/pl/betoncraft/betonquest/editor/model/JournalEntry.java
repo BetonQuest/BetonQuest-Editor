@@ -5,6 +5,8 @@ package pl.betoncraft.betonquest.editor.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import pl.betoncraft.betonquest.editor.controller.JournalEntryEditController;
+import pl.betoncraft.betonquest.editor.data.Editable;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
@@ -13,7 +15,7 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
  *
  * @author Jakub Sapalski
  */
-public class JournalEntry implements ID {
+public class JournalEntry implements ID, Editable {
 	
 	private StringProperty id;
 	private TranslatableText text = new TranslatableText();
@@ -28,6 +30,10 @@ public class JournalEntry implements ID {
 
 	public TranslatableText getText() {
 		return text;
+	}
+
+	public void edit() {
+		JournalEntryEditController.display(this);
 	}
 
 	@Override
