@@ -124,6 +124,21 @@
 				</ButtonBar>
 			</VBox>
 
+			<VBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="2">
+				<Label text="%main-page-lines" id="option-label" />
+				<ListView fx:id="mainPageList" />
+				<ButtonBar>
+					<padding>
+						<Insets top="5" />
+					</padding>
+					<buttons>
+						<Button text="%add" />
+						<Button text="%edit" />
+						<Button text="%del" />
+					</buttons>
+				</ButtonBar>
+			</VBox>
+
 		</GridPane>
 	</ScrollPane>
 </Tab>

@@ -64,6 +64,7 @@ public class QuestPackage {
 	private final ObservableList<StaticEvent> staticEvents = FXCollections.observableArrayList();
 	private final ObservableList<QuestCanceler> cancelers = FXCollections.observableArrayList();
 	private final ObservableList<NpcBinding> npcBindings = FXCollections.observableArrayList();
+	private final ObservableList<MainPageLine> mainPage = FXCollections.observableArrayList();
 
 	/**
 	 * Loads a package using a hashmap containing all data. The key is a file
@@ -155,7 +156,54 @@ public class QuestPackage {
 							}
 						}
 					}
-					// cancelers.add(new QuestCanceler(key.substring(7), config.get(key))); TODO add cancelers
+				}
+				// handling journal main page
+				else if (key.startsWith("journal_main_page")) {
+					String[] parts = key.split("\\.");
+					if (parts.length > 1) {
+						String lineName = parts[1];
+						MainPageLine line = null;
+						for (MainPageLine test : mainPage) {
+							if (lineName.equals(test.getId().get())) {
+								line = test;
+							}
+						}
+						if (line == null) {
+							line = new MainPageLine(lineName);
+							mainPage.add(line);
+						}
+						if (parts.length > 2) {
+							switch (parts[2]) {
+							case "text":
+								if (parts.length > 3) {
+									String lang = parts[3];
+									if (!languages.containsKey(lang)) {
+										languages.put(lang, 1);
+									} else {
+										languages.put(lang, languages.get(lang) + 1);
+									}
+									line.getText().addLang(lang, value);
+								} else {
+									line.getText().setDef(value);
+								}
+								break;
+							case "priority":
+								try {
+									line.getPriority().set(Integer.parseInt(value));
+								} catch (NumberFormatException e) {
+									// TODO error, need a number
+								}
+								break;
+							case "conditions":
+								String[] conditions = value.split(",");
+								for (int i = 0; i < conditions.length; i++) {
+									conditions[i] = conditions[i].trim();
+								}
+								line.getConditions().addAll(conditions);
+								break;
+							}
+						}
+					}
 				}
 				// handling default language
 				else if (key.equalsIgnoreCase("default_language")) {
@@ -448,6 +496,10 @@ public class QuestPackage {
 		return npcBindings;
 	}
 	
+	public ObservableList<MainPageLine> getMainPage() {
+		return mainPage;
+	}
+
 	@Override
 	public String toString() {
 		return packName.get();
@@ -614,6 +666,22 @@ public class QuestPackage {
 				cancelers.set(canceler.getId(), cancelerNode);
 			}
 			root.set("cancel", cancelers);
+		}
+		// save main page
+		if (!mainPage.isEmpty()) {
+			ObjectNode lines = mapper.createObjectNode();
+			for (MainPageLine line : mainPage) {
+				ObjectNode node = mapper.createObjectNode();
+				addTranslatedNode(mapper, node, "text", line.getText());
+				node.put("priority", line.getPriority().get());
+				StringBuilder conditions = new StringBuilder();
+				for (String condition : line.getConditions()) {
+					conditions.append(condition + ',');
+				}
+				node.put("conditions", conditions.substring(0, conditions.length() - 1));
+				lines.set(line.getId().get(), node);
+			}
+			root.set("journal_main_page", lines);
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}

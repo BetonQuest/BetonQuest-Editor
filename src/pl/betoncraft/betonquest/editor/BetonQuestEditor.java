@@ -132,6 +132,7 @@ public class BetonQuestEditor extends Application {
 		 MainController.setStaticEvents(pack.getStaticEvents());
 		 MainController.setGlobalLocations(pack.getLocations());
 		 MainController.setQuestCancelers(pack.getCancelers());
+		 MainController.setMainPageLines(pack.getMainPage());
 		 ConversationController.setConversations(pack.getConversations());
 		 EcoController.setConditions(pack.getConditions());
 		 EcoController.setEvents(pack.getEvents());

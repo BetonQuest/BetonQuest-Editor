@@ -25,6 +25,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import pl.betoncraft.betonquest.editor.model.GlobalLocation;
 import pl.betoncraft.betonquest.editor.model.GlobalVariable;
+import pl.betoncraft.betonquest.editor.model.MainPageLine;
 import pl.betoncraft.betonquest.editor.model.NpcBinding;
 import pl.betoncraft.betonquest.editor.model.QuestCanceler;
 import pl.betoncraft.betonquest.editor.model.StaticEvent;
@@ -49,6 +50,7 @@ public class MainController {
 	@FXML private TableColumn<StaticEvent, String> event;
 	@FXML private ListView<GlobalLocation> globLocList;
 	@FXML private ListView<QuestCanceler> cancelList;
+	@FXML private ListView<MainPageLine> mainPageList;
 	
 	public MainController() {
 		instance = this;
@@ -78,6 +80,10 @@ public class MainController {
 	
 	public static void setQuestCancelers(ObservableList<QuestCanceler> questCancelers) {
 		instance.cancelList.setItems(questCancelers);
+	}
+	
+	public static void setMainPageLines(ObservableList<MainPageLine> mainPageLines) {
+		instance.mainPageList.setItems(mainPageLines);
 	}
 	
 }
