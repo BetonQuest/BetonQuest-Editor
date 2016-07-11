@@ -125,6 +125,7 @@ public class BetonQuestEditor extends Application {
 	 */
 	public void display(QuestPackage pack) {
 		 currentPackage = pack;
+		 pack.sort();
 		 MainController.setNpcBindings(pack.getNpcBindings());
 		 MainController.setGlobVariables(pack.getVariables());
 		 MainController.setStaticEvents(pack.getStaticEvents());
@@ -140,13 +141,10 @@ public class BetonQuestEditor extends Application {
 	}
 	
 	/**
-	 * Refreshes all controlers.
+	 * Refreshes the currently displayed package
 	 */
-	public void refresh() {
-		MainController.refresh();
-		ConversationController.refresh();
-		EcoController.refresh();
-		OtherController.refresh();
+	public static void refresh() {
+		instance.display(instance.currentPackage);
 	}
 
 	public static void main(String[] args) {

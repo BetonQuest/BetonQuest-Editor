@@ -55,7 +55,7 @@ public class InstructionEditController {
 	@FXML private void ok() {
 		data.getId().set(id.getText().trim());
 		data.getInstruction().set(instruction.getText().trim());
-		BetonQuestEditor.getInstance().refresh();
+		BetonQuestEditor.refresh();
 		stage.close();
 	}
 	

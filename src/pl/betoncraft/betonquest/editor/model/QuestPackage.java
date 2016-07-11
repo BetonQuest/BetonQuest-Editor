@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -125,7 +126,7 @@ public class QuestPackage {
 								}
 								break;
 							case "events":
-								String[] eventNames = value.split("\\.");
+								String[] eventNames = value.split(",");
 								Event[] events = new Event[eventNames.length];
 								for (int i = 0; i < eventNames.length; i++) {
 									events[i] = newEvent(eventNames[i].trim());
@@ -133,7 +134,7 @@ public class QuestPackage {
 								canceler.getEvents().addAll(events);
 								break;
 							case "conditions":
-								String[] conditionNames = value.split("\\.");
+								String[] conditionNames = value.split(",");
 								Condition[] conditions = new Condition[conditionNames.length];
 								for (int i = 0; i < conditionNames.length; i++) {
 									conditions[i] = newCondition(conditionNames[i].trim());
@@ -141,7 +142,7 @@ public class QuestPackage {
 								canceler.getConditions().addAll(conditions);
 								break;
 							case "objectives":
-								String[] objectiveNames = value.split("\\.");
+								String[] objectiveNames = value.split(",");
 								Objective[] objectives = new Objective[objectiveNames.length];
 								for (int i = 0; i < objectiveNames.length; i++) {
 									objectives[i] = newObjective(objectiveNames[i].trim());
@@ -149,13 +150,13 @@ public class QuestPackage {
 								canceler.getObjectives().addAll(objectives);
 								break;
 							case "tags":
-								canceler.getTags().addAll(value.split("\\."));
+								canceler.getTags().addAll(value.split(","));
 								break;
 							case "points":
-								canceler.getPoints().addAll(value.split("\\."));
+								canceler.getPoints().addAll(value.split(","));
 								break;
 							case "journal":
-								String[] journalNames = value.split("\\.");
+								String[] journalNames = value.split(",");
 								JournalEntry[] journal = new JournalEntry[journalNames.length];
 								for (int i = 0; i < journalNames.length; i++) {
 									journal[i] = newJournalEntry(journalNames[i].trim());
@@ -216,22 +217,22 @@ public class QuestPackage {
 			// handling event.yml
 			HashMap<String, String> eventsMap = data.get("events");
 			for (String key : eventsMap.keySet()) {
-				events.add(new Event(key, eventsMap.get(key)));
+				newEvent(key).getInstruction().set(eventsMap.get(key));
 			}
 			// handling conditions.yml
 			HashMap<String, String> conditionsMap = data.get("conditions");
 			for (String key : conditionsMap.keySet()) {
-				conditions.add(new Condition(key, conditionsMap.get(key)));
+				newCondition(key).getInstruction().set(conditionsMap.get(key));
 			}
 			// handling objectives.yml
 			HashMap<String, String> objectivesMap = data.get("objectives");
 			for (String key : objectivesMap.keySet()) {
-				objectives.add(new Objective(key, objectivesMap.get(key)));
+				newObjective(key).getInstruction().set(objectivesMap.get(key));
 			}
 			// handling items.yml
 			HashMap<String, String> itemsMap = data.get("items");
 			for (String key : itemsMap.keySet()) {
-				items.add(new Item(key, itemsMap.get(key)));
+				newItem(key).getInstruction().set(itemsMap.get(key));
 			}
 			// handling journal.yml
 			HashMap<String, String> journalMap = data.get("journal");
@@ -336,7 +337,7 @@ public class QuestPackage {
 										String[] conditionNames = subValue.split(",");
 										Condition[] conditions = new Condition[conditionNames.length];
 										for (int i = 0; i < conditionNames.length; i++) {
-											conditions[i] = new Condition(conditionNames[i].trim());
+											conditions[i] = newCondition(conditionNames[i].trim());
 										}
 										option.getConditions().addAll(conditions);
 										break;
@@ -427,57 +428,18 @@ public class QuestPackage {
 		}
 	}
 
-//	/**
-//	 * Updates the data across this package.
-//	 * 
-//	 * @param oldId ID of this data before it was changed
-//	 * @param data updated data instance
-//	 */
-//	public void update(String oldId, Instructionable data) {
-//		switch (data.getClass().getSimpleName()) {
-//		case "Event":
-//			for (Conversation conv : conversations) {
-//				ArrayList<ConversationOption> options = new ArrayList<>(conv.getNpcOptions());
-//				options.addAll(conv.getPlayerOptions());
-//				for (ConversationOption option : options) {
-//					if (option.getEvents().contains(oldId)) {
-//						option.getEvents().remove(oldId);
-//						option.getEvents().add(data.getId().get());
-//					}
-//				}
-//				if (conv.getFinalEvents().contains(oldId)) {
-//					conv.getFinalEvents().remove(oldId);
-//					conv.getFinalEvents().add(data.getId().get());
-//				}
-//			}
-//			break;
-//		case "Condition":
-//			for (Conversation conv : conversations) {
-//				ArrayList<ConversationOption> options = new ArrayList<>(conv.getNpcOptions());
-//				options.addAll(conv.getPlayerOptions());
-//				for (ConversationOption option : options) {
-//					if (option.getConditions().contains(oldId)) {
-//						option.getConditions().remove(oldId);
-//						option.getConditions().add(data.getId().get());
-//					}
-//				}
-//			}
-//			break;
-//		}
-//	}
-	
 	public StringProperty getName() {
 		return packName;
 	}
-	
+
 	public String getDefLang() {
 		return defLang;
 	}
-	
+
 	public void setDefLang(String defLang) {
 		this.defLang = defLang;
 	}
-	
+
 	public static <T extends ID> T getByID(ObservableList<T> list, String id) {
 		for (T object : list) {
 			if (object.getId().get().equals(id)) {
@@ -490,7 +452,7 @@ public class QuestPackage {
 	public ObservableList<Conversation> getConversations() {
 		return conversations;
 	}
-	
+
 	public Conversation newConversation(String id) {
 		Conversation conv = getByID(conversations, id);
 		if (conv == null) {
@@ -503,7 +465,7 @@ public class QuestPackage {
 	public ObservableList<Event> getEvents() {
 		return events;
 	}
-	
+
 	public Event newEvent(String id) {
 		Event event = getByID(events, id);
 		if (event == null) {
@@ -516,8 +478,11 @@ public class QuestPackage {
 	public ObservableList<Condition> getConditions() {
 		return conditions;
 	}
-	
+
 	public Condition newCondition(String id) {
+		while (id.startsWith("!")) {
+			id = id.substring(1, id.length());
+		}
 		Condition condition = getByID(conditions, id);
 		if (condition == null) {
 			condition = new Condition(id);
@@ -529,7 +494,7 @@ public class QuestPackage {
 	public ObservableList<Objective> getObjectives() {
 		return objectives;
 	}
-	
+
 	public Objective newObjective(String id) {
 		Objective objective = getByID(objectives, id);
 		if (objective == null) {
@@ -542,7 +507,7 @@ public class QuestPackage {
 	public ObservableList<JournalEntry> getJournal() {
 		return journal;
 	}
-	
+
 	public JournalEntry newJournalEntry(String id) {
 		JournalEntry journalEntry = getByID(journal, id);
 		if (journalEntry == null) {
@@ -555,7 +520,7 @@ public class QuestPackage {
 	public ObservableList<Item> getItems() {
 		return items;
 	}
-	
+
 	public Item newItem(String id) {
 		Item item = getByID(items, id);
 		if (item == null) {
@@ -568,7 +533,7 @@ public class QuestPackage {
 	public ObservableList<GlobalVariable> getVariables() {
 		return variables;
 	}
-	
+
 	public GlobalVariable newGlobalVariable(String id) {
 		GlobalVariable globalVariable = getByID(variables, id);
 		if (globalVariable == null) {
@@ -585,7 +550,7 @@ public class QuestPackage {
 	public ObservableList<StaticEvent> getStaticEvents() {
 		return staticEvents;
 	}
-	
+
 	public StaticEvent newStaticEvent(String id) {
 		StaticEvent staticEvent = getByID(staticEvents, id);
 		if (staticEvent == null) {
@@ -598,7 +563,7 @@ public class QuestPackage {
 	public ObservableList<QuestCanceler> getCancelers() {
 		return cancelers;
 	}
-	
+
 	public QuestCanceler newQuestCanceler(String id) {
 		QuestCanceler questCanceler = getByID(cancelers, id);
 		if (questCanceler == null) {
@@ -611,7 +576,7 @@ public class QuestPackage {
 	public ObservableList<NpcBinding> getNpcBindings() {
 		return npcBindings;
 	}
-	
+
 	public NpcBinding newNpcBinding(String id) {
 		NpcBinding npcBinding = getByID(npcBindings, id);
 		if (npcBinding == null) {
@@ -620,11 +585,11 @@ public class QuestPackage {
 		}
 		return npcBinding;
 	}
-	
+
 	public ObservableList<MainPageLine> getMainPage() {
 		return mainPage;
 	}
-	
+
 	public MainPageLine newMainPageLine(String id) {
 		MainPageLine mainPageLine = getByID(mainPage, id);
 		if (mainPageLine == null) {
@@ -632,6 +597,28 @@ public class QuestPackage {
 			mainPage.add(mainPageLine);
 		}
 		return mainPageLine;
+	}
+
+	public void sort() {
+		// sort lists
+		ArrayList<ObservableList<? extends ID>> lists = new ArrayList<>();
+		lists.add(conversations);
+		lists.add(events);
+		lists.add(conditions);
+		lists.add(objectives);
+		lists.add(items);
+		lists.add(journal);
+		lists.add(staticEvents);
+		lists.add(variables);
+		lists.add(npcBindings);
+		lists.add(mainPage);
+		lists.forEach(list -> list.sort((ID o1, ID o2) -> o1.getId().get().compareTo(o2.getId().get())));
+		// sort options in conversations
+		for (Conversation conv : conversations) {
+			conv.getNpcOptions().sort((NpcOption o1, NpcOption o2) -> o1.getId().get().compareTo(o2.getId().get()));
+			conv.getPlayerOptions()
+					.sort((PlayerOption o1, PlayerOption o2) -> o1.getId().get().compareTo(o2.getId().get()));
+		}
 	}
 
 	@Override
@@ -709,7 +696,7 @@ public class QuestPackage {
 		}
 		return new QuestPackage(packName, values);
 	}
-	
+
 	public void printMainYAML(OutputStream out) throws IOException {
 		YAMLFactory yf = new YAMLFactory();
 		YAMLMapper mapper = new YAMLMapper();
@@ -742,7 +729,7 @@ public class QuestPackage {
 		if (!locations.isEmpty()) {
 			StringBuilder builder = new StringBuilder();
 			for (GlobalLocation loc : locations) {
-				builder.append(loc.getObjective() + ",");
+				builder.append(loc.toString() + ",");
 			}
 			root.put("global_locations", builder.toString().substring(0, builder.length() - 1));
 		}
@@ -819,7 +806,7 @@ public class QuestPackage {
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
-	
+
 	public void printEventsYaml(OutputStream out) throws IOException {
 		YAMLFactory yf = new YAMLFactory();
 		YAMLMapper mapper = new YAMLMapper();
@@ -829,7 +816,7 @@ public class QuestPackage {
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
-	
+
 	public void printConditionsYaml(OutputStream out) throws IOException {
 		YAMLFactory yf = new YAMLFactory();
 		YAMLMapper mapper = new YAMLMapper();
@@ -839,7 +826,7 @@ public class QuestPackage {
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
-	
+
 	public void printObjectivesYaml(OutputStream out) throws IOException {
 		YAMLFactory yf = new YAMLFactory();
 		YAMLMapper mapper = new YAMLMapper();
@@ -849,7 +836,7 @@ public class QuestPackage {
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
-	
+
 	public void printItemsYaml(OutputStream out) throws IOException {
 		YAMLFactory yf = new YAMLFactory();
 		YAMLMapper mapper = new YAMLMapper();
@@ -859,7 +846,7 @@ public class QuestPackage {
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
-	
+
 	public void printJournalYaml(OutputStream out) throws IOException {
 		YAMLFactory yf = new YAMLFactory();
 		YAMLMapper mapper = new YAMLMapper();
@@ -950,7 +937,7 @@ public class QuestPackage {
 		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
-	
+
 	private void addTranslatedNode(YAMLMapper mapper, ObjectNode root, String name, TranslatableText text) {
 		if (text.getDef() != null) {
 			root.put(name, text.getDef().get());
@@ -979,7 +966,8 @@ public class QuestPackage {
 			out.closeEntry();
 			// save conversation files
 			for (Conversation conv : conversations) {
-				ZipEntry conversation = new ZipEntry(prefix + "conversations" + File.separator + conv.getId().get() + ".yml");
+				ZipEntry conversation = new ZipEntry(
+						prefix + "conversations" + File.separator + conv.getId().get() + ".yml");
 				out.putNextEntry(conversation);
 				printConversationYaml(out, conv);
 				out.closeEntry();
