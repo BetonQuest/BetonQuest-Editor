@@ -33,7 +33,7 @@
 			<!-- events -->
 			<VBox spacing="5" GridPane.columnIndex="0">
 				<Label text="%events" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="eventsList" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="eventsList" onMouseClicked="#editEvent"/>
 				<ButtonBar>
 					<buttons>
 						<Button text="%add" onAction="#addEvent" />
@@ -46,7 +46,7 @@
 			<!-- conditions -->
 			<VBox spacing="5" GridPane.columnIndex="1">
 				<Label text="%conditions" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="conditionsList" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="conditionsList" onMouseClicked="#editCondition"/>
 				<ButtonBar>
 					<buttons>
 						<Button text="%add" onAction="#addCondition" />
@@ -59,7 +59,7 @@
 			<!-- objectives -->
 			<VBox spacing="5" GridPane.columnIndex="2">
 				<Label text="%objectives" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="objectivesList" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="objectivesList" onMouseClicked="#editObjective" />
 				<ButtonBar>
 					<buttons>
 						<Button text="%add" onAction="#addObjective" />
