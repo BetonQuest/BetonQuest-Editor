@@ -43,6 +43,7 @@ public class MainPageLine implements ID {
 		this.id = new SimpleStringProperty(id);
 	}
 	
+	@Override
 	public StringProperty getId() {
 		return id;
 	}

@@ -24,6 +24,7 @@ public class JournalEntry implements ID, Editable {
 		this.id = new SimpleStringProperty(id);
 	}
 	
+	@Override
 	public StringProperty getId() {
 		return id;
 	}
@@ -32,6 +33,7 @@ public class JournalEntry implements ID, Editable {
 		return text;
 	}
 
+	@Override
 	public void edit() {
 		JournalEntryEditController.display(this);
 	}

@@ -42,14 +42,17 @@ public class Event implements Instruction, Editable {
 		this.id = new SimpleStringProperty(id);
 	}
 
+	@Override
 	public StringProperty getId() {
 		return id;
 	}
 
+	@Override
 	public StringProperty getInstruction() {
 		return instruction;
 	}
 	
+	@Override
 	public void edit() {
 		InstructionEditController.display(this);
 	}

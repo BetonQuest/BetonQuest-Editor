@@ -33,6 +33,7 @@ public class Conversation implements ID {
 		this.convName = new SimpleStringProperty(convName);
 	}
 	
+	@Override
 	public StringProperty getId() {
 		return convName;
 	}

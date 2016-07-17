@@ -31,6 +31,7 @@ public class QuestCanceler implements ID {
 		this.id = new SimpleStringProperty(id);
 	}
 
+	@Override
 	public StringProperty getId() {
 		return id;
 	}

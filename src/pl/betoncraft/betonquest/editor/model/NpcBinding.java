@@ -42,6 +42,7 @@ public class NpcBinding implements ID {
 		this.id = new SimpleStringProperty(id);
 	}
 
+	@Override
 	public StringProperty getId() {
 		return id;
 	}

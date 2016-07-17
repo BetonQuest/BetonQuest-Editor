@@ -40,10 +40,12 @@ public class GlobalVariable implements Instruction {
 		this.id = new SimpleStringProperty(id);
 	}
 
+	@Override
 	public StringProperty getId() {
 		return id;
 	}
 
+	@Override
 	public StringProperty getInstruction() {
 		return value;
 	}

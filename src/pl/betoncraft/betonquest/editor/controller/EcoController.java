@@ -9,7 +9,6 @@ import javafx.scene.control.ListView;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Event;
-import pl.betoncraft.betonquest.editor.model.NpcOption;
 import pl.betoncraft.betonquest.editor.model.Objective;
 
 /**

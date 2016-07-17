@@ -37,6 +37,7 @@ public class StaticEvent implements ID {
 		this.time = new SimpleStringProperty(time);
 	}
 
+	@Override
 	public StringProperty getId() {
 		return time;
 	}
