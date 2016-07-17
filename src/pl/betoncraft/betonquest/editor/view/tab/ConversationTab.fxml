@@ -31,7 +31,7 @@
 					<Insets bottom="5" top="5" left="5" right="5" />
 				</padding>
 				<Label text="%conversation" id="option-label" />
-				<ComboBox editable="true" fx:id="conversation" onAction="#selectConversation" />
+				<ComboBox editable="false" fx:id="conversation" onAction="#selectConversation" />
 				<Button text="%add" onAction="#addConversation" />
 				<Button text="%rename" onAction="#renameConversation" />
 				<Button text="%del" onAction="#delConversation" />
@@ -75,7 +75,7 @@
 							GridPane.rowIndex="1" GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="startingOptionsChoice" onAction="#clickStartingOptions" />
-							<ComboBox editable="true" fx:id="startingOptionsCombo" />
+							<ComboBox editable="false" fx:id="startingOptionsCombo" />
 							<Button text="%add" onAction="#addStartingOption" />
 							<Button text="%del" onAction="#delStartingOption" />
 						</HBox>
@@ -85,7 +85,7 @@
 							GridPane.rowIndex="2" GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="finalEventsChoice" />
-							<ComboBox editable="true" fx:id="finalEventsCombo" />
+							<ComboBox editable="false" fx:id="finalEventsCombo" />
 							<Button text="%add" onAction="#addFinalEvent" />
 							<Button text="%del" onAction="#delFinalEvent" />
 						</HBox>
@@ -149,7 +149,7 @@
 							GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="eventChoice" />
-							<ComboBox editable="true" fx:id="eventCombo" />
+							<ComboBox editable="false" fx:id="eventCombo" />
 							<Button text="%add" onAction="#addEvent" />
 							<Button text="%del" onAction="#delEvent" />
 						</HBox>
@@ -157,7 +157,7 @@
 							GridPane.rowIndex="2" GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="conditionChoice" />
-							<ComboBox editable="true" fx:id="conditionCombo" />
+							<ComboBox editable="false" fx:id="conditionCombo" />
 							<Button text="%add" onAction="#addCondition" />
 							<Button text="%del" onAction="#delCondition" />
 						</HBox>
@@ -176,7 +176,7 @@
 							<Label text="%points-to" id="option-label" />
 							<ListView VBox.vgrow="ALWAYS" fx:id="pointsToList"
 								onMouseClicked="#clickPointsTo" onKeyReleased="#clickPointsTo" />
-							<ComboBox editable="true" maxWidth="9000" fx:id="pointsToCombo" />
+							<ComboBox editable="false" maxWidth="9000" fx:id="pointsToCombo" />
 							<Button text="%add" maxWidth="9000" onAction="#addPointer" />
 							<Button text="%del" maxWidth="9000" onAction="#delPointer" />
 						</VBox>
