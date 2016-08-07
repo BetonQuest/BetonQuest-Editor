@@ -14,8 +14,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 
 /**
  * This class is a TextField which implements an "autocomplete" functionality,
@@ -43,23 +41,6 @@ public class AutoCompleteTextField extends TextField {
 				} else {
 					LinkedList<String> searchResult = new LinkedList<>();
 					searchResult.addAll(entries.subSet(getText(), getText() + Character.MAX_VALUE));
-					if (entries.size() > 0) {
-						populatePopup(searchResult);
-						if (!entriesPopup.isShowing()) {
-							entriesPopup.show(AutoCompleteTextField.this, Side.BOTTOM, 0, 0);
-						}
-					} else {
-						entriesPopup.hide();
-					}
-				}
-			}
-		});
-		setOnKeyPressed(new EventHandler<KeyEvent>() {
-			@Override
-			public void handle(KeyEvent event) {
-				if (event.getCode() == KeyCode.DOWN) {
-					LinkedList<String> searchResult = new LinkedList<>();
-					searchResult.addAll(entries);
 					if (entries.size() > 0) {
 						populatePopup(searchResult);
 						if (!entriesPopup.isShowing()) {

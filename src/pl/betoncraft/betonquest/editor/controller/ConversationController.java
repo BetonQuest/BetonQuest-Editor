@@ -82,6 +82,8 @@ public class ConversationController {
 	@FXML private ChoiceBox<Condition> conditionChoice;
 	@FXML private AutoCompleteTextField conditionField;
 	
+	@FXML private Label pointsToLabel;
+	@FXML private Label pointedByLabel;
 	@FXML private ListView<ConversationOption> pointsToList;
 	@FXML private AutoCompleteTextField pointsToField;
 	@FXML private ListView<ConversationOption> pointedByList;
@@ -162,7 +164,6 @@ public class ConversationController {
 			if (conversation.getNpcOptions().isEmpty()) {
 				NpcOption option = conversation.newNpcOption("start");
 				conversation.getStartingOptions().add(option);
-				
 			}
 			displayOption(conversation.getNpcOptions().get(0));
 		}
@@ -188,7 +189,6 @@ public class ConversationController {
 		npcList.setItems(FXCollections.observableArrayList());
 		playerList.setItems(FXCollections.observableArrayList());
 		clearOption();
-		currentConversation = null;
 		conversationPane.setDisable(true);
 		stopPane.setDisable(true);
 	}
@@ -207,9 +207,13 @@ public class ConversationController {
 		}
 		currentOption = option;
 		if (option instanceof NpcOption) {
-			optionType.setText(BetonQuestEditor.getInstance().getLanguage().getString("npc-option"));
+			optionType.setText(BetonQuestEditor.getInstance().getLanguage().getString("npc-option") + " \"" + currentOption.getId().get() + "\"");
+			pointsToLabel.setText(BetonQuestEditor.getInstance().getLanguage().getString("points-to-player"));
+			pointedByLabel.setText(BetonQuestEditor.getInstance().getLanguage().getString("pointed-by-player"));
 		} else {
-			optionType.setText(BetonQuestEditor.getInstance().getLanguage().getString("player-option"));
+			optionType.setText(BetonQuestEditor.getInstance().getLanguage().getString("player-option") + " \"" + currentOption.getId().get() + "\"");
+			pointsToLabel.setText(BetonQuestEditor.getInstance().getLanguage().getString("points-to-npc"));
+			pointedByLabel.setText(BetonQuestEditor.getInstance().getLanguage().getString("pointed-by-npc"));
 		}
 		this.option.textProperty().bindBidirectional(option.getText().get(currentConversation.getPack().getDefLang()));
 		eventChoice.setItems(option.getEvents());
@@ -245,11 +249,15 @@ public class ConversationController {
 		} else {
 			oppositeOptions = currentConversation.getNpcOptions();
 		}
-		SortedSet<String> oppositeOptionsSet = new TreeSet<>();
-		for (ConversationOption o : oppositeOptions) {
-			oppositeOptionsSet.add(o.getId().get());
+		ObservableList<? extends ConversationOption> notPointers = FXCollections.observableArrayList(oppositeOptions);
+		for (ConversationOption o : option.getPointers()) {
+			notPointers.remove(o);
 		}
-		pointsToField.getEntries().addAll(oppositeOptionsSet);
+		SortedSet<String> notPointersSet = new TreeSet<>();
+		for (ConversationOption o : notPointers) {
+			notPointersSet.add(o.getId().get());
+		}
+		pointsToField.getEntries().addAll(notPointersSet);
 		ObservableList<ConversationOption> pointedByOptions = FXCollections.observableArrayList();
 		for (ConversationOption opposite : oppositeOptions) {
 			if (opposite.getPointers().contains(option)) {
@@ -273,11 +281,12 @@ public class ConversationController {
 		conditionChoice.setItems(FXCollections.observableArrayList());
 		conditionField.getEntries().clear();
 		conditionField.clear();
+		pointsToLabel.setText(BetonQuestEditor.getInstance().getLanguage().getString("points-to"));
+		pointedByLabel.setText(BetonQuestEditor.getInstance().getLanguage().getString("pointed-by"));
 		pointedByList.setItems(FXCollections.observableArrayList());
 		pointsToList.setItems(FXCollections.observableArrayList());
 		playerList.getSelectionModel().clearSelection();
 		npcList.getSelectionModel().clearSelection();
-		currentOption = null;
 		optionPane.setDisable(true);
 	}
 	
@@ -323,14 +332,6 @@ public class ConversationController {
 			}
 			displayOption(option);
 		}
-	}
-	
-	@FXML private void clickStartingOptions() {
-		ConversationOption option = startingOptionsChoice.getSelectionModel().getSelectedItem();
-		if (option == null) {
-			return;
-		}
-		displayOption(option);
 	}
 	
 	@FXML private void addStartingOption() {
@@ -481,6 +482,9 @@ public class ConversationController {
 				return;
 			}
 			npcList.getItems().remove(option);
+			for (PlayerOption o : currentConversation.getPlayerOptions()) {
+				o.getPointers().remove(option);
+			}
 			displayOption((npcList.getItems().get(0)));
 			BetonQuestEditor.refresh();
 		}
@@ -515,6 +519,9 @@ public class ConversationController {
 				displayOption((playerList.getItems().get(0)));
 			} else {
 				clearOption();
+			}
+			for (NpcOption o : currentConversation.getNpcOptions()) {
+				o.getPointers().remove(option);
 			}
 			BetonQuestEditor.refresh();
 		}

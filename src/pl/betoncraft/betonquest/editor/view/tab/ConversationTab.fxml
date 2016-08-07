@@ -77,7 +77,7 @@
 						<Label text="%start-options" id="option-label"
 							GridPane.rowIndex="1" GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
-							<ChoiceBox fx:id="startingOptionsChoice" onAction="#clickStartingOptions" />
+							<ChoiceBox fx:id="startingOptionsChoice" />
 							<AutoCompleteTextField fx:id="startingOptionsField" />
 							<Button text="%add" onAction="#addStartingOption" />
 							<Button text="%del" onAction="#delStartingOption" />
@@ -179,7 +179,7 @@
 						<!-- points to -->
 						<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="0"
 							GridPane.vgrow="ALWAYS">
-							<Label text="%points-to" id="option-label" />
+							<Label id="option-label" fx:id="pointsToLabel" />
 							<ListView VBox.vgrow="ALWAYS" fx:id="pointsToList"
 								onMouseClicked="#clickPointsTo" onKeyReleased="#clickPointsTo" />
 							<AutoCompleteTextField maxWidth="9000" fx:id="pointsToField" />
@@ -190,7 +190,7 @@
 						<!-- pointed by -->
 						<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="1"
 							GridPane.vgrow="ALWAYS">
-							<Label text="%pointed-by" id="option-label" />
+							<Label id="option-label" fx:id="pointedByLabel" />
 							<ListView VBox.vgrow="ALWAYS" fx:id="pointedByList"
 								onMouseClicked="#clickPointedBy" onKeyReleased="#clickPointedBy" />
 						</VBox>
