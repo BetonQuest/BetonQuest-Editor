@@ -19,6 +19,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SelectionModel?>
 <?import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.StackPane?>
 
 <Tab fx:controller="pl.betoncraft.betonquest.editor.controller.ConversationController"
 	xmlns:fx="http://javafx.com/fxml/1" text="%conv">
@@ -37,7 +39,7 @@
 				<Button text="%rename" onAction="#renameConversation" />
 				<Button text="%del" onAction="#delConversation" />
 				<!-- stop option -->
-				<HBox spacing="5" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+				<HBox spacing="5" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" fx:id="stopPane" >
 					<Label text="%stop-option" id="option-label" />
 					<CheckBox fx:id="stop" />
 				</HBox>
@@ -133,6 +135,11 @@
 					<padding>
 						<Insets bottom="5" top="5" left="5" right="5" />
 					</padding>
+					
+					<!-- option type -->
+					<StackPane alignment="CENTER">
+						<Label id="option-label" fx:id="optionType" />
+					</StackPane>
 
 					<!-- main option settings -->
 					<GridPane hgap="5" vgap="5">
@@ -141,8 +148,8 @@
 							<ColumnConstraints hgrow="ALWAYS" />
 						</columnConstraints>
 						<Label text="%text" id="option-label" GridPane.rowIndex="0"
-							GridPane.columnIndex="0" />
-						<TextField GridPane.rowIndex="0" GridPane.columnIndex="1"
+							GridPane.columnIndex="0" GridPane.valignment="TOP" />
+						<TextArea wrapText="true" GridPane.rowIndex="0" GridPane.columnIndex="1"
 							fx:id="option" />
 						<Label text="%events" id="option-label" GridPane.rowIndex="1"
 							GridPane.columnIndex="0" />

@@ -175,8 +175,30 @@
 	-fx-background-radius: 2;
 }
 
+.text-area .content {
+	-fx-background-color: -fx-light;
+}
+
+.text-area .scroll-pane {
+	-fx-padding: 0;
+}
+
+.text-area {
+	-fx-font-size: 16;
+	-fx-border-color: -fx-dark;
+}
+
+.text-area:focused, .text-area:selected {
+	-fx-focus-color: transparent;
+	-fx-faint-focus-color: transparent;
+}
+
 #entry-text .content {
 	-fx-background-color: -fx-medium-dark;
+}
+
+#entry-text .scroll-pane {
+	-fx-padding: 0;
 }
 
 #entry-text {

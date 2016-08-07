@@ -33,10 +33,13 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField;
@@ -59,6 +62,7 @@ public class ConversationController {
 	
 	@FXML private ChoiceBox<Conversation> conversation;
 	@FXML private GridPane conversationPane;
+	@FXML private HBox stopPane;
 	@FXML private VBox optionPane;
 	
 	@FXML private TextField npc;
@@ -71,7 +75,8 @@ public class ConversationController {
 	@FXML private ListView<NpcOption> npcList;
 	@FXML private ListView<PlayerOption> playerList;
 	
-	@FXML private TextField option;
+	@FXML private Label optionType;
+	@FXML private TextArea option;
 	@FXML private ChoiceBox<Event> eventChoice;
 	@FXML private AutoCompleteTextField eventField;
 	@FXML private ChoiceBox<Condition> conditionChoice;
@@ -162,6 +167,7 @@ public class ConversationController {
 			displayOption(conversation.getNpcOptions().get(0));
 		}
 		conversationPane.setDisable(false);
+		stopPane.setDisable(false);
 	}
 	
 	/**
@@ -184,6 +190,7 @@ public class ConversationController {
 		clearOption();
 		currentConversation = null;
 		conversationPane.setDisable(true);
+		stopPane.setDisable(true);
 	}
 	
 	/**
@@ -199,6 +206,11 @@ public class ConversationController {
 			playerList.getSelectionModel().select((PlayerOption) option);
 		}
 		currentOption = option;
+		if (option instanceof NpcOption) {
+			optionType.setText(BetonQuestEditor.getInstance().getLanguage().getString("npc-option"));
+		} else {
+			optionType.setText(BetonQuestEditor.getInstance().getLanguage().getString("player-option"));
+		}
 		this.option.textProperty().bindBidirectional(option.getText().get(currentConversation.getPack().getDefLang()));
 		eventChoice.setItems(option.getEvents());
 		if (option.getEvents().size() > 0) {
@@ -252,6 +264,7 @@ public class ConversationController {
 		if (currentOption == null) {
 			return;
 		}
+		optionType.setText(BetonQuestEditor.getInstance().getLanguage().getString("option"));
 		option.textProperty().unbindBidirectional(currentOption.getText().get(currentConversation.getPack().getDefLang()));
 		option.clear();
 		eventChoice.setItems(FXCollections.observableArrayList());
@@ -322,6 +335,7 @@ public class ConversationController {
 	
 	@FXML private void addStartingOption() {
 		String name = startingOptionsField.getText();
+		startingOptionsField.clear();
 		NpcOption option = getById(currentConversation.getNpcOptions(), name);
 		if (option == null) {
 			option = currentConversation.newNpcOption(name);
@@ -349,6 +363,7 @@ public class ConversationController {
 	
 	@FXML private void addFinalEvent() {
 		String name = finalEventsField.getText();
+		finalEventsField.clear();
 		Event event = getById(currentConversation.getPack().getEvents(), name);
 		if (event == null) {
 			event = currentConversation.getPack().newEvent(name);
@@ -369,6 +384,7 @@ public class ConversationController {
 	
 	@FXML private void addEvent() {
 		String name = eventField.getText();
+		eventField.clear();
 		Event event = getById(currentConversation.getPack().getEvents(), name);
 		if (event == null) {
 			event = currentConversation.getPack().newEvent(name);
@@ -389,6 +405,7 @@ public class ConversationController {
 	
 	@FXML private void addCondition() {
 		String name = conditionField.getText();
+		conditionField.clear();
 		Condition condition = getById(currentConversation.getPack().getConditions(), name);
 		if (condition == null) {
 			condition = currentConversation.getPack().newCondition(name);
@@ -409,6 +426,7 @@ public class ConversationController {
 	
 	@FXML private void addPointer() {
 		String name = pointsToField.getText();
+		pointsToField.clear();
 		ConversationOption option;
 		if (currentOption instanceof NpcOption) {
 			option = getById(currentConversation.getPlayerOptions(), name);
@@ -426,7 +444,7 @@ public class ConversationController {
 	}
 	
 	@FXML private void delPointer() {
-		ConversationOption option = getById(currentOption.getPointers(), pointsToField.getText());
+		ConversationOption option = pointsToList.getSelectionModel().getSelectedItem();
 		if (option != null) {
 			pointsToList.getItems().remove(option);
 		}
