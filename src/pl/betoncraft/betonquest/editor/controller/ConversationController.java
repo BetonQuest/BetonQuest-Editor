@@ -18,18 +18,29 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
+import java.util.Collection;
+import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.data.Editable;
+import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Conversation;
 import pl.betoncraft.betonquest.editor.model.ConversationOption;
@@ -46,60 +57,66 @@ public class ConversationController {
 	
 	private static ConversationController instance;
 	
-	@FXML private ComboBox<Conversation> conversation;
+	@FXML private ChoiceBox<Conversation> conversation;
+	@FXML private GridPane conversationPane;
+	@FXML private VBox optionPane;
 	
 	@FXML private TextField npc;
 	@FXML private CheckBox stop;
 	@FXML private ChoiceBox<NpcOption> startingOptionsChoice;
-	@FXML private ComboBox<NpcOption> startingOptionsCombo;
+	@FXML private AutoCompleteTextField startingOptionsField;
 	@FXML private ChoiceBox<Event> finalEventsChoice;
-	@FXML private ComboBox<Event> finalEventsCombo;
+	@FXML private AutoCompleteTextField finalEventsField;
 	
 	@FXML private ListView<NpcOption> npcList;
-	@FXML private TextField npcField;
 	@FXML private ListView<PlayerOption> playerList;
-	@FXML private TextField playerField;
 	
 	@FXML private TextField option;
 	@FXML private ChoiceBox<Event> eventChoice;
-	@FXML private ComboBox<Event> eventCombo;
+	@FXML private AutoCompleteTextField eventField;
 	@FXML private ChoiceBox<Condition> conditionChoice;
-	@FXML private ComboBox<Condition> conditionCombo;
+	@FXML private AutoCompleteTextField conditionField;
 	
 	@FXML private ListView<ConversationOption> pointsToList;
-	@FXML private ComboBox<ConversationOption> pointsToCombo;
+	@FXML private AutoCompleteTextField pointsToField;
 	@FXML private ListView<ConversationOption> pointedByList;
 	
 	private Conversation currentConversation;
 	private ConversationOption currentOption;
-	private boolean firstSelection = true;
 	
 	public ConversationController() {
 		instance = this;
 	}
 	
+	/**
+	 * Sets the list of conversation which can be displayed in this tab.
+	 * 
+	 * @param conversations list of conversations
+	 */
 	public static void setConversations(ObservableList<Conversation> conversations) {
-		instance.firstSelection = true;
-		instance.conversation.setItems(null);
 		instance.conversation.setItems(conversations);
 		if (instance.currentConversation != null && conversations.contains(instance.currentConversation)) {
 			instance.displayConversation(instance.currentConversation);
 		} else {
-			instance.displayConversation(conversations.get(0));
+			if (conversations.size() > 0) {
+				instance.displayConversation(conversations.get(0));
+			}
 		}
 	}
 	
+	/**
+	 * Displays this conversation in the tab.
+	 * 
+	 * @param conversation Conversation to display
+	 */
 	public synchronized void displayConversation(Conversation conversation) {
-		if (firstSelection) {
-			firstSelection = false;
-			this.conversation.getSelectionModel().select(conversation);
+		// this selects the current conversation in the ChoiceBox if it's not already selected
+		if (instance.conversation.getSelectionModel().isEmpty() || !instance.conversation.getValue().equals(conversation)) {
+			instance.conversation.getSelectionModel().select(conversation);
+			// selecting a conversation triggers this method again, return to prevent selecting twice
 			return;
 		}
-		if (currentConversation != null) {
-			npc.textProperty().unbindBidirectional(currentConversation.getNPC().get(
-					currentConversation.getPack().getDefLang()));
-			stop.selectedProperty().unbindBidirectional(currentConversation.getStop());
-		}
+		clearConversation();
 		currentConversation = conversation;
 		String lang = conversation.getPack().getDefLang();
 		npc.textProperty().bindBidirectional(conversation.getNPC().get(lang));
@@ -112,7 +129,11 @@ public class ConversationController {
 		for (NpcOption option : conversation.getStartingOptions()) {
 			notStartingOptions.remove(option);
 		}
-		startingOptionsCombo.setItems(notStartingOptions);
+		SortedSet<String> notStartingOptionsSet = new TreeSet<>();
+		for (NpcOption option : notStartingOptions) {
+			notStartingOptionsSet.add(option.getId().get());
+		}
+		startingOptionsField.getEntries().addAll(notStartingOptionsSet);
 		finalEventsChoice.setItems(conversation.getFinalEvents());
 		if (currentConversation.getFinalEvents().size() > 0) {
 			finalEventsChoice.getSelectionModel().select(0);
@@ -121,11 +142,16 @@ public class ConversationController {
 		for (Event event : conversation.getFinalEvents()) {
 			notFinalEvents.remove(event);
 		}
-		finalEventsCombo.setItems(notFinalEvents);
-		startingOptionsCombo.setItems(notStartingOptions);
+		SortedSet<String> notFinalEventsSet = new TreeSet<>();
+		for (Event event : notFinalEvents) {
+			notFinalEventsSet.add(event.getId().get());
+		}
+		finalEventsField.getEntries().addAll(notFinalEventsSet);
 		npcList.setItems(conversation.getNpcOptions());
 		playerList.setItems(conversation.getPlayerOptions());
-		if (currentOption != null && (conversation.getNpcOptions().contains(currentOption) || conversation.getPlayerOptions().contains(currentOption))) {
+		// make sure there's at least a single NPC option
+		if (currentOption != null && (conversation.getNpcOptions().contains(currentOption)
+				|| conversation.getPlayerOptions().contains(currentOption))) {
 			displayOption(currentOption);
 		} else {
 			if (conversation.getNpcOptions().isEmpty()) {
@@ -135,26 +161,45 @@ public class ConversationController {
 			}
 			displayOption(conversation.getNpcOptions().get(0));
 		}
+		conversationPane.setDisable(false);
 	}
 	
-	public void displayOption(ConversationOption option) {
-		if (option instanceof NpcOption) {
-			playerList.getSelectionModel().clearSelection();
-			playerField.clear();
-			npcList.getSelectionModel().select((NpcOption) option);
-			npcField.setText(option.getId().get());
-		} else {
-			npcList.getSelectionModel().clearSelection();
-			npcField.clear();
-			playerList.getSelectionModel().select((PlayerOption) option);
-			playerField.setText(option.getId().get());
+	/**
+	 * Removes current conversation from the view.
+	 */
+	public void clearConversation() {
+		if (currentConversation == null) {
+			return;
 		}
-		String lang = currentConversation.getPack().getDefLang();
-		if (currentOption != null) {
-			this.option.textProperty().unbindBidirectional(currentOption.getText().get(lang));
+		npc.textProperty().unbindBidirectional(currentConversation.getNPC().get(currentConversation.getPack().getDefLang()));
+		npc.clear();
+		stop.selectedProperty().unbindBidirectional(currentConversation.getStop());
+		stop.setSelected(false);
+		startingOptionsChoice.setItems(FXCollections.observableArrayList());
+		startingOptionsField.getEntries().clear();
+		finalEventsChoice.setItems(FXCollections.observableArrayList());
+		finalEventsField.getEntries().clear();
+		npcList.setItems(FXCollections.observableArrayList());
+		playerList.setItems(FXCollections.observableArrayList());
+		clearOption();
+		currentConversation = null;
+		conversationPane.setDisable(true);
+	}
+	
+	/**
+	 * Displays the option on the option side.
+	 * 
+	 * @param option ConversationOption to display
+	 */
+	public void displayOption(ConversationOption option) {
+		clearOption();
+		if (option instanceof NpcOption) {
+			npcList.getSelectionModel().select((NpcOption) option);
+		} else {
+			playerList.getSelectionModel().select((PlayerOption) option);
 		}
 		currentOption = option;
-		this.option.textProperty().bindBidirectional(option.getText().get(lang));
+		this.option.textProperty().bindBidirectional(option.getText().get(currentConversation.getPack().getDefLang()));
 		eventChoice.setItems(option.getEvents());
 		if (option.getEvents().size() > 0) {
 			eventChoice.getSelectionModel().select(0);
@@ -163,7 +208,11 @@ public class ConversationController {
 		for (Event event : option.getEvents()) {
 			notEvents.remove(event);
 		}
-		eventCombo.setItems(notEvents);
+		SortedSet<String> notEventsSet = new TreeSet<>();
+		for (Event event : notEvents) {
+			notEventsSet.add(event.getId().get());
+		}
+		eventField.getEntries().addAll(notEventsSet);
 		conditionChoice.setItems(option.getConditions());
 		if (option.getConditions().size() > 0) {
 			conditionChoice.getSelectionModel().select(0);
@@ -172,7 +221,11 @@ public class ConversationController {
 		for (Condition condition : option.getConditions()) {
 			notConditions.remove(condition);
 		}
-		conditionCombo.setItems(notConditions);
+		SortedSet<String> notConditionsSet = new TreeSet<>();
+		for (Condition condition : notConditions) {
+			notConditionsSet.add(condition.getId().toString());
+		}
+		conditionField.getEntries().addAll(notConditionsSet);
 		pointsToList.setItems(option.getPointers());
 		ObservableList<? extends ConversationOption> oppositeOptions;
 		if (option instanceof NpcOption) {
@@ -180,7 +233,11 @@ public class ConversationController {
 		} else {
 			oppositeOptions = currentConversation.getNpcOptions();
 		}
-		pointsToCombo.setItems(FXCollections.observableArrayList(oppositeOptions));
+		SortedSet<String> oppositeOptionsSet = new TreeSet<>();
+		for (ConversationOption o : oppositeOptions) {
+			oppositeOptionsSet.add(o.getId().get());
+		}
+		pointsToField.getEntries().addAll(oppositeOptionsSet);
 		ObservableList<ConversationOption> pointedByOptions = FXCollections.observableArrayList();
 		for (ConversationOption opposite : oppositeOptions) {
 			if (opposite.getPointers().contains(option)) {
@@ -188,10 +245,31 @@ public class ConversationController {
 			}
 		}
 		pointedByList.setItems(pointedByOptions);
+		optionPane.setDisable(false);
+	}
+	
+	public void clearOption() {
+		if (currentOption == null) {
+			return;
+		}
+		option.textProperty().unbindBidirectional(currentOption.getText().get(currentConversation.getPack().getDefLang()));
+		option.clear();
+		eventChoice.setItems(FXCollections.observableArrayList());
+		eventField.getEntries().clear();
+		eventField.clear();
+		conditionChoice.setItems(FXCollections.observableArrayList());
+		conditionField.getEntries().clear();
+		conditionField.clear();
+		pointedByList.setItems(FXCollections.observableArrayList());
+		pointsToList.setItems(FXCollections.observableArrayList());
+		playerList.getSelectionModel().clearSelection();
+		npcList.getSelectionModel().clearSelection();
+		currentOption = null;
+		optionPane.setDisable(true);
 	}
 	
 	@FXML private void selectConversation() {
-		Conversation selected = conversation.getSelectionModel().getSelectedItem();
+		Conversation selected = conversation.getValue();
 		if (selected == null) {
 			return;
 		}
@@ -214,20 +292,24 @@ public class ConversationController {
 		displayOption(option);
 	}
 	
-	@FXML private void clickPointsTo() {
-		ConversationOption option = pointsToList.getSelectionModel().getSelectedItem();
-		if (option == null) {
-			return;
+	@FXML private void clickPointsTo(MouseEvent event) {
+		if (event.getClickCount() == 2) {
+			ConversationOption option = pointsToList.getSelectionModel().getSelectedItem();
+			if (option == null) {
+				return;
+			}
+			displayOption(option);
 		}
-		displayOption(option);
 	}
 	
-	@FXML private void clickPointedBy() {
-		ConversationOption option = pointedByList.getSelectionModel().getSelectedItem();
-		if (option == null) {
-			return;
+	@FXML private void clickPointedBy(MouseEvent event) {
+		if (event.getClickCount() == 2) {
+			ConversationOption option = pointedByList.getSelectionModel().getSelectedItem();
+			if (option == null) {
+				return;
+			}
+			displayOption(option);
 		}
-		displayOption(option);
 	}
 	
 	@FXML private void clickStartingOptions() {
@@ -239,8 +321,12 @@ public class ConversationController {
 	}
 	
 	@FXML private void addStartingOption() {
-		NpcOption option = getObjectFromComboBox(startingOptionsCombo, e -> currentConversation.newNpcOption(e));
-		if (option != null && !startingOptionsChoice.getItems().contains(option)) {
+		String name = startingOptionsField.getText();
+		NpcOption option = getById(currentConversation.getNpcOptions(), name);
+		if (option == null) {
+			option = currentConversation.newNpcOption(name);
+		}
+		if (!startingOptionsChoice.getItems().contains(option)) {
 			startingOptionsChoice.getItems().add(option);
 			BetonQuestEditor.refresh();
 			displayOption(option);
@@ -262,8 +348,12 @@ public class ConversationController {
 	}
 	
 	@FXML private void addFinalEvent() {
-		Event event = getObjectFromComboBox(finalEventsCombo, e -> currentConversation.getPack().newEvent(e));
-		if (event != null && !finalEventsChoice.getItems().contains(event)) {
+		String name = finalEventsField.getText();
+		Event event = getById(currentConversation.getPack().getEvents(), name);
+		if (event == null) {
+			event = currentConversation.getPack().newEvent(name);
+		}
+		if (!finalEventsChoice.getItems().contains(event)) {
 			finalEventsChoice.getItems().add(event);
 			BetonQuestEditor.refresh();
 		}
@@ -278,8 +368,12 @@ public class ConversationController {
 	}
 	
 	@FXML private void addEvent() {
-		Event event = getObjectFromComboBox(eventCombo, e -> currentConversation.getPack().newEvent(e));
-		if (event != null && !eventChoice.getItems().contains(event)) {
+		String name = eventField.getText();
+		Event event = getById(currentConversation.getPack().getEvents(), name);
+		if (event == null) {
+			event = currentConversation.getPack().newEvent(name);
+		}
+		if (!eventChoice.getItems().contains(event)) {
 			eventChoice.getItems().add(event);
 			BetonQuestEditor.refresh();
 		}
@@ -294,8 +388,12 @@ public class ConversationController {
 	}
 	
 	@FXML private void addCondition() {
-		Condition condition = getObjectFromComboBox(conditionCombo, e -> currentConversation.getPack().newCondition(e));
-		if (condition != null && !conditionChoice.getItems().contains(condition)) {
+		String name = conditionField.getText();
+		Condition condition = getById(currentConversation.getPack().getConditions(), name);
+		if (condition == null) {
+			condition = currentConversation.getPack().newCondition(name);
+		}
+		if (!conditionChoice.getItems().contains(condition)) {
 			conditionChoice.getItems().add(condition);
 			BetonQuestEditor.refresh();
 		}
@@ -310,29 +408,38 @@ public class ConversationController {
 	}
 	
 	@FXML private void addPointer() {
+		String name = pointsToField.getText();
 		ConversationOption option;
 		if (currentOption instanceof NpcOption) {
-			option = getObjectFromComboBox(pointsToCombo, e -> currentConversation.newPlayerOption(e));
+			option = getById(currentConversation.getPlayerOptions(), name);
+			if (option == null) {
+				option = currentConversation.newPlayerOption(name);
+			}
 		} else {
-			option = getObjectFromComboBox(pointsToCombo, e -> currentConversation.newNpcOption(e));
+			option = getById(currentConversation.getNpcOptions(), name);
+			if (option == null) {
+				option = currentConversation.newNpcOption(name);
+			}
 		}
-		if (option != null) {
-			pointsToList.getItems().add(option);
-			BetonQuestEditor.refresh();
-		}
+		pointsToList.getItems().add(option);
+		BetonQuestEditor.refresh();
 	}
 	
 	@FXML private void delPointer() {
-		ConversationOption option = pointsToCombo.getValue();
+		ConversationOption option = getById(currentOption.getPointers(), pointsToField.getText());
 		if (option != null) {
 			pointsToList.getItems().remove(option);
 		}
 	}
 	
 	@FXML private void addNpcOption() {
-		String name = npcField.getText();
-		if (currentConversation.getNpcOption(name) == null) {
-			NpcOption option = currentConversation.newNpcOption(name);
+		StringProperty name = new SimpleStringProperty();
+		NameEditController.display(name);
+		if (name.get() == null || name.get().isEmpty()) {
+			return;
+		}
+		if (currentConversation.getNpcOption(name.get()) == null) {
+			NpcOption option = currentConversation.newNpcOption(name.get());
 			BetonQuestEditor.refresh();
 			displayOption(option);
 		}
@@ -340,9 +447,8 @@ public class ConversationController {
 	
 	@FXML private void renameNpcOption() {
 		NpcOption option = npcList.getSelectionModel().getSelectedItem();
-		String text = npcField.getText();
-		if (option != null && text != null) {
-			option.getId().set(text);
+		if (option != null) {
+			NameEditController.display(option.getId());
 			BetonQuestEditor.refresh();
 		}
 	}
@@ -352,7 +458,7 @@ public class ConversationController {
 		if (option != null) {
 			if (npcList.getItems().size() == 1) {
 				Alert alert = new Alert(AlertType.ERROR);
-				alert.setHeaderText("Cannot delete last NPC option");
+				alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("cannot-delete-last-option"));
 				alert.show();
 				return;
 			}
@@ -363,9 +469,13 @@ public class ConversationController {
 	}
 	
 	@FXML private void addPlayerOption() {
-		String name = playerField.getText();
-		if (currentConversation.getPlayerOption(name) == null) {
-			PlayerOption option = currentConversation.newPlayerOption(name);
+		StringProperty name = new SimpleStringProperty();
+		NameEditController.display(name);
+		if (name.get() == null || name.get().isEmpty()) {
+			return;
+		}
+		if (currentConversation.getPlayerOption(name.get()) == null) {
+			PlayerOption option = currentConversation.newPlayerOption(name.get());
 			BetonQuestEditor.refresh();
 			displayOption(option);
 		}
@@ -373,9 +483,8 @@ public class ConversationController {
 	
 	@FXML private void renamePlayerOption() {
 		PlayerOption option = playerList.getSelectionModel().getSelectedItem();
-		String text = playerField.getText();
-		if (option != null && text != null) {
-			option.getId().set(text);
+		if (option != null) {
+			NameEditController.display(option.getId());
 			BetonQuestEditor.refresh();
 		}
 	}
@@ -384,53 +493,64 @@ public class ConversationController {
 		PlayerOption option = playerList.getSelectionModel().getSelectedItem();
 		if (option != null) {
 			playerList.getItems().remove(option);
-			displayOption((playerList.getItems().get(0))); // TODO fix error when the list is empty
+			if (playerList.getItems().size() > 0) {
+				displayOption((playerList.getItems().get(0)));
+			} else {
+				clearOption();
+			}
 			BetonQuestEditor.refresh();
 		}
 	}
 	
 	@FXML private void addConversation() {
-		Conversation conversation = getObjectFromComboBox(this.conversation,
-				e -> currentConversation.getPack().newConversation(e));
-		if (conversation != null) {
-			displayConversation(conversation);
+		StringProperty string = new SimpleStringProperty();
+		NameEditController.display(string);
+		String name = string.get();
+		if (name == null || name.isEmpty()) {
+			return;
 		}
+//		for (Conversation conv : currentConversation.getPack().getConversations()) {
+//			if (name.equals(conv.getId().getName())) {
+//				// TODO alert about name conflict
+//			}
+//		}
+		Conversation conv = new Conversation(BetonQuestEditor.getInstance().getDisplayedPackage(), name);
+		
+		BetonQuestEditor.getInstance().getDisplayedPackage().getConversations().add(conv);
+		displayConversation(conv);
+		BetonQuestEditor.refresh();
 	}
 	
 	@FXML private void renameConversation() {
-		String name = conversation.getEditor().getText();
-		if (name != null) {
-			currentConversation.getId().set(name);
-			BetonQuestEditor.refresh();
-		}
+		NameEditController.display(currentConversation.getId());
+		BetonQuestEditor.refresh();
 	}
 	
 	@FXML private void delConversation() {
 		Conversation conv = conversation.getValue();
 		if (conv != null) {
-			conversation.getItems().remove(conv); // TODO add confirmation dialog
-			displayConversation(conversation.getItems().get(0)); // TODO fix error when the list is empty
-			BetonQuestEditor.refresh();
-		}
-	}
-	
-	private <T> T getObjectFromComboBox(ComboBox<T> combo, Converter<T> converter) {
-		T object = combo.getValue();
-		String text = combo.getEditor().getText();
-		if (text == null) {
-			return null;
-		}
-		if (object == null || !object.toString().equals(text)) {
-			object = converter.convert(text);
-			if (object instanceof Editable) {
-				((Editable) object).edit();
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("confirm-action"));
+			Optional<ButtonType> action = alert.showAndWait();
+			if (action.isPresent() && action.get() == ButtonType.OK) {
+				conversation.getItems().remove(conv);
+				if (conversation.getItems().size() > 0) {
+					displayConversation(conversation.getItems().get(0));
+				} else {
+					clearConversation();
+				}
+				BetonQuestEditor.refresh();
 			}
 		}
-		return object;
 	}
 	
-	private interface Converter<T> {
-		T convert(String id);
+	private <T extends ID> T getById(Collection<T> collection, String id) {
+		for (T object : collection) {
+			if (object.getId().get().equals(id)) {
+				return object;
+			}
+		}
+		return null;
 	}
 
 }

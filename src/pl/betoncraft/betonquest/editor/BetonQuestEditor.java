@@ -54,6 +54,7 @@ public class BetonQuestEditor extends Application {
 
 	private static BetonQuestEditor instance;
 	private Stage stage;
+	private ResourceBundle language;
 	
 	private HashMap<String, QuestPackage> loadedPackages = new HashMap<>();
 	private QuestPackage currentPackage;
@@ -63,17 +64,17 @@ public class BetonQuestEditor extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		instance = this;
-		Locale.setDefault(Locale.US);
+		Locale.setDefault(Locale.US); // TODO remove this later
 		stage = primaryStage;
 		try {
 			URL location = getClass().getResource("view/Root.fxml");
-			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
-			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
+			language = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
+			FXMLLoader fxmlLoader = new FXMLLoader(location, language);
 			BorderPane root = (BorderPane) fxmlLoader.load();
 			Scene scene = new Scene(root, 1280, 720);
 			scene.getStylesheets().add(getClass().getResource("resource/style.css").toExternalForm());
 			stage.setScene(scene);
-			stage.setTitle(resources.getString("betonquest-editor"));
+			stage.setTitle(language.getString("betonquest-editor"));
 			stage.getIcons().add(new Image(getClass().getResourceAsStream("resource/icon.png")));
 			stage.setMinHeight(600);
 			stage.setMinWidth(800);
@@ -104,6 +105,13 @@ public class BetonQuestEditor extends Application {
 	 */
 	public Stage getPrimaryStage() {
 		return stage;
+	}
+	
+	/**
+	 * @return ResourceBundle containing language strings
+	 */
+	public ResourceBundle getLanguage() {
+		return language;
 	}
 	
 	/**
@@ -147,6 +155,9 @@ public class BetonQuestEditor extends Application {
 		instance.display(instance.currentPackage);
 	}
 
+	/**
+	 * Parses the arguments and starts the application.
+	 */
 	public static void main(String[] args) {
 		if (args.length > 1) {
 			autoLoadPackage = new File(args[0]);

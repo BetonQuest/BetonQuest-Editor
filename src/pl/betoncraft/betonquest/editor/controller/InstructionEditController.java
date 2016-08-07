@@ -35,7 +35,7 @@ import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.data.Instruction;
 
 /**
- * Controls the pop-up window for editing instruction strings.
+ * Controls the pop-up window used for editing instruction strings.
  *
  * @author Jakub Sapalski
  */
@@ -47,6 +47,12 @@ public class InstructionEditController {
 	@FXML private TextField id;
 	@FXML private TextField instruction;
 	
+	/**
+	 * Sets the data in the window.
+	 * 
+	 * @param stage the pop-up window
+	 * @param data Instruction to display in text fields
+	 */
 	private void setData(Stage stage, Instruction data) {
 		this.stage = stage;
 		this.data = data;
@@ -54,29 +60,38 @@ public class InstructionEditController {
 		instruction.setText(data.getInstruction().get());
 	}
 	
+	/**
+	 * Checks if the name is inserted and changes the StringProperties of the Instruction object.
+	 */
 	@FXML private void ok() {
-		String text1 = id.getText();
-		if (text1 == null || text1.isEmpty()) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Error");
-			alert.setHeaderText("ID cannot be null"); // TODO make this alert better and translated
+		String idString = id.getText();
+		if (idString == null || idString.isEmpty()) {
+			Alert alert = new Alert(AlertType.ERROR); // TODO apply CSS to alert/exception windows
+			alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("name-not-null"));
 			alert.showAndWait();
-			stage.close();
 			return;
 		}
-		data.getId().set(text1.trim());
-		String text2 = instruction.getText();
-		if (text2 != null) {
-			data.getInstruction().set(text2.trim());
+		data.getId().set(idString.trim());
+		String instructionString = instruction.getText();
+		if (instructionString != null) {
+			data.getInstruction().set(instructionString.trim());
 		}
 		BetonQuestEditor.refresh();
 		stage.close();
 	}
 	
+	/**
+	 * Closes the window without changing StringProperties in the Instruction object.
+	 */
 	@FXML private void cancel() {
 		stage.close();
 	}
 	
+	/**
+	 * Displays a window in which the user can edit the Instruction object.
+	 * 
+	 * @param data the Instruction object to edit
+	 */
 	public static void display(Instruction data) {
 		try {
 			Stage window = new Stage();

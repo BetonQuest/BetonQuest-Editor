@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SelectionModel?>
+<?import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField?>
 
 <Tab fx:controller="pl.betoncraft.betonquest.editor.controller.ConversationController"
 	xmlns:fx="http://javafx.com/fxml/1" text="%conv">
@@ -31,7 +32,7 @@
 					<Insets bottom="5" top="5" left="5" right="5" />
 				</padding>
 				<Label text="%conversation" id="option-label" />
-				<ComboBox editable="true" fx:id="conversation" onAction="#selectConversation" />
+				<ChoiceBox fx:id="conversation" onAction="#selectConversation" />
 				<Button text="%add" onAction="#addConversation" />
 				<Button text="%rename" onAction="#renameConversation" />
 				<Button text="%del" onAction="#delConversation" />
@@ -44,7 +45,7 @@
 
 			<Separator />
 
-			<GridPane VBox.vgrow="ALWAYS">
+			<GridPane VBox.vgrow="ALWAYS" fx:id="conversationPane">
 				<columnConstraints>
 					<ColumnConstraints percentWidth="49.5" />
 					<ColumnConstraints percentWidth="1" />
@@ -75,7 +76,7 @@
 							GridPane.rowIndex="1" GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="startingOptionsChoice" onAction="#clickStartingOptions" />
-							<ComboBox editable="true" fx:id="startingOptionsCombo" />
+							<AutoCompleteTextField fx:id="startingOptionsField" />
 							<Button text="%add" onAction="#addStartingOption" />
 							<Button text="%del" onAction="#delStartingOption" />
 						</HBox>
@@ -85,7 +86,7 @@
 							GridPane.rowIndex="2" GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="finalEventsChoice" />
-							<ComboBox editable="true" fx:id="finalEventsCombo" />
+							<AutoCompleteTextField fx:id="finalEventsField" />
 							<Button text="%add" onAction="#addFinalEvent" />
 							<Button text="%del" onAction="#delFinalEvent" />
 						</HBox>
@@ -99,7 +100,6 @@
 							<Label text="%npc-options" id="option-label" />
 							<ListView VBox.vgrow="ALWAYS" fx:id="npcList"
 								onMouseClicked="#clickNpcOption" onKeyReleased="#clickNpcOption" />
-							<TextField fx:id="npcField" />
 							<ButtonBar>
 								<buttons>
 									<Button text="%add" onAction="#addNpcOption" />
@@ -114,7 +114,6 @@
 							<Label text="%player-options" id="option-label" />
 							<ListView VBox.vgrow="ALWAYS" fx:id="playerList"
 								onMouseClicked="#clickPlayerOption" onKeyReleased="#clickPlayerOption" />
-							<TextField fx:id="playerField" />
 							<ButtonBar>
 								<buttons>
 									<Button text="%add" onAction="#addPlayerOption" />
@@ -130,7 +129,7 @@
 					GridPane.halignment="CENTER" />
 
 				<!-- settings for an option -->
-				<VBox spacing="5" GridPane.columnIndex="2" GridPane.vgrow="ALWAYS">
+				<VBox spacing="5" GridPane.columnIndex="2" GridPane.vgrow="ALWAYS" fx:id="optionPane">
 					<padding>
 						<Insets bottom="5" top="5" left="5" right="5" />
 					</padding>
@@ -149,7 +148,7 @@
 							GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="eventChoice" />
-							<ComboBox editable="true" fx:id="eventCombo" />
+							<AutoCompleteTextField fx:id="eventField" />
 							<Button text="%add" onAction="#addEvent" />
 							<Button text="%del" onAction="#delEvent" />
 						</HBox>
@@ -157,7 +156,7 @@
 							GridPane.rowIndex="2" GridPane.columnIndex="0" />
 						<HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
 							<ChoiceBox fx:id="conditionChoice" />
-							<ComboBox editable="true" fx:id="conditionCombo" />
+							<AutoCompleteTextField fx:id="conditionField" />
 							<Button text="%add" onAction="#addCondition" />
 							<Button text="%del" onAction="#delCondition" />
 						</HBox>
@@ -176,7 +175,7 @@
 							<Label text="%points-to" id="option-label" />
 							<ListView VBox.vgrow="ALWAYS" fx:id="pointsToList"
 								onMouseClicked="#clickPointsTo" onKeyReleased="#clickPointsTo" />
-							<ComboBox editable="true" maxWidth="9000" fx:id="pointsToCombo" />
+							<AutoCompleteTextField maxWidth="9000" fx:id="pointsToField" />
 							<Button text="%add" maxWidth="9000" onAction="#addPointer" />
 							<Button text="%del" maxWidth="9000" onAction="#delPointer" />
 						</VBox>
