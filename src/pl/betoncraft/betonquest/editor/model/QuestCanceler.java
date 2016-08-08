@@ -18,6 +18,7 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
 public class QuestCanceler implements ID {
 	
 	private StringProperty id;
+	private int index = -1;
 	private TranslatableText name = new TranslatableText();
 	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
 	private ObservableList<Event> events = FXCollections.observableArrayList();
@@ -33,6 +34,14 @@ public class QuestCanceler implements ID {
 
 	public StringProperty getId() {
 		return id;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public String getLocation() {

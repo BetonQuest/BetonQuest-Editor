@@ -32,6 +32,7 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
 public abstract class ConversationOption implements ID {
 	
 	private StringProperty id;
+	private int index = -1;
 	private TranslatableText text = new TranslatableText();
 	private ObservableList<Event> events = FXCollections.observableArrayList();
 	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
@@ -43,6 +44,14 @@ public abstract class ConversationOption implements ID {
 
 	public StringProperty getId() {
 		return id;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public TranslatableText getText() {

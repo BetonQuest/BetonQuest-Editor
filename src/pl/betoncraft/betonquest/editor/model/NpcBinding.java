@@ -31,6 +31,7 @@ import pl.betoncraft.betonquest.editor.data.ID;
 public class NpcBinding implements ID {
 	
 	private StringProperty id;
+	private int index = -1;
 	private ObjectProperty<Conversation> conversation = new SimpleObjectProperty<>();
 	
 	public NpcBinding(String id, Conversation conversation) {
@@ -44,6 +45,14 @@ public class NpcBinding implements ID {
 
 	public StringProperty getId() {
 		return id;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public ObjectProperty<Conversation> getConversation() {

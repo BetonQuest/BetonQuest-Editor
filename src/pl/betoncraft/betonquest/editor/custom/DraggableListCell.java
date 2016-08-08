@@ -92,6 +92,10 @@ public class DraggableListCell<T extends ID> extends ListCell<T> {
 				
 				if (dragged != null) {
 					items.add(items.indexOf(getItem()), items.remove(items.indexOf(dragged)));
+					
+					for (int i = 0; i < items.size(); i++) {
+						items.get(i).setIndex(i);
+					}
 
 					List<T> itemscopy = new ArrayList<>(getListView().getItems());
 					getListView().getItems().setAll(itemscopy);

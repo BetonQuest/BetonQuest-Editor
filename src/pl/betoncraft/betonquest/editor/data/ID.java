@@ -27,6 +27,21 @@ import javafx.beans.property.StringProperty;
  */
 public interface ID {
 	
+	/**
+	 * @return the ID of this object
+	 */
 	public StringProperty getId();
+	
+	/**
+	 * @return the index of this object, as ordered in the file
+	 */
+	public int getIndex();
+	
+	/**
+	 * Sets index of this object, so it can be saved to the file in order.
+	 * 
+	 * @param index index of the object related to other objects in the same file
+	 */
+	public void setIndex(int index);
 	
 }

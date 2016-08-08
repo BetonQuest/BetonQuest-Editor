@@ -17,6 +17,7 @@ import pl.betoncraft.betonquest.editor.data.Instruction;
 public class Item implements Instruction, Editable {
 	
 	private StringProperty id;
+	private int index = -1;
 	private StringProperty instruction = new SimpleStringProperty();
 	
 	public Item(String id, String instruction) {
@@ -30,6 +31,14 @@ public class Item implements Instruction, Editable {
 
 	public StringProperty getId() {
 		return id;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public StringProperty getInstruction() {

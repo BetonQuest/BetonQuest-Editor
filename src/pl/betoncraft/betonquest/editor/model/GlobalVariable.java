@@ -29,6 +29,7 @@ import pl.betoncraft.betonquest.editor.data.Instruction;
 public class GlobalVariable implements Instruction {
 	
 	private StringProperty id;
+	private int index = -1;
 	private StringProperty value = new SimpleStringProperty();
 	
 	public GlobalVariable(String id, String value) {
@@ -42,6 +43,14 @@ public class GlobalVariable implements Instruction {
 
 	public StringProperty getId() {
 		return id;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public StringProperty getInstruction() {

@@ -18,6 +18,7 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
 public class JournalEntry implements ID, Editable {
 	
 	private StringProperty id;
+	private int index = -1;
 	private TranslatableText text = new TranslatableText();
 	
 	public JournalEntry(String id) {
@@ -26,6 +27,14 @@ public class JournalEntry implements ID, Editable {
 	
 	public StringProperty getId() {
 		return id;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public TranslatableText getText() {

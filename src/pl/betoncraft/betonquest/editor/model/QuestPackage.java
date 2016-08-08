@@ -79,6 +79,225 @@ public class QuestPackage {
 	private QuestPackage(String id, HashMap<String, LinkedHashMap<String, String>> data) {
 		packName = new SimpleStringProperty(id);
 		try {
+			// handling journal.yml
+			HashMap<String, String> journalMap = data.get("journal");
+			int journalIndex = 0;
+			for (Entry<String, String> entry : journalMap.entrySet()) {
+				String value = entry.getValue();
+				String[] parts = entry.getKey().split("\\.");
+				// getting the right entry
+				JournalEntry journalEntry = newJournalEntry(parts[0]);
+				if (journalEntry.getIndex() < 0) journalEntry.setIndex(journalIndex++);
+				// handling entry data
+				if (parts.length > 1) {
+					String lang = parts[1];
+					if (!languages.containsKey(lang)) {
+						languages.put(lang, 1);
+					} else {
+						languages.put(lang, languages.get(lang) + 1);
+					}
+					journalEntry.getText().addLang(lang, value);
+				} else {
+					journalEntry.getText().setDef(value);
+				}
+			}
+			// handling items.yml
+			HashMap<String, String> itemsMap = data.get("items");
+			int itemIndex = 0;
+			for (String key : itemsMap.keySet()) {
+				Item item = newItem(key);
+				item.getInstruction().set(itemsMap.get(key));
+				if (item.getIndex() < 0) item.setIndex(itemIndex++);
+			}
+			// handling conditions.yml
+			HashMap<String, String> conditionsMap = data.get("conditions");
+			int conditionIndex = 0;
+			for (String key : conditionsMap.keySet()) {
+				Condition condition = newCondition(key);
+				condition.getInstruction().set(conditionsMap.get(key));
+				if (condition.getIndex() < 0) condition.setIndex(conditionIndex++);
+			}
+			// handling event.yml
+			HashMap<String, String> eventsMap = data.get("events");
+			int eventIndex = 0;
+			for (String key : eventsMap.keySet()) {
+				Event event = newEvent(key);
+				event.getInstruction().set(eventsMap.get(key));
+				if (event.getIndex() < 0) event.setIndex(eventIndex++);
+			}
+			// handling objectives.yml
+			HashMap<String, String> objectivesMap = data.get("objectives");
+			int objectiveIndex = 0;
+			for (String key : objectivesMap.keySet()) {
+				Objective objective = newObjective(key);
+				objective.getInstruction().set(objectivesMap.get(key));
+				if (objective.getIndex() < 0) objective.setIndex(objectiveIndex++);
+			}
+			// handling conversations/
+			int convIndex = 0;
+			for (Entry<String, LinkedHashMap<String, String>> entry : data.entrySet()) {
+				String key = entry.getKey();
+				HashMap<String, String> value = entry.getValue();
+				if (key.startsWith("conversations.")) {
+					HashMap<String, String> convData = value;
+					String convName = key.substring(14);
+					Conversation conv = newConversation(convName);
+					if (conv.getIndex() < 0) conv.setIndex(convIndex++);
+					int playerIndex = 0;
+					int npcIndex = 0;
+					// handling conversation.yml
+					for (Entry<String, String> subEntry : convData.entrySet()) {
+						String subKey = subEntry.getKey();
+						String subValue = subEntry.getValue();
+						// reading NPC name, optionally in multiple languages
+						if (subKey.equals("quester")) {
+							conv.getNPC().setDef(subValue);
+						} else if (subKey.startsWith("quester.")) {
+							String lang = subKey.substring(8);
+							if (!languages.containsKey(lang)) {
+								languages.put(lang, 1);
+							} else {
+								languages.put(lang, languages.get(lang) + 1);
+							}
+							conv.getNPC().addLang(lang, subValue);
+						}
+						// reading the stop option
+						else if (subKey.equals("stop")) {
+							conv.getStop().set(subValue.equalsIgnoreCase("true"));
+						}
+						// reading starting options
+						else if (subKey.equals("first")) {
+							String[] pointerNames = subValue.split(",");
+							NpcOption[] options = new NpcOption[pointerNames.length];
+							for (int i = 0; i < pointerNames.length; i++) {
+								options[i] = conv.newNpcOption(pointerNames[i].trim());
+							}
+							conv.getStartingOptions().addAll(options);
+						}
+						// reading final events
+						else if (subKey.equals("final")) {
+							String[] eventNames = subValue.split(",");
+							Event[] events = new Event[eventNames.length];
+							for (int i = 0; i < eventNames.length; i++) {
+								events[i] = newEvent(eventNames[i].trim());
+							}
+							conv.getFinalEvents().addAll(events);
+						}
+						// reading NPC options
+						else if (subKey.startsWith("NPC_options.")) {
+							String[] parts = subKey.split("\\.");
+							if (parts.length > 1) {
+								String optionName = parts[1];
+								// resolving an option
+								NpcOption option = conv.newNpcOption(optionName);
+								if (option.getIndex() < 0) option.setIndex(npcIndex++);
+								if (parts.length > 2) {
+									// getting specific values
+									switch (parts[2]) {
+									case "text":
+										if (parts.length > 3) {
+											String lang = parts[3];
+											if (!languages.containsKey(lang)) {
+												languages.put(lang, 1);
+											} else {
+												languages.put(lang, languages.get(lang) + 1);
+											}
+											option.getText().addLang(lang, subValue);
+										} else {
+											option.getText().setDef(subValue);
+										}
+										break;
+									case "event":
+									case "events":
+										String[] eventNames = subValue.split(",");
+										Event[] events = new Event[eventNames.length];
+										for (int i = 0; i < eventNames.length; i++) {
+											events[i] = newEvent(eventNames[i].trim());
+										}
+										option.getEvents().addAll(events);
+										break;
+									case "condition":
+									case "conditions":
+										String[] conditionNames = subValue.split(",");
+										Condition[] conditions = new Condition[conditionNames.length];
+										for (int i = 0; i < conditionNames.length; i++) {
+											conditions[i] = newCondition(conditionNames[i].trim());
+										}
+										option.getConditions().addAll(conditions);
+										break;
+									case "pointer":
+									case "pointers":
+										String[] pointerNames = subValue.split(",");
+										PlayerOption[] options = new PlayerOption[pointerNames.length];
+										for (int i = 0; i < pointerNames.length; i++) {
+											options[i] = conv.newPlayerOption(pointerNames[i].trim());
+										}
+										option.getPointers().addAll(options);
+										break;
+									}
+								}
+							}
+						}
+						// reading player options
+						else if (subKey.startsWith("player_options.")) {
+							String[] parts = subKey.split("\\.");
+							if (parts.length > 1) {
+								String optionName = parts[1];
+								// resolving an option
+								PlayerOption option = conv.newPlayerOption(optionName);
+								if (option.getIndex() < 0) {
+									option.setIndex(playerIndex++);
+								}
+								if (parts.length > 2) {
+									// getting specific values
+									switch (parts[2]) {
+									case "text":
+										if (parts.length > 3) {
+											String lang = parts[3];
+											if (!languages.containsKey(lang)) {
+												languages.put(lang, 1);
+											} else {
+												languages.put(lang, languages.get(lang) + 1);
+											}
+											option.getText().addLang(lang, subValue);
+										} else {
+											option.getText().setDef(subValue);
+										}
+										break;
+									case "event":
+									case "events":
+										String[] eventNames = subValue.split(",");
+										Event[] events = new Event[eventNames.length];
+										for (int i = 0; i < eventNames.length; i++) {
+											events[i] = newEvent(eventNames[i].trim());
+										}
+										option.getEvents().addAll(events);
+										break;
+									case "condition":
+									case "conditions":
+										String[] conditionNames = subValue.split(",");
+										Condition[] conditions = new Condition[conditionNames.length];
+										for (int i = 0; i < conditionNames.length; i++) {
+											conditions[i] = new Condition(conditionNames[i].trim());
+										}
+										option.getConditions().addAll(conditions);
+										break;
+									case "pointer":
+									case "pointers":
+										String[] pointerNames = subValue.split(",");
+										NpcOption[] options = new NpcOption[pointerNames.length];
+										for (int i = 0; i < pointerNames.length; i++) {
+											options[i] = conv.newNpcOption(pointerNames[i].trim());
+										}
+										option.getPointers().addAll(options);
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
 			// handling main.yml
 			LinkedHashMap<String, String> config = data.get("main");
 			for (Entry<String, String> entry : config.entrySet()) {
@@ -213,203 +432,6 @@ public class QuestPackage {
 				// handling default language
 				else if (key.equalsIgnoreCase("default_language")) {
 					defLang = value;
-				}
-			}
-			// handling event.yml
-			HashMap<String, String> eventsMap = data.get("events");
-			for (String key : eventsMap.keySet()) {
-				newEvent(key).getInstruction().set(eventsMap.get(key));
-			}
-			// handling conditions.yml
-			HashMap<String, String> conditionsMap = data.get("conditions");
-			for (String key : conditionsMap.keySet()) {
-				newCondition(key).getInstruction().set(conditionsMap.get(key));
-			}
-			// handling objectives.yml
-			HashMap<String, String> objectivesMap = data.get("objectives");
-			for (String key : objectivesMap.keySet()) {
-				newObjective(key).getInstruction().set(objectivesMap.get(key));
-			}
-			// handling items.yml
-			HashMap<String, String> itemsMap = data.get("items");
-			for (String key : itemsMap.keySet()) {
-				newItem(key).getInstruction().set(itemsMap.get(key));
-			}
-			// handling journal.yml
-			HashMap<String, String> journalMap = data.get("journal");
-			for (Entry<String, String> entry : journalMap.entrySet()) {
-				String value = entry.getValue();
-				String[] parts = entry.getKey().split("\\.");
-				// getting the right entry
-				JournalEntry journalEntry = newJournalEntry(parts[0]);
-				// handling entry data
-				if (parts.length > 1) {
-					String lang = parts[1];
-					if (!languages.containsKey(lang)) {
-						languages.put(lang, 1);
-					} else {
-						languages.put(lang, languages.get(lang) + 1);
-					}
-					journalEntry.getText().addLang(lang, value);
-				} else {
-					journalEntry.getText().setDef(value);
-				}
-			}
-			// handling conversations/
-			for (Entry<String, LinkedHashMap<String, String>> entry : data.entrySet()) {
-				String key = entry.getKey();
-				HashMap<String, String> value = entry.getValue();
-				if (key.startsWith("conversations.")) {
-					HashMap<String, String> convData = value;
-					String convName = key.substring(14);
-					Conversation conv = newConversation(convName);
-					// handling conversation.yml
-					for (Entry<String, String> subEntry : convData.entrySet()) {
-						String subKey = subEntry.getKey();
-						String subValue = subEntry.getValue();
-						// reading NPC name, optionally in multiple languages
-						if (subKey.equals("quester")) {
-							conv.getNPC().setDef(subValue);
-						} else if (subKey.startsWith("quester.")) {
-							String lang = subKey.substring(8);
-							if (!languages.containsKey(lang)) {
-								languages.put(lang, 1);
-							} else {
-								languages.put(lang, languages.get(lang) + 1);
-							}
-							conv.getNPC().addLang(lang, subValue);
-						}
-						// reading the stop option
-						else if (subKey.equals("stop")) {
-							conv.getStop().set(subValue.equalsIgnoreCase("true"));
-						}
-						// reading starting options
-						else if (subKey.equals("first")) {
-							String[] pointerNames = subValue.split(",");
-							NpcOption[] options = new NpcOption[pointerNames.length];
-							for (int i = 0; i < pointerNames.length; i++) {
-								options[i] = conv.newNpcOption(pointerNames[i].trim());
-							}
-							conv.getStartingOptions().addAll(options);
-						}
-						// reading final events
-						else if (subKey.equals("final")) {
-							String[] eventNames = subValue.split(",");
-							Event[] events = new Event[eventNames.length];
-							for (int i = 0; i < eventNames.length; i++) {
-								events[i] = newEvent(eventNames[i].trim());
-							}
-							conv.getFinalEvents().addAll(events);
-						}
-						// reading NPC options
-						else if (subKey.startsWith("NPC_options.")) {
-							String[] parts = subKey.split("\\.");
-							if (parts.length > 1) {
-								String optionName = parts[1];
-								// resolving an option
-								NpcOption option = conv.newNpcOption(optionName);
-								if (parts.length > 2) {
-									// getting specific values
-									switch (parts[2]) {
-									case "text":
-										if (parts.length > 3) {
-											String lang = parts[3];
-											if (!languages.containsKey(lang)) {
-												languages.put(lang, 1);
-											} else {
-												languages.put(lang, languages.get(lang) + 1);
-											}
-											option.getText().addLang(lang, subValue);
-										} else {
-											option.getText().setDef(subValue);
-										}
-										break;
-									case "event":
-									case "events":
-										String[] eventNames = subValue.split(",");
-										Event[] events = new Event[eventNames.length];
-										for (int i = 0; i < eventNames.length; i++) {
-											events[i] = newEvent(eventNames[i].trim());
-										}
-										option.getEvents().addAll(events);
-										break;
-									case "condition":
-									case "conditions":
-										String[] conditionNames = subValue.split(",");
-										Condition[] conditions = new Condition[conditionNames.length];
-										for (int i = 0; i < conditionNames.length; i++) {
-											conditions[i] = newCondition(conditionNames[i].trim());
-										}
-										option.getConditions().addAll(conditions);
-										break;
-									case "pointer":
-									case "pointers":
-										String[] pointerNames = subValue.split(",");
-										PlayerOption[] options = new PlayerOption[pointerNames.length];
-										for (int i = 0; i < pointerNames.length; i++) {
-											options[i] = conv.newPlayerOption(pointerNames[i].trim());
-										}
-										option.getPointers().addAll(options);
-										break;
-									}
-								}
-							}
-						}
-						// reading player options
-						else if (subKey.startsWith("player_options.")) {
-							String[] parts = subKey.split("\\.");
-							if (parts.length > 1) {
-								String optionName = parts[1];
-								// resolving an option
-								PlayerOption option = conv.newPlayerOption(optionName);
-								if (parts.length > 2) {
-									// getting specific values
-									switch (parts[2]) {
-									case "text":
-										if (parts.length > 3) {
-											String lang = parts[3];
-											if (!languages.containsKey(lang)) {
-												languages.put(lang, 1);
-											} else {
-												languages.put(lang, languages.get(lang) + 1);
-											}
-											option.getText().addLang(lang, subValue);
-										} else {
-											option.getText().setDef(subValue);
-										}
-										break;
-									case "event":
-									case "events":
-										String[] eventNames = subValue.split(",");
-										Event[] events = new Event[eventNames.length];
-										for (int i = 0; i < eventNames.length; i++) {
-											events[i] = newEvent(eventNames[i].trim());
-										}
-										option.getEvents().addAll(events);
-										break;
-									case "condition":
-									case "conditions":
-										String[] conditionNames = subValue.split(",");
-										Condition[] conditions = new Condition[conditionNames.length];
-										for (int i = 0; i < conditionNames.length; i++) {
-											conditions[i] = new Condition(conditionNames[i].trim());
-										}
-										option.getConditions().addAll(conditions);
-										break;
-									case "pointer":
-									case "pointers":
-										String[] pointerNames = subValue.split(",");
-										NpcOption[] options = new NpcOption[pointerNames.length];
-										for (int i = 0; i < pointerNames.length; i++) {
-											options[i] = conv.newNpcOption(pointerNames[i].trim());
-										}
-										option.getPointers().addAll(options);
-										break;
-									}
-								}
-							}
-						}
-					}
 				}
 			}
 			// check which language is used most widely and set it as default
@@ -613,12 +635,11 @@ public class QuestPackage {
 		lists.add(variables);
 		lists.add(npcBindings);
 		lists.add(mainPage);
-		lists.forEach(list -> list.sort((ID o1, ID o2) -> o1.getId().get().compareTo(o2.getId().get())));
+		lists.forEach(list -> list.sort((ID o1, ID o2) -> o1.getIndex() - o2.getIndex()));
 		// sort options in conversations
 		for (Conversation conv : conversations) {
-			conv.getNpcOptions().sort((NpcOption o1, NpcOption o2) -> o1.getId().get().compareTo(o2.getId().get()));
-			conv.getPlayerOptions()
-					.sort((PlayerOption o1, PlayerOption o2) -> o1.getId().get().compareTo(o2.getId().get()));
+			conv.getNpcOptions().sort((NpcOption o1, NpcOption o2) -> o1.getIndex() - o2.getIndex());
+			conv.getPlayerOptions().sort((PlayerOption o1, PlayerOption o2) -> o1.getIndex() - o2.getIndex());
 		}
 	}
 
@@ -697,9 +718,8 @@ public class QuestPackage {
 				} else if (token == JsonToken.VALUE_STRING || token == JsonToken.VALUE_NUMBER_INT
 						|| token == JsonToken.VALUE_NUMBER_FLOAT || token == JsonToken.VALUE_TRUE
 						|| token == JsonToken.VALUE_FALSE) {
-					values.get(name).put(
-							(currentPath + fieldName).substring(1, currentPath.length() + fieldName.length()),
-							parser.getText());
+					String key = (currentPath + fieldName).substring(1, currentPath.length() + fieldName.length());
+					values.get(name).put(key, parser.getText());
 				} else if (token == JsonToken.END_OBJECT) {
 					currentPath = currentPath.substring(0,
 							currentPath.substring(0, currentPath.length() - 1).lastIndexOf(".") + 1);

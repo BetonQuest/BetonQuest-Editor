@@ -31,6 +31,7 @@ import pl.betoncraft.betonquest.editor.data.ID;
 public class StaticEvent implements ID {
 	
 	private StringProperty time;
+	private int index = -1;
 	private ObjectProperty<Event> event = new SimpleObjectProperty<>();
 	
 	public StaticEvent(String time) {
@@ -39,6 +40,14 @@ public class StaticEvent implements ID {
 
 	public StringProperty getId() {
 		return time;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public ObjectProperty<Event> getEvent() {

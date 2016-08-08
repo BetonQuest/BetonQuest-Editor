@@ -21,6 +21,7 @@ public class Conversation implements ID {
 
 	private QuestPackage pack;
 	private StringProperty convName;
+	private int index = -1;
 	private TranslatableText npc = new TranslatableText();
 	private BooleanProperty stop = new SimpleBooleanProperty();
 	private ObservableList<NpcOption> npcOptions = FXCollections.observableArrayList();
@@ -35,6 +36,14 @@ public class Conversation implements ID {
 	
 	public StringProperty getId() {
 		return convName;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public QuestPackage getPack() {
