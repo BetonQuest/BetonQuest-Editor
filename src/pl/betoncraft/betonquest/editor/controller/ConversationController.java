@@ -43,6 +43,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField;
+import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Conversation;
@@ -154,7 +155,9 @@ public class ConversationController {
 			notFinalEventsSet.add(event.getId().get());
 		}
 		finalEventsField.getEntries().addAll(notFinalEventsSet);
+		npcList.setCellFactory(param -> new DraggableListCell<>());
 		npcList.setItems(conversation.getNpcOptions());
+		playerList.setCellFactory(param -> new DraggableListCell<>());
 		playerList.setItems(conversation.getPlayerOptions());
 		// make sure there's at least a single NPC option
 		if (currentOption != null && (conversation.getNpcOptions().contains(currentOption)
@@ -242,6 +245,7 @@ public class ConversationController {
 			notConditionsSet.add(condition.getId().toString());
 		}
 		conditionField.getEntries().addAll(notConditionsSet);
+		pointsToList.setCellFactory(param -> new DraggableListCell<>());
 		pointsToList.setItems(option.getPointers());
 		ObservableList<? extends ConversationOption> oppositeOptions;
 		if (option instanceof NpcOption) {
@@ -264,6 +268,7 @@ public class ConversationController {
 				pointedByOptions.add(opposite);
 			}
 		}
+		pointedByList.setCellFactory(param -> new DraggableListCell<>());
 		pointedByList.setItems(pointedByOptions);
 		optionPane.setDisable(false);
 	}

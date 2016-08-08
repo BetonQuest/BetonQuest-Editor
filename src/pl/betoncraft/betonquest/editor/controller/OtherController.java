@@ -23,6 +23,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
 import pl.betoncraft.betonquest.editor.model.Item;
 import pl.betoncraft.betonquest.editor.model.JournalEntry;
 
@@ -44,12 +45,12 @@ public class OtherController {
 	}
 	
 	public static void setItems(ObservableList<Item> items) {
-		instance.itemsList.setItems(null);
+		instance.itemsList.setCellFactory(param -> new DraggableListCell<>());
 		instance.itemsList.setItems(items);
 	}
 	
 	public static void setJournal(ObservableList<JournalEntry> journal) {
-		instance.journalList.setItems(null);
+		instance.journalList.setCellFactory(param -> new DraggableListCell<>());
 		instance.journalList.setItems(journal);
 	}
 	

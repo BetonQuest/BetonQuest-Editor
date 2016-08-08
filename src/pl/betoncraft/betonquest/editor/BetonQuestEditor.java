@@ -133,7 +133,6 @@ public class BetonQuestEditor extends Application {
 	 */
 	public void display(QuestPackage pack) {
 		 currentPackage = pack;
-		 pack.sort();
 		 MainController.setNpcBindings(pack.getNpcBindings());
 		 MainController.setGlobVariables(pack.getVariables());
 		 MainController.setStaticEvents(pack.getStaticEvents());

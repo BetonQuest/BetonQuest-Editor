@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import java.util.zip.ZipEntry;
@@ -75,11 +76,11 @@ public class QuestPackage {
 	 * 
 	 * @param map
 	 */
-	private QuestPackage(String id, HashMap<String, HashMap<String, String>> data) {
+	private QuestPackage(String id, HashMap<String, LinkedHashMap<String, String>> data) {
 		packName = new SimpleStringProperty(id);
 		try {
 			// handling main.yml
-			HashMap<String, String> config = data.get("main");
+			LinkedHashMap<String, String> config = data.get("main");
 			for (Entry<String, String> entry : config.entrySet()) {
 				String key = entry.getKey();
 				String value = entry.getValue();
@@ -255,7 +256,7 @@ public class QuestPackage {
 				}
 			}
 			// handling conversations/
-			for (Entry<String, HashMap<String, String>> entry : data.entrySet()) {
+			for (Entry<String, LinkedHashMap<String, String>> entry : data.entrySet()) {
 				String key = entry.getKey();
 				HashMap<String, String> value = entry.getValue();
 				if (key.startsWith("conversations.")) {
@@ -627,6 +628,7 @@ public class QuestPackage {
 	}
 
 	public static QuestPackage loadFromZip(ZipFile file) throws IOException, PackageNotFoundException {
+		// TODO fix incorrect order of loaded entries
 		HashMap<String, ZipEntry> zipEntries = new HashMap<>();
 		Enumeration<? extends ZipEntry> entries = file.entries();
 		String packName = null;
@@ -635,11 +637,21 @@ public class QuestPackage {
 			try {
 				ZipEntry entry = entries.nextElement();
 				String entryName = entry.getName();
-				packName = entryName.substring(0, entryName.indexOf('/'));
+				// get the correct path separator (both can be used)
+				int index = entryName.indexOf('/');
+				char separator = '/';
+				if (index < 0) {
+					index = entryName.indexOf('\\');
+					separator = '\\';
+				}
+				if (index < 0) {
+					continue;
+				}
+				packName = entryName.substring(0, entryName.indexOf(separator));
 				if (!entryName.endsWith(".yml"))
 					continue;
-				if (entryName.contains("conversations/")) {
-					String convName = entryName.substring(entryName.lastIndexOf('/') + 1, entryName.length() - 4);
+				if (entryName.contains("conversations" + separator)) {
+					String convName = entryName.substring(entryName.lastIndexOf(separator) + 1, entryName.length() - 4);
 					zipEntries.put("conversations." + convName, entry);
 				} else {
 					if (entryName.endsWith("main.yml")) {
@@ -668,9 +680,9 @@ public class QuestPackage {
 			throw new PackageNotFoundException("Package does not contain required files");
 		}
 		// parse the yaml into hashmaps
-		HashMap<String, HashMap<String, String>> values = new HashMap<>();
+		HashMap<String, LinkedHashMap<String, String>> values = new LinkedHashMap<>();
 		for (String name : zipEntries.keySet()) {
-			values.put(name, new HashMap<>());
+			values.put(name, new LinkedHashMap<>());
 			YAMLParser parser = new YAMLFactory().createParser(file.getInputStream(zipEntries.get(name)));
 			String currentPath = "";
 			String fieldName = "";

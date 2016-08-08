@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Event;
 import pl.betoncraft.betonquest.editor.model.Objective;
@@ -29,17 +30,17 @@ public class EcoController {
 	}
 
 	public static void setEvents(ObservableList<Event> events) {
-		instance.eventsList.setItems(null);
+		instance.eventsList.setCellFactory(param -> new DraggableListCell<>());
 		instance.eventsList.setItems(events);
 	}
 	
 	public static void setConditions(ObservableList<Condition> conditions) {
-		instance.conditionsList.setItems(null);
+		instance.conditionsList.setCellFactory(param -> new DraggableListCell<>());
 		instance.conditionsList.setItems(conditions);
 	}
 	
 	public static void setObjectives(ObservableList<Objective> objectives) {
-		instance.objectivesList.setItems(null);
+		instance.objectivesList.setCellFactory(param -> new DraggableListCell<>());
 		instance.objectivesList.setItems(objectives);
 	}
 	
