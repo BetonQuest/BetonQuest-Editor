@@ -43,6 +43,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
@@ -168,18 +169,22 @@ public class QuestPackage {
 						// reading starting options
 						else if (subKey.equals("first")) {
 							String[] pointerNames = subValue.split(",");
-							NpcOption[] options = new NpcOption[pointerNames.length];
+							ArrayList<IdWrapper<NpcOption>> options = new ArrayList<>(pointerNames.length);
 							for (int i = 0; i < pointerNames.length; i++) {
-								options[i] = conv.newNpcOption(pointerNames[i].trim());
+								IdWrapper<NpcOption> startingOption = new IdWrapper<>(conv.newNpcOption(pointerNames[i].trim()));
+								options.add(i, startingOption);
+								startingOption.setIndex(i); 
 							}
 							conv.getStartingOptions().addAll(options);
 						}
 						// reading final events
 						else if (subKey.equals("final")) {
 							String[] eventNames = subValue.split(",");
-							Event[] events = new Event[eventNames.length];
+							ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
 							for (int i = 0; i < eventNames.length; i++) {
-								events[i] = newEvent(eventNames[i].trim());
+								IdWrapper<Event> finalEvent = new IdWrapper<>(newEvent(eventNames[i].trim()));
+								events.add(i, finalEvent);
+								finalEvent.setIndex(i);
 							}
 							conv.getFinalEvents().addAll(events);
 						}
@@ -210,27 +215,33 @@ public class QuestPackage {
 									case "event":
 									case "events":
 										String[] eventNames = subValue.split(",");
-										Event[] events = new Event[eventNames.length];
+										ArrayList<IdWrapper<Event>> events = new ArrayList<IdWrapper<Event>>(eventNames.length);
 										for (int i = 0; i < eventNames.length; i++) {
-											events[i] = newEvent(eventNames[i].trim());
+											IdWrapper<Event> event = new IdWrapper<>(newEvent(eventNames[i].trim()));
+											events.add(i, event);
+											event.setIndex(i);
 										}
 										option.getEvents().addAll(events);
 										break;
 									case "condition":
 									case "conditions":
 										String[] conditionNames = subValue.split(",");
-										Condition[] conditions = new Condition[conditionNames.length];
+										ArrayList<IdWrapper<Condition>> conditions = new ArrayList<IdWrapper<Condition>>(conditionNames.length);
 										for (int i = 0; i < conditionNames.length; i++) {
-											conditions[i] = newCondition(conditionNames[i].trim());
+											IdWrapper<Condition> condition = new IdWrapper<>(newCondition(conditionNames[i].trim()));
+											conditions.add(i, condition);
+											condition.setIndex(i);
 										}
 										option.getConditions().addAll(conditions);
 										break;
 									case "pointer":
 									case "pointers":
 										String[] pointerNames = subValue.split(",");
-										PlayerOption[] options = new PlayerOption[pointerNames.length];
+										ArrayList<IdWrapper<ConversationOption>> options = new ArrayList<>(pointerNames.length);
 										for (int i = 0; i < pointerNames.length; i++) {
-											options[i] = conv.newPlayerOption(pointerNames[i].trim());
+											IdWrapper<ConversationOption> pointer = new IdWrapper<>(conv.newPlayerOption(pointerNames[i].trim()));
+											options.add(i, pointer);
+											pointer.setIndex(i);
 										}
 										option.getPointers().addAll(options);
 										break;
@@ -267,27 +278,33 @@ public class QuestPackage {
 									case "event":
 									case "events":
 										String[] eventNames = subValue.split(",");
-										Event[] events = new Event[eventNames.length];
+										ArrayList<IdWrapper<Event>> events = new ArrayList<IdWrapper<Event>>(eventNames.length);
 										for (int i = 0; i < eventNames.length; i++) {
-											events[i] = newEvent(eventNames[i].trim());
+											IdWrapper<Event> event = new IdWrapper<>(newEvent(eventNames[i].trim()));
+											events.add(i, event);
+											event.setIndex(i);
 										}
 										option.getEvents().addAll(events);
 										break;
 									case "condition":
 									case "conditions":
 										String[] conditionNames = subValue.split(",");
-										Condition[] conditions = new Condition[conditionNames.length];
+										ArrayList<IdWrapper<Condition>> conditions = new ArrayList<IdWrapper<Condition>>(conditionNames.length);
 										for (int i = 0; i < conditionNames.length; i++) {
-											conditions[i] = new Condition(conditionNames[i].trim());
+											IdWrapper<Condition> condition = new IdWrapper<>(newCondition(conditionNames[i].trim()));
+											conditions.add(i, condition);
+											condition.setIndex(i);
 										}
 										option.getConditions().addAll(conditions);
 										break;
 									case "pointer":
 									case "pointers":
 										String[] pointerNames = subValue.split(",");
-										NpcOption[] options = new NpcOption[pointerNames.length];
+										ArrayList<IdWrapper<ConversationOption>> options = new ArrayList<>(pointerNames.length);
 										for (int i = 0; i < pointerNames.length; i++) {
-											options[i] = conv.newNpcOption(pointerNames[i].trim());
+											IdWrapper<ConversationOption> pointer = new IdWrapper<>(conv.newNpcOption(pointerNames[i].trim()));
+											options.add(i, pointer);
+											pointer.setIndex(i);
 										}
 										option.getPointers().addAll(options);
 										break;
@@ -635,11 +652,25 @@ public class QuestPackage {
 		lists.add(variables);
 		lists.add(npcBindings);
 		lists.add(mainPage);
-		lists.forEach(list -> list.sort((ID o1, ID o2) -> o1.getIndex() - o2.getIndex()));
-		// sort options in conversations
 		for (Conversation conv : conversations) {
-			conv.getNpcOptions().sort((NpcOption o1, NpcOption o2) -> o1.getIndex() - o2.getIndex());
-			conv.getPlayerOptions().sort((PlayerOption o1, PlayerOption o2) -> o1.getIndex() - o2.getIndex());
+			lists.add(conv.getNpcOptions());
+			lists.add(conv.getPlayerOptions());
+			lists.add(conv.getStartingOptions());
+			lists.add(conv.getFinalEvents());
+			ArrayList<ConversationOption> list = new ArrayList<>(conv.getNpcOptions());
+			list.addAll(conv.getPlayerOptions());
+			for (ConversationOption option : list) {
+				lists.add(option.getConditions());
+				lists.add(option.getEvents());
+				lists.add(option.getPointers());
+			}
+		}
+		for (ObservableList<? extends ID> list : lists) {
+			list.sort((ID o1, ID o2) -> o1.getIndex() - o2.getIndex());
+			int index = 0;
+			for (ID object : list) {
+				object.setIndex(index++);
+			}
 		}
 	}
 
@@ -711,18 +742,25 @@ public class QuestPackage {
 				JsonToken token = parser.nextToken();
 				if (token == null)
 					break;
-				if (token == JsonToken.START_OBJECT) {
+				switch (token) {
+				case START_OBJECT:
 					currentPath = currentPath + fieldName + ".";
-				} else if (token == JsonToken.FIELD_NAME) {
+					break;
+				case FIELD_NAME:
 					fieldName = parser.getText();
-				} else if (token == JsonToken.VALUE_STRING || token == JsonToken.VALUE_NUMBER_INT
-						|| token == JsonToken.VALUE_NUMBER_FLOAT || token == JsonToken.VALUE_TRUE
-						|| token == JsonToken.VALUE_FALSE) {
+					break;
+				case END_OBJECT:
+					currentPath = currentPath.substring(0, currentPath.substring(0, currentPath.length() - 1).lastIndexOf(".") + 1);
+					break;
+				case VALUE_STRING:
+				case VALUE_NUMBER_INT:
+				case VALUE_NUMBER_FLOAT:
+				case VALUE_FALSE:
+				case VALUE_TRUE:
 					String key = (currentPath + fieldName).substring(1, currentPath.length() + fieldName.length());
 					values.get(name).put(key, parser.getText());
-				} else if (token == JsonToken.END_OBJECT) {
-					currentPath = currentPath.substring(0,
-							currentPath.substring(0, currentPath.length() - 1).lastIndexOf(".") + 1);
+				default:
+					// do nothing
 				}
 			}
 		}
@@ -896,13 +934,13 @@ public class QuestPackage {
 		addTranslatedNode(mapper, root, "quester", conv.getNPC());
 		root.put("stop", String.valueOf(conv.getStop().get()));
 		StringBuilder first = new StringBuilder();
-		for (NpcOption option : conv.getStartingOptions()) {
+		for (IdWrapper<NpcOption> option : conv.getStartingOptions()) {
 			first.append(option.toString() + ',');
 		}
 		root.put("first", first.substring(0, first.length() - 1));
 		if (!conv.getFinalEvents().isEmpty()) {
 			StringBuilder finalEvents = new StringBuilder();
-			for (Event event : conv.getFinalEvents()) {
+			for (IdWrapper<Event> event : conv.getFinalEvents()) {
 				finalEvents.append(event.toString() + ',');
 			}
 			root.put("final", finalEvents.substring(0, finalEvents.length() - 1));
@@ -914,21 +952,21 @@ public class QuestPackage {
 				addTranslatedNode(mapper, npcOption, "text", option.getText());
 				if (!option.getEvents().isEmpty()) {
 					StringBuilder events = new StringBuilder();
-					for (Event event : option.getEvents()) {
+					for (IdWrapper<Event> event : option.getEvents()) {
 						events.append(event.toString() + ',');
 					}
 					npcOption.put("events", events.substring(0, events.length() - 1));
 				}
 				if (!option.getConditions().isEmpty()) {
 					StringBuilder conditions = new StringBuilder();
-					for (Condition condition : option.getConditions()) {
+					for (IdWrapper<Condition> condition : option.getConditions()) {
 						conditions.append(condition.toString() + ',');
 					}
 					npcOption.put("conditions", conditions.substring(0, conditions.length() - 1));
 				}
 				if (!option.getPointers().isEmpty()) {
 					StringBuilder pointers = new StringBuilder();
-					for (ConversationOption pointer : option.getPointers()) {
+					for (IdWrapper<ConversationOption> pointer : option.getPointers()) {
 						pointers.append(pointer.toString() + ',');
 					}
 					npcOption.put("pointers", pointers.substring(0, pointers.length() - 1));
@@ -944,21 +982,21 @@ public class QuestPackage {
 				addTranslatedNode(mapper, playerOption, "text", option.getText());
 				if (!option.getEvents().isEmpty()) {
 					StringBuilder events = new StringBuilder();
-					for (Event event : option.getEvents()) {
+					for (IdWrapper<Event> event : option.getEvents()) {
 						events.append(event.toString() + ',');
 					}
 					playerOption.put("events", events.substring(0, events.length() - 1));
 				}
 				if (!option.getConditions().isEmpty()) {
 					StringBuilder conditions = new StringBuilder();
-					for (Condition condition : option.getConditions()) {
+					for (IdWrapper<Condition> condition : option.getConditions()) {
 						conditions.append(condition.toString() + ',');
 					}
 					playerOption.put("conditions", conditions.substring(0, conditions.length() - 1));
 				}
 				if (!option.getPointers().isEmpty()) {
 					StringBuilder pointers = new StringBuilder();
-					for (ConversationOption pointer : option.getPointers()) {
+					for (IdWrapper<ConversationOption> pointer : option.getPointers()) {
 						pointers.append(pointer.toString() + ',');
 					}
 					playerOption.put("pointers", pointers.substring(0, pointers.length() - 1));

@@ -45,6 +45,7 @@ import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
 import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Conversation;
 import pl.betoncraft.betonquest.editor.model.ConversationOption;
@@ -68,9 +69,9 @@ public class ConversationController {
 	
 	@FXML private TextField npc;
 	@FXML private CheckBox stop;
-	@FXML private ChoiceBox<NpcOption> startingOptionsChoice;
+	@FXML private ChoiceBox<IdWrapper<NpcOption>> startingOptionsChoice;
 	@FXML private AutoCompleteTextField startingOptionsField;
-	@FXML private ChoiceBox<Event> finalEventsChoice;
+	@FXML private ChoiceBox<IdWrapper<Event>> finalEventsChoice;
 	@FXML private AutoCompleteTextField finalEventsField;
 	
 	@FXML private ListView<NpcOption> npcList;
@@ -78,16 +79,16 @@ public class ConversationController {
 	
 	@FXML private Label optionType;
 	@FXML private TextArea option;
-	@FXML private ChoiceBox<Event> eventChoice;
+	@FXML private ChoiceBox<IdWrapper<Event>> eventChoice;
 	@FXML private AutoCompleteTextField eventField;
-	@FXML private ChoiceBox<Condition> conditionChoice;
+	@FXML private ChoiceBox<IdWrapper<Condition>> conditionChoice;
 	@FXML private AutoCompleteTextField conditionField;
 	
 	@FXML private Label pointsToLabel;
 	@FXML private Label pointedByLabel;
-	@FXML private ListView<ConversationOption> pointsToList;
+	@FXML private ListView<IdWrapper<ConversationOption>> pointsToList;
 	@FXML private AutoCompleteTextField pointsToField;
-	@FXML private ListView<ConversationOption> pointedByList;
+	@FXML private ListView<IdWrapper<ConversationOption>> pointedByList;
 	
 	private Conversation currentConversation;
 	private ConversationOption currentOption;
@@ -134,8 +135,8 @@ public class ConversationController {
 			startingOptionsChoice.getSelectionModel().select(0);
 		}
 		ObservableList<NpcOption> notStartingOptions = FXCollections.observableArrayList(conversation.getNpcOptions());
-		for (NpcOption option : conversation.getStartingOptions()) {
-			notStartingOptions.remove(option);
+		for (IdWrapper<NpcOption> option : conversation.getStartingOptions()) {
+			notStartingOptions.remove(option.get());
 		}
 		SortedSet<String> notStartingOptionsSet = new TreeSet<>();
 		for (NpcOption option : notStartingOptions) {
@@ -147,8 +148,8 @@ public class ConversationController {
 			finalEventsChoice.getSelectionModel().select(0);
 		}
 		ObservableList<Event> notFinalEvents = FXCollections.observableArrayList(conversation.getPack().getEvents());
-		for (Event event : conversation.getFinalEvents()) {
-			notFinalEvents.remove(event);
+		for (IdWrapper<Event> event : conversation.getFinalEvents()) {
+			notFinalEvents.remove(event.get());
 		}
 		SortedSet<String> notFinalEventsSet = new TreeSet<>();
 		for (Event event : notFinalEvents) {
@@ -166,7 +167,7 @@ public class ConversationController {
 		} else {
 			if (conversation.getNpcOptions().isEmpty()) {
 				NpcOption option = conversation.newNpcOption("start");
-				conversation.getStartingOptions().add(option);
+				conversation.getStartingOptions().add(new IdWrapper<>(option));
 			}
 			displayOption(conversation.getNpcOptions().get(0));
 		}
@@ -224,8 +225,8 @@ public class ConversationController {
 			eventChoice.getSelectionModel().select(0);
 		}
 		ObservableList<Event> notEvents = FXCollections.observableArrayList(currentConversation.getPack().getEvents()); 
-		for (Event event : option.getEvents()) {
-			notEvents.remove(event);
+		for (IdWrapper<Event> event : option.getEvents()) {
+			notEvents.remove(event.get());
 		}
 		SortedSet<String> notEventsSet = new TreeSet<>();
 		for (Event event : notEvents) {
@@ -237,12 +238,12 @@ public class ConversationController {
 			conditionChoice.getSelectionModel().select(0);
 		}
 		ObservableList<Condition> notConditions = FXCollections.observableArrayList(currentConversation.getPack().getConditions());
-		for (Condition condition : option.getConditions()) {
-			notConditions.remove(condition);
+		for (IdWrapper<Condition> condition : option.getConditions()) {
+			notConditions.remove(condition.get());
 		}
 		SortedSet<String> notConditionsSet = new TreeSet<>();
 		for (Condition condition : notConditions) {
-			notConditionsSet.add(condition.getId().toString());
+			notConditionsSet.add(condition.getId().get());
 		}
 		conditionField.getEntries().addAll(notConditionsSet);
 		pointsToList.setCellFactory(param -> new DraggableListCell<>());
@@ -254,18 +255,20 @@ public class ConversationController {
 			oppositeOptions = currentConversation.getNpcOptions();
 		}
 		ObservableList<? extends ConversationOption> notPointers = FXCollections.observableArrayList(oppositeOptions);
-		for (ConversationOption o : option.getPointers()) {
-			notPointers.remove(o);
+		for (IdWrapper<ConversationOption> o : option.getPointers()) {
+			notPointers.remove(o.get());
 		}
 		SortedSet<String> notPointersSet = new TreeSet<>();
 		for (ConversationOption o : notPointers) {
 			notPointersSet.add(o.getId().get());
 		}
 		pointsToField.getEntries().addAll(notPointersSet);
-		ObservableList<ConversationOption> pointedByOptions = FXCollections.observableArrayList();
+		ObservableList<IdWrapper<ConversationOption>> pointedByOptions = FXCollections.observableArrayList();
 		for (ConversationOption opposite : oppositeOptions) {
-			if (opposite.getPointers().contains(option)) {
-				pointedByOptions.add(opposite);
+			for (IdWrapper<ConversationOption> pointer : opposite.getPointers()) {
+				if (pointer.get().equals(option)) {
+					pointedByOptions.add(new IdWrapper<>(opposite));
+				}
 			}
 		}
 		pointedByList.setCellFactory(param -> new DraggableListCell<>());
@@ -321,21 +324,21 @@ public class ConversationController {
 	
 	@FXML private void clickPointsTo(MouseEvent event) {
 		if (event.getClickCount() == 2) {
-			ConversationOption option = pointsToList.getSelectionModel().getSelectedItem();
+			IdWrapper<ConversationOption> option = pointsToList.getSelectionModel().getSelectedItem();
 			if (option == null) {
 				return;
 			}
-			displayOption(option);
+			displayOption(option.get());
 		}
 	}
 	
 	@FXML private void clickPointedBy(MouseEvent event) {
 		if (event.getClickCount() == 2) {
-			ConversationOption option = pointedByList.getSelectionModel().getSelectedItem();
+			IdWrapper<ConversationOption> option = pointedByList.getSelectionModel().getSelectedItem();
 			if (option == null) {
 				return;
 			}
-			displayOption(option);
+			displayOption(option.get());
 		}
 	}
 	
@@ -347,14 +350,16 @@ public class ConversationController {
 			option = currentConversation.newNpcOption(name);
 		}
 		if (!startingOptionsChoice.getItems().contains(option)) {
-			startingOptionsChoice.getItems().add(option);
+			IdWrapper<NpcOption> startingOption = new IdWrapper<>(option);
+			startingOption.setIndex(startingOptionsChoice.getItems().size());
+			startingOptionsChoice.getItems().add(startingOption);
 			BetonQuestEditor.refresh();
 			displayOption(option);
 		}
 	}
 	
 	@FXML private void delStartingOption() {
-		NpcOption option = startingOptionsChoice.getValue();
+		IdWrapper<NpcOption> option = startingOptionsChoice.getValue();
 		if (option != null) {
 			if (startingOptionsChoice.getItems().size() == 1) {
 				Alert alert = new Alert(AlertType.ERROR);
@@ -375,13 +380,15 @@ public class ConversationController {
 			event = currentConversation.getPack().newEvent(name);
 		}
 		if (!finalEventsChoice.getItems().contains(event)) {
-			finalEventsChoice.getItems().add(event);
+			IdWrapper<Event> finalEvent = new IdWrapper<>(event);
+			finalEvent.setIndex(finalEventsChoice.getItems().size());
+			finalEventsChoice.getItems().add(finalEvent);
 			BetonQuestEditor.refresh();
 		}
 	}
 	
 	@FXML private void delFinalEvent() {
-		Event event = finalEventsChoice.getValue();
+		IdWrapper<Event> event = finalEventsChoice.getValue();
 		if (event != null) {
 			finalEventsChoice.getItems().remove(event);
 			BetonQuestEditor.refresh();
@@ -396,13 +403,15 @@ public class ConversationController {
 			event = currentConversation.getPack().newEvent(name);
 		}
 		if (!eventChoice.getItems().contains(event)) {
-			eventChoice.getItems().add(event);
+			IdWrapper<Event> wrapped = new IdWrapper<>(event);
+			wrapped.setIndex(eventChoice.getItems().size());
+			eventChoice.getItems().add(wrapped);
 			BetonQuestEditor.refresh();
 		}
 	}
 	
 	@FXML private void delEvent() {
-		Event event = eventChoice.getValue();
+		IdWrapper<Event> event = eventChoice.getValue();
 		if (event != null) {
 			eventChoice.getItems().remove(event);
 			BetonQuestEditor.refresh();
@@ -417,13 +426,15 @@ public class ConversationController {
 			condition = currentConversation.getPack().newCondition(name);
 		}
 		if (!conditionChoice.getItems().contains(condition)) {
-			conditionChoice.getItems().add(condition);
+			IdWrapper<Condition> wrapped = new IdWrapper<>(condition);
+			wrapped.setIndex(conditionChoice.getItems().size());
+			conditionChoice.getItems().add(wrapped);
 			BetonQuestEditor.refresh();
 		}
 	}
 	
 	@FXML private void delCondition() {
-		Condition condition = conditionChoice.getValue();
+		IdWrapper<Condition> condition = conditionChoice.getValue();
 		if (condition != null) {
 			conditionChoice.getItems().remove(condition);
 			BetonQuestEditor.refresh();
@@ -445,12 +456,14 @@ public class ConversationController {
 				option = currentConversation.newNpcOption(name);
 			}
 		}
-		pointsToList.getItems().add(option);
+		IdWrapper<ConversationOption> wrapped = new IdWrapper<>(option);
+		wrapped.setIndex(pointsToList.getItems().size());
+		pointsToList.getItems().add(wrapped);
 		BetonQuestEditor.refresh();
 	}
 	
 	@FXML private void delPointer() {
-		ConversationOption option = pointsToList.getSelectionModel().getSelectedItem();
+		IdWrapper<ConversationOption> option = pointsToList.getSelectionModel().getSelectedItem();
 		if (option != null) {
 			pointsToList.getItems().remove(option);
 		}
@@ -464,6 +477,7 @@ public class ConversationController {
 		}
 		if (currentConversation.getNpcOption(name.get()) == null) {
 			NpcOption option = currentConversation.newNpcOption(name.get());
+			option.setIndex(currentConversation.getNpcOptions().size() - 1);
 			BetonQuestEditor.refresh();
 			displayOption(option);
 		}
@@ -503,6 +517,7 @@ public class ConversationController {
 		}
 		if (currentConversation.getPlayerOption(name.get()) == null) {
 			PlayerOption option = currentConversation.newPlayerOption(name.get());
+			option.setIndex(currentConversation.getPlayerOptions().size() - 1);
 			BetonQuestEditor.refresh();
 			displayOption(option);
 		}

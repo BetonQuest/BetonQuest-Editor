@@ -10,6 +10,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
@@ -26,8 +27,8 @@ public class Conversation implements ID {
 	private BooleanProperty stop = new SimpleBooleanProperty();
 	private ObservableList<NpcOption> npcOptions = FXCollections.observableArrayList();
 	private ObservableList<PlayerOption> playerOptions = FXCollections.observableArrayList();
-	private ObservableList<NpcOption> startingOptions = FXCollections.observableArrayList();
-	private ObservableList<Event> finalEvents = FXCollections.observableArrayList();
+	private ObservableList<IdWrapper<NpcOption>> startingOptions = FXCollections.observableArrayList();
+	private ObservableList<IdWrapper<Event>> finalEvents = FXCollections.observableArrayList();
 
 	public Conversation(QuestPackage pack, String convName) {
 		this.pack = pack;
@@ -93,11 +94,11 @@ public class Conversation implements ID {
 		return option;
 	}
 
-	public ObservableList<NpcOption> getStartingOptions() {
+	public ObservableList<IdWrapper<NpcOption>> getStartingOptions() {
 		return startingOptions;
 	}
 
-	public ObservableList<Event> getFinalEvents() {
+	public ObservableList<IdWrapper<Event>> getFinalEvents() {
 		return finalEvents;
 	}
 	

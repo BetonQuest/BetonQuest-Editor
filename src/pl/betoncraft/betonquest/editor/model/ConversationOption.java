@@ -22,6 +22,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
@@ -34,9 +35,9 @@ public abstract class ConversationOption implements ID {
 	private StringProperty id;
 	private int index = -1;
 	private TranslatableText text = new TranslatableText();
-	private ObservableList<Event> events = FXCollections.observableArrayList();
-	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
-	private ObservableList<ConversationOption> pointers = FXCollections.observableArrayList();
+	private ObservableList<IdWrapper<Event>> events = FXCollections.observableArrayList();
+	private ObservableList<IdWrapper<Condition>> conditions = FXCollections.observableArrayList();
+	private ObservableList<IdWrapper<ConversationOption>> pointers = FXCollections.observableArrayList();
 
 	public ConversationOption(String id) {
 		this.id = new SimpleStringProperty(id);
@@ -58,15 +59,15 @@ public abstract class ConversationOption implements ID {
 		return text;
 	}
 
-	public ObservableList<Event> getEvents() {
+	public ObservableList<IdWrapper<Event>> getEvents() {
 		return events;
 	}
 
-	public ObservableList<Condition> getConditions() {
+	public ObservableList<IdWrapper<Condition>> getConditions() {
 		return conditions;
 	}
 
-	public ObservableList<ConversationOption> getPointers() {
+	public ObservableList<IdWrapper<ConversationOption>> getPointers() {
 		return pointers;
 	}
 	

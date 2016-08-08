@@ -46,18 +46,21 @@ public class EcoController {
 	
 	@FXML private void addEvent() {
 		Event event = new Event("new_event");
+		event.setIndex(eventsList.getItems().size());
 		eventsList.getItems().add(event);
 		InstructionEditController.display(event);
 	}
 	
 	@FXML private void addCondition() {
 		Condition condition = new Condition("new_condition");
+		condition.setIndex(conditionsList.getItems().size());
 		conditionsList.getItems().add(condition);
 		InstructionEditController.display(condition);
 	}
 	
 	@FXML private void addObjective() {
 		Objective objective = new Objective("new_objective");
+		objective.setIndex(objectivesList.getItems().size());
 		objectivesList.getItems().add(objective);
 		InstructionEditController.display(objective);
 	}

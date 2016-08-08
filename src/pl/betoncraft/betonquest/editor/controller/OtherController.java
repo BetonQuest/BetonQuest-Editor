@@ -56,6 +56,7 @@ public class OtherController {
 	
 	@FXML private void addItem() {
 		Item item = new Item("new_item");
+		item.setIndex(itemsList.getItems().size());
 		itemsList.getItems().add(item);
 		InstructionEditController.display(item);
 	}
@@ -77,6 +78,7 @@ public class OtherController {
 	
 	@FXML private void addEntry() {
 		JournalEntry entry = BetonQuestEditor.getInstance().getDisplayedPackage().newJournalEntry("new_entry");
+		entry.setIndex(journalList.getItems().size() - 1);
 		entry.edit();
 		BetonQuestEditor.refresh();
 	}
