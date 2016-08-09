@@ -56,5 +56,10 @@ public class GlobalVariable implements Instruction {
 	public StringProperty getInstruction() {
 		return value;
 	}
+
+	@Override
+	public void edit() {
+		// TODO edit a global variable
+	}
 	
 }

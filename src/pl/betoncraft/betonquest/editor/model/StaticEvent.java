@@ -54,4 +54,9 @@ public class StaticEvent implements ID {
 		return event;
 	}
 
+	@Override
+	public void edit() {
+		// TODO edit static event
+	}
+
 }

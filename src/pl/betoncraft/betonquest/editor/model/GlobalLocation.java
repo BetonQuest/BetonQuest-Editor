@@ -19,13 +19,14 @@ package pl.betoncraft.betonquest.editor.model;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import pl.betoncraft.betonquest.editor.data.Editable;
 
 /**
  * Represents a location objective which is in the "global locations" list. 
  *
  * @author Jakub Sapalski
  */
-public class GlobalLocation {
+public class GlobalLocation implements Editable {
 	
 	private ObjectProperty<Objective> objective = new SimpleObjectProperty<>();
 	
@@ -40,6 +41,11 @@ public class GlobalLocation {
 	@Override
 	public String toString() {
 		return objective.get().getId().get();
+	}
+
+	@Override
+	public void edit() {
+		// TODO edit global location
 	}
 
 }

@@ -25,7 +25,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author Jakub Sapalski
  */
-public interface ID {
+public interface ID extends Editable {
 	
 	/**
 	 * @return the ID of this object

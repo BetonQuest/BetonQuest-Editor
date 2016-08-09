@@ -71,4 +71,9 @@ public class MainPageLine implements ID {
 		return id.get();
 	}
 
+	@Override
+	public void edit() {
+		// TODO edit main page line
+	}
+
 }

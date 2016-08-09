@@ -76,4 +76,9 @@ public abstract class ConversationOption implements ID {
 		return id.get();
 	}
 
+	@Override
+	public void edit() {
+		// TODO edit option name
+	}
+
 }

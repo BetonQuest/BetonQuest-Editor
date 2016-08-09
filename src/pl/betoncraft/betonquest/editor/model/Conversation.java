@@ -115,4 +115,9 @@ public class Conversation implements ID {
 		return convName.get();
 	}
 
+	@Override
+	public void edit() {
+		// TODO edit conversation name
+	}
+
 }

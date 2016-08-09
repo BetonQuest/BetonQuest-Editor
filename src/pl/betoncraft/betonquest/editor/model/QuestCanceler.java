@@ -85,4 +85,9 @@ public class QuestCanceler implements ID {
 		return id.get();
 	}
 
+	@Override
+	public void edit() {
+		// TODO edit canceler name
+	}
+
 }

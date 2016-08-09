@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Button?>
+<?import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField?>
+
+<VBox
+	fx:controller="pl.betoncraft.betonquest.editor.controller.SortedChoiceController"
+	xmlns:fx="http://javafx.com/fxml/1" spacing="5">
+
+	<padding>
+		<Insets top="10" left="10" bottom="10" right="10" />
+	</padding>
+
+	<Label alignment="CENTER" fx:id="label" id="option-label" />
+
+	<ListView fx:id="list" />
+
+	<AutoCompleteTextField fx:id="field" />
+
+	<ButtonBar>
+		<buttons>
+
+			<Button text="%add" onAction="#add" />
+			<Button text="%edit" onAction="#edit" />
+			<Button text="%del" onAction="#delete" />
+
+		</buttons>
+	</ButtonBar>
+
+</VBox>

@@ -59,4 +59,9 @@ public class NpcBinding implements ID {
 		return conversation;
 	}
 
+	@Override
+	public void edit() {
+		// TODO edit npc binding
+	}
+
 }

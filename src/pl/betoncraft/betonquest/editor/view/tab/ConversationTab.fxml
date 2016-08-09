@@ -39,7 +39,8 @@
 				<Button text="%rename" onAction="#renameConversation" />
 				<Button text="%del" onAction="#delConversation" />
 				<!-- stop option -->
-				<HBox spacing="5" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS" fx:id="stopPane" >
+				<HBox spacing="5" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS"
+					fx:id="stopPane">
 					<Label text="%stop-option" id="option-label" />
 					<CheckBox fx:id="stop" />
 				</HBox>
@@ -55,147 +56,113 @@
 				</columnConstraints>
 
 				<!-- main conversation settings and pointers -->
-				<VBox spacing="5" GridPane.columnIndex="0">
+				<GridPane hgap="5" vgap="5" GridPane.columnIndex="0"
+					GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS">
+					<columnConstraints>
+						<ColumnConstraints percentWidth="50" />
+						<ColumnConstraints percentWidth="50" />
+					</columnConstraints>
 					<padding>
 						<Insets bottom="5" top="5" left="5" right="5" />
 					</padding>
 
 					<!-- settings -->
-					<GridPane hgap="5" vgap="5">
-						<columnConstraints>
-							<ColumnConstraints hgrow="NEVER" />
-							<ColumnConstraints hgrow="ALWAYS" />
-						</columnConstraints>
 
-						<!-- NPC name -->
-						<Label text="%npc-name" id="option-label" GridPane.rowIndex="0"
-							GridPane.columnIndex="0" />
-						<TextField GridPane.rowIndex="0" GridPane.columnIndex="1"
-							fx:id="npc" />
+					<!-- NPC name -->
+					<HBox GridPane.rowIndex="0" GridPane.columnIndex="0"
+						GridPane.columnSpan="2" spacing="5">
+						<Label text="%npc-name" id="option-label" />
+						<TextField fx:id="npc" HBox.hgrow="ALWAYS" />
+					</HBox>
 
-						<!-- starting options -->
-						<Label text="%start-options" id="option-label"
-							GridPane.rowIndex="1" GridPane.columnIndex="0" />
-						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
-							<ChoiceBox fx:id="startingOptionsChoice" />
-							<AutoCompleteTextField fx:id="startingOptionsField" />
-							<Button text="%add" onAction="#addStartingOption" />
-							<Button text="%del" onAction="#delStartingOption" />
-						</HBox>
-
-						<!-- final events -->
-						<Label text="%final-events" id="option-label"
-							GridPane.rowIndex="2" GridPane.columnIndex="0" />
-						<HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
-							<ChoiceBox fx:id="finalEventsChoice" />
-							<AutoCompleteTextField fx:id="finalEventsField" />
-							<Button text="%add" onAction="#addFinalEvent" />
-							<Button text="%del" onAction="#delFinalEvent" />
-						</HBox>
-					</GridPane>
+					<!-- starting options and final events -->
+					<Button fx:id="startingOptionsButton" onAction="#editStartingOptions"
+						GridPane.rowIndex="1" GridPane.columnIndex="0" GridPane.hgrow="ALWAYS"
+						maxWidth="9000" />
+					<Button fx:id="finalEventsButton" onAction="#editFinalEvents"
+						GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS"
+						maxWidth="9000" />
 
 					<!-- player&NPC pointers -->
-					<HBox spacing="5" VBox.vgrow="ALWAYS">
 
-						<!-- npc options -->
-						<VBox spacing="5" HBox.hgrow="ALWAYS">
-							<Label text="%npc-options" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" fx:id="npcList"
-								onMouseClicked="#clickNpcOption" onKeyReleased="#clickNpcOption" />
-							<ButtonBar>
-								<buttons>
-									<Button text="%add" onAction="#addNpcOption" />
-									<Button text="%rename" onAction="#renameNpcOption" />
-									<Button text="%del" onAction="#delNpcOption" />
-								</buttons>
-							</ButtonBar>
-						</VBox>
+					<!-- npc options -->
+					<Label text="%npc-options" id="option-label"
+						GridPane.rowIndex="2" GridPane.columnIndex="0" />
+					<ListView GridPane.vgrow="ALWAYS" fx:id="npcList"
+						GridPane.rowIndex="3" GridPane.columnIndex="0" onMouseClicked="#clickNpcOption"
+						onKeyReleased="#clickNpcOption" />
+					<ButtonBar GridPane.rowIndex="4" GridPane.columnIndex="0">
+						<buttons>
+							<Button text="%add" onAction="#addNpcOption" />
+							<Button text="%rename" onAction="#renameNpcOption" />
+							<Button text="%del" onAction="#delNpcOption" />
+						</buttons>
+					</ButtonBar>
 
-						<!-- player options -->
-						<VBox spacing="5" HBox.hgrow="ALWAYS">
-							<Label text="%player-options" id="option-label" />
-							<ListView VBox.vgrow="ALWAYS" fx:id="playerList"
-								onMouseClicked="#clickPlayerOption" onKeyReleased="#clickPlayerOption" />
-							<ButtonBar>
-								<buttons>
-									<Button text="%add" onAction="#addPlayerOption" />
-									<Button text="%rename" onAction="#renamePlayerOption" />
-									<Button text="%del" onAction="#delPlayerOption" />
-								</buttons>
-							</ButtonBar>
-						</VBox>
-					</HBox>
-				</VBox>
+					<!-- player options -->
+					<Label text="%player-options" id="option-label"
+						GridPane.rowIndex="2" GridPane.columnIndex="1" />
+					<ListView GridPane.vgrow="ALWAYS" fx:id="playerList"
+						GridPane.rowIndex="3" GridPane.columnIndex="1" onMouseClicked="#clickPlayerOption"
+						onKeyReleased="#clickPlayerOption" />
+					<ButtonBar GridPane.rowIndex="4" GridPane.columnIndex="1">
+						<buttons>
+							<Button text="%add" onAction="#addPlayerOption" />
+							<Button text="%rename" onAction="#renamePlayerOption" />
+							<Button text="%del" onAction="#delPlayerOption" />
+						</buttons>
+					</ButtonBar>
+				</GridPane>
 
 				<Separator orientation="VERTICAL" GridPane.columnIndex="1"
 					GridPane.halignment="CENTER" />
 
 				<!-- settings for an option -->
-				<VBox spacing="5" GridPane.columnIndex="2" GridPane.vgrow="ALWAYS" fx:id="optionPane">
+				<GridPane hgap="5" vgap="5" GridPane.columnIndex="2"
+					GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS" fx:id="optionPane">
+					<columnConstraints>
+						<ColumnConstraints percentWidth="50" />
+						<ColumnConstraints percentWidth="50" />
+					</columnConstraints>
 					<padding>
 						<Insets bottom="5" top="5" left="5" right="5" />
 					</padding>
-					
+
 					<!-- option type -->
-					<StackPane alignment="CENTER">
-						<Label id="option-label" fx:id="optionType" />
-					</StackPane>
+					<Label id="option-label" fx:id="optionType"
+						GridPane.halignment="CENTER" GridPane.rowIndex="0"
+						GridPane.columnSpan="2" />
 
-					<!-- main option settings -->
-					<GridPane hgap="5" vgap="5">
-						<columnConstraints>
-							<ColumnConstraints hgrow="NEVER" />
-							<ColumnConstraints hgrow="ALWAYS" />
-						</columnConstraints>
-						<Label text="%text" id="option-label" GridPane.rowIndex="0"
-							GridPane.columnIndex="0" GridPane.valignment="TOP" />
-						<TextArea wrapText="true" GridPane.rowIndex="0" GridPane.columnIndex="1"
-							fx:id="option" />
-						<Label text="%events" id="option-label" GridPane.rowIndex="1"
-							GridPane.columnIndex="0" />
-						<HBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
-							<ChoiceBox fx:id="eventChoice" />
-							<AutoCompleteTextField fx:id="eventField" />
-							<Button text="%add" onAction="#addEvent" />
-							<Button text="%del" onAction="#delEvent" />
-						</HBox>
-						<Label text="%conditions" id="option-label"
-							GridPane.rowIndex="2" GridPane.columnIndex="0" />
-						<HBox spacing="5" GridPane.rowIndex="2" GridPane.columnIndex="1">
-							<ChoiceBox fx:id="conditionChoice" />
-							<AutoCompleteTextField fx:id="conditionField" />
-							<Button text="%add" onAction="#addCondition" />
-							<Button text="%del" onAction="#delCondition" />
-						</HBox>
-					</GridPane>
+					<!-- text -->
+					<TextArea wrapText="true" GridPane.rowIndex="1"
+						promptText="%text" GridPane.columnSpan="2" fx:id="option" />
 
-					<!-- pointers -->
-					<GridPane hgap="5" vgap="5" VBox.vgrow="ALWAYS">
-						<columnConstraints>
-							<ColumnConstraints percentWidth="50" />
-							<ColumnConstraints percentWidth="50" />
-						</columnConstraints>
+					<!-- events and conditions -->
+					<Button fx:id="conditionsButton" GridPane.rowIndex="2"
+						GridPane.columnIndex="0" onAction="#editConditions" maxWidth="9000" />
+					<Button fx:id="eventsButton" GridPane.rowIndex="2"
+						GridPane.columnIndex="1" onAction="#editEvents" maxWidth="9000" />
 
-						<!-- points to -->
-						<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="0"
-							GridPane.vgrow="ALWAYS">
-							<Label id="option-label" fx:id="pointsToLabel" />
-							<ListView VBox.vgrow="ALWAYS" fx:id="pointsToList"
-								onMouseClicked="#clickPointsTo" onKeyReleased="#clickPointsTo" />
-							<AutoCompleteTextField maxWidth="9000" fx:id="pointsToField" />
-							<Button text="%add" maxWidth="9000" onAction="#addPointer" />
-							<Button text="%del" maxWidth="9000" onAction="#delPointer" />
-						</VBox>
+					<!-- points to -->
+					<Label id="option-label" fx:id="pointsToLabel"
+						GridPane.rowIndex="3" GridPane.columnIndex="0" />
+					<ListView GridPane.vgrow="ALWAYS" fx:id="pointsToList"
+						GridPane.rowIndex="4" GridPane.columnIndex="0" onMouseClicked="#clickPointsTo"
+						onKeyReleased="#clickPointsTo" />
+					<AutoCompleteTextField maxWidth="9000"
+						GridPane.rowIndex="5" GridPane.columnIndex="0" fx:id="pointsToField" />
+					<Button text="%add" maxWidth="9000" onAction="#addPointer"
+						GridPane.rowIndex="6" GridPane.columnIndex="0" />
+					<Button text="%del" maxWidth="9000" onAction="#delPointer"
+						GridPane.rowIndex="7" GridPane.columnIndex="0" />
 
-						<!-- pointed by -->
-						<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="1"
-							GridPane.vgrow="ALWAYS">
-							<Label id="option-label" fx:id="pointedByLabel" />
-							<ListView VBox.vgrow="ALWAYS" fx:id="pointedByList"
-								onMouseClicked="#clickPointedBy" onKeyReleased="#clickPointedBy" />
-						</VBox>
-					</GridPane>
-				</VBox>
+					<!-- pointed by -->
+					<Label id="option-label" fx:id="pointedByLabel"
+						GridPane.rowIndex="3" GridPane.columnIndex="1" />
+					<ListView GridPane.vgrow="ALWAYS" fx:id="pointedByList"
+						GridPane.rowIndex="4" GridPane.rowSpan="4" GridPane.columnIndex="1"
+						onMouseClicked="#clickPointedBy" onKeyReleased="#clickPointedBy" />
+				</GridPane>
 			</GridPane>
 		</VBox>
 	</ScrollPane>
