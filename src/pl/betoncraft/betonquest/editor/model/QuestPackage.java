@@ -42,6 +42,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
@@ -215,7 +216,7 @@ public class QuestPackage {
 									case "event":
 									case "events":
 										String[] eventNames = subValue.split(",");
-										ArrayList<IdWrapper<Event>> events = new ArrayList<IdWrapper<Event>>(eventNames.length);
+										ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
 										for (int i = 0; i < eventNames.length; i++) {
 											IdWrapper<Event> event = new IdWrapper<>(newEvent(eventNames[i].trim()));
 											events.add(i, event);
@@ -226,9 +227,16 @@ public class QuestPackage {
 									case "condition":
 									case "conditions":
 										String[] conditionNames = subValue.split(",");
-										ArrayList<IdWrapper<Condition>> conditions = new ArrayList<IdWrapper<Condition>>(conditionNames.length);
+										ArrayList<ConditionWrapper> conditions = new ArrayList<>(conditionNames.length);
 										for (int i = 0; i < conditionNames.length; i++) {
-											IdWrapper<Condition> condition = new IdWrapper<>(newCondition(conditionNames[i].trim()));
+											String name = conditionNames[i].trim();
+											boolean negated = false;
+											while (name.startsWith("!")) {
+												name = name.substring(1, name.length());
+												negated = true;
+											}
+											ConditionWrapper condition = new ConditionWrapper(newCondition(name));
+											condition.setNegated(negated);
 											conditions.add(i, condition);
 											condition.setIndex(i);
 										}
@@ -278,7 +286,7 @@ public class QuestPackage {
 									case "event":
 									case "events":
 										String[] eventNames = subValue.split(",");
-										ArrayList<IdWrapper<Event>> events = new ArrayList<IdWrapper<Event>>(eventNames.length);
+										ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
 										for (int i = 0; i < eventNames.length; i++) {
 											IdWrapper<Event> event = new IdWrapper<>(newEvent(eventNames[i].trim()));
 											events.add(i, event);
@@ -289,9 +297,16 @@ public class QuestPackage {
 									case "condition":
 									case "conditions":
 										String[] conditionNames = subValue.split(",");
-										ArrayList<IdWrapper<Condition>> conditions = new ArrayList<IdWrapper<Condition>>(conditionNames.length);
+										ArrayList<ConditionWrapper> conditions = new ArrayList<>(conditionNames.length);
 										for (int i = 0; i < conditionNames.length; i++) {
-											IdWrapper<Condition> condition = new IdWrapper<>(newCondition(conditionNames[i].trim()));
+											String name = conditionNames[i].trim();
+											boolean negated = false;
+											while (name.startsWith("!")) {
+												name = name.substring(1, name.length());
+												negated = true;
+											}
+											ConditionWrapper condition = new ConditionWrapper(newCondition(name));
+											condition.setNegated(negated);
 											conditions.add(i, condition);
 											condition.setIndex(i);
 										}
@@ -520,9 +535,6 @@ public class QuestPackage {
 	}
 
 	public Condition newCondition(String id) {
-		while (id.startsWith("!")) {
-			id = id.substring(1, id.length());
-		}
 		Condition condition = getByID(conditions, id);
 		if (condition == null) {
 			condition = new Condition(id);

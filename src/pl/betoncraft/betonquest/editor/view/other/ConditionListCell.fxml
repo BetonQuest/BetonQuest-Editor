@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.CheckBox?>
+
+<HBox xmlns:fx="http://javafx.com/fxml/1"
+	fx:controller="pl.betoncraft.betonquest.editor.controller.ConditionListCellController">
+
+	<CheckBox fx:id="box" onAction="#tick" id="condition-checkbox" />
+	<Text fx:id="text" />
+
+</HBox>

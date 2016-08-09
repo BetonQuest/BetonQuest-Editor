@@ -144,6 +144,10 @@
 	-fx-background-color: -fx-light;
 }
 
+#condition-checkbox .mark {
+	-fx-shape: "M20 0 L44 0 L32 48 L38 50 L40 56 L38 62 L32 64 L26 62 L24 56 L26 50 L32 48 L20 0 L0 0 L64 0";
+}
+
 .list-view:focused, .table-view:focused, .text-field:focused, .button:focused {
 	-fx-background-insets: 0, 0, 1, 2;
     -fx-background-radius: 0;

@@ -29,13 +29,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField;
-import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
 import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
@@ -45,22 +45,26 @@ import pl.betoncraft.betonquest.editor.data.IdWrapper;
  *
  * @author Jakub Sapalski
  */
-public class SortedChoiceController<T extends ID> {
+public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F extends ListCell<W>> {
 	
 	private String labelText;
-	private ObservableList<IdWrapper<T>> chosen;
-	private ObservableList<T> available;
-	private Creator<T> creator;
+	private ObservableList<W> chosen;
+	private ObservableList<O> available;
+	private Creator<O> creator;
+	private CellFactory<F> cellFactory;
+	private Wrapper<O, W> wrapper;
 
 	@FXML private Label label;
-	@FXML private ListView<IdWrapper<T>> list;
+	@FXML private ListView<W> list;
 	@FXML private AutoCompleteTextField field;
 	
-	public void setData(String labelText, ObservableList<IdWrapper<T>> chosen, ObservableList<T> available, Creator<T> creator) {
+	public void setData(String labelText, ObservableList<W> chosen, ObservableList<O> available, Creator<O> creator, CellFactory<F> cellFactory, Wrapper<O, W> wrapper) {
 		this.labelText = labelText;
 		this.chosen = chosen;
 		this.available = available;
 		this.creator = creator;
+		this.cellFactory = cellFactory;
+		this.wrapper = wrapper;
 		// fill the view
 		refresh();
 	}
@@ -69,10 +73,10 @@ public class SortedChoiceController<T extends ID> {
 		chosen.sort((ID o1, ID o2) -> o1.getIndex() - o2.getIndex());
 		available.sort((ID o1, ID o2) -> o1.getIndex() - o2.getIndex());
 		label.setText(BetonQuestEditor.getInstance().getLanguage().getString(labelText));
-		list.setCellFactory(param -> new DraggableListCell<IdWrapper<T>>());
+		list.setCellFactory(param -> cellFactory.getListCell());
 		list.getItems().setAll(chosen);
 		ObservableList<ID> toChoose = FXCollections.observableArrayList(available);
-		for (IdWrapper<T> wrapped : chosen) {
+		for (IdWrapper<O> wrapped : chosen) {
 			toChoose.remove(wrapped.get());
 		}
 		field.getEntries().clear();
@@ -92,7 +96,7 @@ public class SortedChoiceController<T extends ID> {
 				return;
 			}
 			// check if it's not already there
-			for (IdWrapper<T> wrapped : chosen) {
+			for (IdWrapper<O> wrapped : chosen) {
 				if (wrapped.getId().get().equals(name)) {
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("already-exists"));
@@ -101,9 +105,9 @@ public class SortedChoiceController<T extends ID> {
 				}
 			}
 			// add it
-			T object = null;
+			O object = null;
 			// check if it already exists
-			for (T id : available) {
+			for (O id : available) {
 				if (id.getId().get().equals(name)) {
 					object = id;
 					break;
@@ -111,7 +115,7 @@ public class SortedChoiceController<T extends ID> {
 			}
 			// create one if not
 			if (object == null) {
-				object = (T) creator.create(name);
+				object = (O) creator.create(name);
 				if (object.edit() == EditResult.SUCCESS) {
 					object.setIndex(available.size());
 					available.add(object);
@@ -119,7 +123,7 @@ public class SortedChoiceController<T extends ID> {
 					return;
 				}
 			}
-			IdWrapper<T> wrapped = new IdWrapper<T>(object);
+			W wrapped = wrapper.wrap(object);
 			wrapped.setIndex(chosen.size());
 			chosen.add(wrapped);
 			refresh();
@@ -130,7 +134,7 @@ public class SortedChoiceController<T extends ID> {
 	
 	@FXML private void edit() {
 		try {
-			IdWrapper<T> object = list.getSelectionModel().getSelectedItem();
+			IdWrapper<O> object = list.getSelectionModel().getSelectedItem();
 			if (object != null) {
 				object.edit();
 				refresh();
@@ -142,7 +146,7 @@ public class SortedChoiceController<T extends ID> {
 	
 	@FXML private void delete() {
 		try {
-			IdWrapper<T> object = list.getSelectionModel().getSelectedItem();
+			IdWrapper<O> object = list.getSelectionModel().getSelectedItem();
 			if (object != null) {
 				chosen.remove(object);
 				refresh();
@@ -152,7 +156,9 @@ public class SortedChoiceController<T extends ID> {
 		}
 	}
 	
-	public static <E extends ID> void display(String labelText, ObservableList<IdWrapper<E>> chosen, ObservableList<E> available, Creator<E> creator) {
+	public static <O extends ID, W extends IdWrapper<O>, F extends ListCell<W>> void display(String labelText,
+			ObservableList<W> chosen, ObservableList<O> available, Creator<O> creator, CellFactory<F> cellFactory,
+			Wrapper<O, W> wrapper) {
 		try {
 			Stage window = new Stage();
 			URL location = BetonQuestEditor.class.getResource("view/window/SortedChoiceWindow.fxml");
@@ -171,16 +177,24 @@ public class SortedChoiceController<T extends ID> {
 				BetonQuestEditor.refresh();
 			});
 			@SuppressWarnings("unchecked")
-			SortedChoiceController<E> controller = (SortedChoiceController<E>) fxmlLoader.getController();
-			controller.setData(labelText, chosen, available, creator);
+			SortedChoiceController<O, W, F> controller = (SortedChoiceController<O, W, F>) fxmlLoader.getController();
+			controller.setData(labelText, chosen, available, creator, cellFactory, wrapper);
 			window.showAndWait();
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
-	public static interface Creator<E> {
-		public E create(String name);
+	public static interface Creator<O> {
+		public O create(String name);
+	}
+	
+	public static interface CellFactory<F> {
+		public F getListCell();
+	}
+	
+	public static interface Wrapper<O, W> {
+		public W wrap(O item);
 	}
 
 }

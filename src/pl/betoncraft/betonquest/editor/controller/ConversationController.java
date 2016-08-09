@@ -44,7 +44,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField;
+import pl.betoncraft.betonquest.editor.custom.ConditionListCell;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
+import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.model.Condition;
@@ -310,31 +312,39 @@ public class ConversationController {
 	
 	@FXML private void editStartingOptions() {
 		try {
-			SortedChoiceController.display("starting-options", currentConversation.getStartingOptions(), currentConversation.getNpcOptions(), name -> new NpcOption(name));
+			SortedChoiceController.display("starting-options", currentConversation.getStartingOptions(),
+					currentConversation.getNpcOptions(), name -> new NpcOption(name), () -> new DraggableListCell<>(),
+					item -> new IdWrapper<>(item));
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
 	}
-	
+
 	@FXML private void editFinalEvents() {
 		try {
-			SortedChoiceController.display("final-events", currentConversation.getFinalEvents(), currentConversation.getPack().getEvents(), name -> new Event(name));
+			SortedChoiceController.display("final-events", currentConversation.getFinalEvents(),
+					currentConversation.getPack().getEvents(), name -> new Event(name), () -> new DraggableListCell<>(),
+					item -> new IdWrapper<>(item));
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
 	}
-	
+
 	@FXML private void editConditions() {
 		try {
-			SortedChoiceController.display("conditions", currentOption.getConditions(), currentConversation.getPack().getConditions(), name -> new Condition(name));
+			SortedChoiceController.display("conditions", currentOption.getConditions(),
+					currentConversation.getPack().getConditions(), name -> new Condition(name),
+					() -> new ConditionListCell(), item -> new ConditionWrapper(item));
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
 	}
-	
+
 	@FXML private void editEvents() {
 		try {
-			SortedChoiceController.display("events", currentOption.getEvents(), currentConversation.getPack().getEvents(), name -> new Event(name));
+			SortedChoiceController.display("events", currentOption.getEvents(),
+					currentConversation.getPack().getEvents(), name -> new Event(name), () -> new DraggableListCell<>(),
+					item -> new IdWrapper<>(item));
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
