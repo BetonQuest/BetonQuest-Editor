@@ -43,6 +43,7 @@ import pl.betoncraft.betonquest.editor.controller.ConversationController;
 import pl.betoncraft.betonquest.editor.controller.EcoController;
 import pl.betoncraft.betonquest.editor.controller.MainController;
 import pl.betoncraft.betonquest.editor.controller.OtherController;
+import pl.betoncraft.betonquest.editor.controller.TabsController;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
 /**
@@ -60,6 +61,7 @@ public class BetonQuestEditor extends Application {
 	private QuestPackage currentPackage;
 	private static File autoLoadPackage;
 	private static File autoSavePackage;
+	private static int autoSelect = -1;
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -71,6 +73,7 @@ public class BetonQuestEditor extends Application {
 			language = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
 			FXMLLoader fxmlLoader = new FXMLLoader(location, language);
 			BorderPane root = (BorderPane) fxmlLoader.load();
+			TabsController.setDisabled(true);
 			Scene scene = new Scene(root, 1280, 720);
 			scene.getStylesheets().add(getClass().getResource("resource/style.css").toExternalForm());
 			stage.setScene(scene);
@@ -81,12 +84,13 @@ public class BetonQuestEditor extends Application {
 			stage.setMaximized(true);
 			stage.show();
 			// load package for debugging
-			if (autoLoadPackage != null) try {
+			if (autoLoadPackage != null) {
 				QuestPackage pack = QuestPackage.loadFromZip(new ZipFile(autoLoadPackage));
 				loadedPackages.put(pack.getName().get(), pack);
 				display(pack);
-			} catch (Exception e) {
-				BetonQuestEditor.showStackTrace(e);
+			}
+			if (autoSelect > 0) {
+				TabsController.selectTab(autoSelect);
 			}
 		} catch (Exception e) {
 			showStackTrace(e);
@@ -146,6 +150,7 @@ public class BetonQuestEditor extends Application {
 		 EcoController.setObjectives(pack.getObjectives());
 		 OtherController.setItems(pack.getItems());
 		 OtherController.setJournal(pack.getJournal());
+		 TabsController.setDisabled(false);
 	}
 	
 	/**
@@ -159,7 +164,7 @@ public class BetonQuestEditor extends Application {
 	 * Parses the arguments and starts the application.
 	 */
 	public static void main(String[] args) {
-		if (args.length > 1) {
+		if (args.length > 2) {
 			autoLoadPackage = new File(args[0]);
 			if (!autoLoadPackage.exists() || !autoLoadPackage.getName().endsWith(".zip")) {
 				autoLoadPackage = null;
@@ -168,6 +173,7 @@ public class BetonQuestEditor extends Application {
 			if (!autoSavePackage.getName().endsWith(".zip")) {
 				autoSavePackage = null;
 			}
+			autoSelect = Integer.parseInt(args[2]);
 		}
 		launch(args);
 	}

@@ -3,7 +3,9 @@
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.Tab?>
 
-<TabPane xmlns:fx="http://javafx.com/fxml/1" side="RIGHT" tabClosingPolicy="UNAVAILABLE">
+<TabPane xmlns:fx="http://javafx.com/fxml/1" side="RIGHT" fx:id="root"
+	fx:controller="pl.betoncraft.betonquest.editor.controller.TabsController"
+	tabClosingPolicy="UNAVAILABLE">
 	<fx:include source="tab/MainTab.fxml" />
 	<fx:include source="tab/ConversationTab.fxml" />
 	<fx:include source="tab/EcoTab.fxml" />
