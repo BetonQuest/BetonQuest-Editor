@@ -22,21 +22,23 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.model.JournalEntry;
 
 /**
- * Controlls the pop-up window used for editing journal entries.
+ * Controls the pop-up window used for editing journal entries.
  *
  * @author Jakub Sapalski
  */
@@ -44,32 +46,69 @@ public class JournalEntryEditController {
 	
 	private Stage stage;
 	private JournalEntry data;
+	private StringProperty entry;
+	private EditResult result = EditResult.CANCEL;
 	
 	@FXML private TextField id;
 	@FXML private TextArea text;
 	
+	/**
+	 * Sets the data in the window.
+	 * 
+	 * @param stage the pop-up window
+	 * @param data JournalEntry to display in text fields
+	 */
 	private void setData(Stage stage, JournalEntry data) {
 		this.stage = stage;
 		this.data = data;
-		id.textProperty().bindBidirectional(data.getId());
-		text.textProperty().bindBidirectional(data.getText().get(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()));
+		id.setText(data.getId().get());
+		entry = data.getText().get(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang());
+		text.setText(entry.get());
 	}
 	
+	/**
+	 * Checks if the name is inserted and changes the StringProperties of the JournalEntry object.
+	 */
 	@FXML private void ok() {
-		if (data.getId().get().isEmpty()) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("name-not-null"));
-			alert.showAndWait();
-		} else {
+		try {
+			String idString = id.getText();
+			if (idString == null || idString.isEmpty()) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("name-not-null"));
+				alert.showAndWait();
+				return;
+			}
+			data.getId().set(idString.trim());
+			String entryText = text.getText();
+			if (entryText != null && !entryText.isEmpty()) {
+				entry.set(entryText);
+			} else {
+				entry.set(new String());
+			}
 			BetonQuestEditor.refresh();
+			result = EditResult.SUCCESS;
 			stage.close();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
-	public static void display(JournalEntry data) {
+	/**
+	 * Closes the window without changing StringProperties in the JournalEntry object.
+	 */
+	@FXML private void cancel() {
+		stage.close();
+	}
+	
+	/**
+	 * Displays a window in which the user can edit a journal entry object.
+	 * 
+	 * @param data the JournalEntry object to edit
+	 */
+	public static EditResult display(JournalEntry data) {
 		try {
 			Stage window = new Stage();
-			URL location = BetonQuestEditor.class.getResource("view/window/JournalEditWindow.fxml");
+			URL location = BetonQuestEditor.class.getResource("view/window/JournalEntryEditWindow.fxml");
 			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
 			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
 			GridPane root = (GridPane) fxmlLoader.load();
@@ -83,9 +122,11 @@ public class JournalEntryEditController {
 			window.setResizable(false);
 			JournalEntryEditController controller = (JournalEntryEditController) fxmlLoader.getController();
 			controller.setData(window, data);
-			window.show();
+			window.showAndWait();
+			return controller.result;
 		} catch (IOException e) {
 			BetonQuestEditor.showStackTrace(e);
+			return EditResult.CANCEL;
 		}
 	}
 

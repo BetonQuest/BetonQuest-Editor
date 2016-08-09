@@ -41,8 +41,8 @@ public class JournalEntry implements ID, Editable {
 		return text;
 	}
 
-	public void edit() {
-		JournalEntryEditController.display(this);
+	public EditResult edit() {
+		return JournalEntryEditController.display(this);
 	}
 
 	@Override

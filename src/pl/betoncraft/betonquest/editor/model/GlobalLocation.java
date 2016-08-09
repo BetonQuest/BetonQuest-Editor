@@ -28,7 +28,7 @@ import pl.betoncraft.betonquest.editor.data.Editable;
  */
 public class GlobalLocation implements Editable {
 	
-	private ObjectProperty<Objective> objective = new SimpleObjectProperty<>();
+	private ObjectProperty<Objective> objective = new SimpleObjectProperty<>(); // TODO use IdWrapper in global locations
 	
 	public GlobalLocation(Objective objective) {
 		this.objective.set(objective);
@@ -44,8 +44,8 @@ public class GlobalLocation implements Editable {
 	}
 
 	@Override
-	public void edit() {
-		// TODO edit global location
+	public EditResult edit() {
+		return null; // TODO edit global location in a custom window
 	}
 
 }

@@ -25,6 +25,10 @@ package pl.betoncraft.betonquest.editor.data;
  */
 public interface Editable {
 	
-	public void edit();
+	public EditResult edit();
+	
+	public enum EditResult {
+		SUCCESS, CANCEL
+	}
 
 }

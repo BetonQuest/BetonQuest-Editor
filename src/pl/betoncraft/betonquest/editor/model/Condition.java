@@ -59,8 +59,8 @@ public class Condition implements Instruction, Editable {
 		return instruction;
 	}
 	
-	public void edit() {
-		InstructionEditController.display(this);
+	public EditResult edit() {
+		return InstructionEditController.display(this);
 	}
 
 	@Override

@@ -24,6 +24,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
+import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.model.Item;
 import pl.betoncraft.betonquest.editor.model.JournalEntry;
 
@@ -55,53 +56,82 @@ public class OtherController {
 	}
 	
 	@FXML private void addItem() {
-		Item item = new Item("new_item");
-		item.setIndex(itemsList.getItems().size());
-		itemsList.getItems().add(item);
-		InstructionEditController.display(item);
+		try {
+			Item item = new Item(new String());
+			if (item.edit() == EditResult.SUCCESS) {
+				item.setIndex(itemsList.getItems().size());
+				itemsList.getItems().add(item);
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	@FXML private void renameItem() {
-		Item item = itemsList.getSelectionModel().getSelectedItem();
-		if (item != null) {
-			InstructionEditController.display(item);
+		try {
+			Item item = itemsList.getSelectionModel().getSelectedItem();
+			if (item != null) {
+				item.edit();
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void delItem() {
-		Item item = itemsList.getSelectionModel().getSelectedItem();
-		if (item != null) {
-			itemsList.getItems().remove(item);
+		try {
+			Item item = itemsList.getSelectionModel().getSelectedItem();
+			if (item != null) {
+				itemsList.getItems().remove(item);
+			}
+			BetonQuestEditor.refresh();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
-		BetonQuestEditor.refresh();
 	}
 	
 	@FXML private void addEntry() {
-		JournalEntry entry = BetonQuestEditor.getInstance().getDisplayedPackage().newJournalEntry("new_entry");
-		entry.setIndex(journalList.getItems().size() - 1);
-		entry.edit();
-		BetonQuestEditor.refresh();
+		try {
+			JournalEntry entry = new JournalEntry(new String());
+			if (entry.edit() == EditResult.SUCCESS) {
+				entry.setIndex(journalList.getItems().size());
+				journalList.getItems().add(entry);
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	@FXML private void editEntry() {
-		JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
-		if (entry != null) {
-			entry.edit();
+		try {
+			JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
+			if (entry != null) {
+				entry.edit();
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void delEntry() {
-		JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
-		if (entry != null) {
-			journalList.getItems().remove(entry);
-			BetonQuestEditor.refresh();
+		try {
+			JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
+			if (entry != null) {
+				journalList.getItems().remove(entry);
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void selectEntry() {
-		JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
-		if (entry != null) {
-			entryText.setText(entry.getText().getLang(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).get());
+		try {
+			JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
+			if (entry != null) {
+				entryText.setText(entry.getText().getLang(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).get());
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	

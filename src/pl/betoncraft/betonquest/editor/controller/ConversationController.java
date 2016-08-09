@@ -115,7 +115,7 @@ public class ConversationController {
 	 * 
 	 * @param conversation Conversation to display
 	 */
-	public synchronized void displayConversation(Conversation conversation) {
+	public void displayConversation(Conversation conversation) {
 		// this selects the current conversation in the ChoiceBox if it's not already selected
 		if (instance.conversation.getSelectionModel().isEmpty() || !instance.conversation.getValue().equals(conversation)) {
 			instance.conversation.getSelectionModel().select(conversation);
@@ -149,7 +149,7 @@ public class ConversationController {
 	}
 	
 	/**
-	 * Removes current conversation from the view.
+	 * Removes the current conversation from the view.
 	 */
 	public void clearConversation() {
 		if (currentConversation == null) {
@@ -223,6 +223,9 @@ public class ConversationController {
 		optionPane.setDisable(false);
 	}
 	
+	/**
+	 * Removes the current option from the view.
+	 */
 	public void clearOption() {
 		if (currentOption == null) {
 			return;
@@ -242,215 +245,295 @@ public class ConversationController {
 	}
 	
 	@FXML private void selectConversation() {
-		Conversation selected = conversation.getValue();
-		if (selected == null) {
-			return;
+		try {
+			Conversation selected = conversation.getValue();
+			if (selected == null) {
+				return;
+			}
+			displayConversation(selected);
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
-		displayConversation(selected);
 	}
 	
 	@FXML private void clickNpcOption() {
-		NpcOption option = npcList.getSelectionModel().getSelectedItem();
-		if (option == null) {
-			return;
-		}
-		displayOption(option);
-	}
-	
-	@FXML private void clickPlayerOption() {
-		PlayerOption option = playerList.getSelectionModel().getSelectedItem();
-		if (option == null) {
-			return;
-		}
-		displayOption(option);
-	}
-	
-	@FXML private void clickPointsTo(MouseEvent event) {
-		if (event.getClickCount() == 2) {
-			IdWrapper<ConversationOption> option = pointsToList.getSelectionModel().getSelectedItem();
+		try {
+			NpcOption option = npcList.getSelectionModel().getSelectedItem();
 			if (option == null) {
 				return;
 			}
-			displayOption(option.get());
+			displayOption(option);
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
+	}
+	
+	@FXML private void clickPlayerOption() {
+		try {
+			PlayerOption option = playerList.getSelectionModel().getSelectedItem();
+			if (option == null) {
+				return;
+			}
+			displayOption(option);
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
+	}
+	
+	@FXML private void clickPointsTo(MouseEvent event) {
+		try {
+			if (event.getClickCount() == 2) {
+				IdWrapper<ConversationOption> option = pointsToList.getSelectionModel().getSelectedItem();
+				if (option == null) {
+					return;
+				}
+				displayOption(option.get());
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void clickPointedBy(MouseEvent event) {
-		if (event.getClickCount() == 2) {
-			IdWrapper<ConversationOption> option = pointedByList.getSelectionModel().getSelectedItem();
-			if (option == null) {
-				return;
+		try {
+			if (event.getClickCount() == 2) {
+				IdWrapper<ConversationOption> option = pointedByList.getSelectionModel().getSelectedItem();
+				if (option == null) {
+					return;
+				}
+				displayOption(option.get());
 			}
-			displayOption(option.get());
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void editStartingOptions() {
-		SortedChoiceController.display("starting-options", currentConversation.getStartingOptions(), currentConversation.getNpcOptions(), name -> new NpcOption(name));
+		try {
+			SortedChoiceController.display("starting-options", currentConversation.getStartingOptions(), currentConversation.getNpcOptions(), name -> new NpcOption(name));
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	@FXML private void editFinalEvents() {
-		SortedChoiceController.display("final-events", currentConversation.getFinalEvents(), currentConversation.getPack().getEvents(), name -> new Event(name));
+		try {
+			SortedChoiceController.display("final-events", currentConversation.getFinalEvents(), currentConversation.getPack().getEvents(), name -> new Event(name));
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	@FXML private void editConditions() {
-		SortedChoiceController.display("conditions", currentOption.getConditions(), currentConversation.getPack().getConditions(), name -> new Condition(name));
+		try {
+			SortedChoiceController.display("conditions", currentOption.getConditions(), currentConversation.getPack().getConditions(), name -> new Condition(name));
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	@FXML private void editEvents() {
-		SortedChoiceController.display("events", currentOption.getEvents(), currentConversation.getPack().getEvents(), name -> new Event(name));
+		try {
+			SortedChoiceController.display("events", currentOption.getEvents(), currentConversation.getPack().getEvents(), name -> new Event(name));
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	@FXML private void addPointer() {
-		String name = pointsToField.getText();
-		pointsToField.clear();
-		ConversationOption option;
-		if (currentOption instanceof NpcOption) {
-			option = getById(currentConversation.getPlayerOptions(), name);
-			if (option == null) {
-				option = currentConversation.newPlayerOption(name);
+		try {
+			String name = pointsToField.getText();
+			pointsToField.clear();
+			ConversationOption option;
+			if (currentOption instanceof NpcOption) {
+				option = getById(currentConversation.getPlayerOptions(), name);
+				if (option == null) {
+					option = currentConversation.newPlayerOption(name);
+				}
+			} else {
+				option = getById(currentConversation.getNpcOptions(), name);
+				if (option == null) {
+					option = currentConversation.newNpcOption(name);
+				}
 			}
-		} else {
-			option = getById(currentConversation.getNpcOptions(), name);
-			if (option == null) {
-				option = currentConversation.newNpcOption(name);
-			}
+			IdWrapper<ConversationOption> wrapped = new IdWrapper<>(option);
+			wrapped.setIndex(pointsToList.getItems().size());
+			pointsToList.getItems().add(wrapped);
+			BetonQuestEditor.refresh();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
-		IdWrapper<ConversationOption> wrapped = new IdWrapper<>(option);
-		wrapped.setIndex(pointsToList.getItems().size());
-		pointsToList.getItems().add(wrapped);
-		BetonQuestEditor.refresh();
 	}
 	
 	@FXML private void delPointer() {
-		IdWrapper<ConversationOption> option = pointsToList.getSelectionModel().getSelectedItem();
-		if (option != null) {
-			pointsToList.getItems().remove(option);
+		try {
+			IdWrapper<ConversationOption> option = pointsToList.getSelectionModel().getSelectedItem();
+			if (option != null) {
+				pointsToList.getItems().remove(option);
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void addNpcOption() {
-		StringProperty name = new SimpleStringProperty();
-		NameEditController.display(name);
-		if (name.get() == null || name.get().isEmpty()) {
-			return;
-		}
-		if (currentConversation.getNpcOption(name.get()) == null) {
-			NpcOption option = currentConversation.newNpcOption(name.get());
-			option.setIndex(currentConversation.getNpcOptions().size() - 1);
-			BetonQuestEditor.refresh();
-			displayOption(option);
+		try {
+			StringProperty name = new SimpleStringProperty();
+			NameEditController.display(name);
+			if (name.get() == null || name.get().isEmpty()) {
+				return;
+			}
+			if (currentConversation.getNpcOption(name.get()) == null) {
+				NpcOption option = currentConversation.newNpcOption(name.get());
+				option.setIndex(currentConversation.getNpcOptions().size() - 1);
+				BetonQuestEditor.refresh();
+				displayOption(option);
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void renameNpcOption() {
-		NpcOption option = npcList.getSelectionModel().getSelectedItem();
-		if (option != null) {
-			NameEditController.display(option.getId());
-			BetonQuestEditor.refresh();
+		try {
+			NpcOption option = npcList.getSelectionModel().getSelectedItem();
+			if (option != null) {
+				NameEditController.display(option.getId());
+				BetonQuestEditor.refresh();
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void delNpcOption() {
-		NpcOption option = npcList.getSelectionModel().getSelectedItem();
-		if (option != null) {
-			if (npcList.getItems().size() == 1) {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("cannot-delete-last-option"));
-				alert.show();
-				return;
-			}
-			npcList.getItems().remove(option);
-			for (PlayerOption o : currentConversation.getPlayerOptions()) {
-				o.getPointers().remove(option);
-			}
-			for (Iterator<IdWrapper<NpcOption>> iterator = currentConversation.getStartingOptions().iterator(); iterator.hasNext();) {
-				if (iterator.next().get().equals(option)) {
-					iterator.remove();
+		try {
+			NpcOption option = npcList.getSelectionModel().getSelectedItem();
+			if (option != null) {
+				if (npcList.getItems().size() == 1) {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("cannot-delete-last-option"));
+					alert.show();
+					return;
 				}
+				npcList.getItems().remove(option);
+				for (PlayerOption o : currentConversation.getPlayerOptions()) {
+					o.getPointers().remove(option);
+				}
+				for (Iterator<IdWrapper<NpcOption>> iterator = currentConversation.getStartingOptions().iterator(); iterator.hasNext();) {
+					if (iterator.next().get().equals(option)) {
+						iterator.remove();
+					}
+				}
+				displayOption((npcList.getItems().get(0)));
+				BetonQuestEditor.refresh();
 			}
-			displayOption((npcList.getItems().get(0)));
-			BetonQuestEditor.refresh();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void addPlayerOption() {
-		StringProperty name = new SimpleStringProperty();
-		NameEditController.display(name);
-		if (name.get() == null || name.get().isEmpty()) {
-			return;
-		}
-		if (currentConversation.getPlayerOption(name.get()) == null) {
-			PlayerOption option = currentConversation.newPlayerOption(name.get());
-			option.setIndex(currentConversation.getPlayerOptions().size() - 1);
-			BetonQuestEditor.refresh();
-			displayOption(option);
+		try {
+			StringProperty name = new SimpleStringProperty();
+			NameEditController.display(name);
+			if (name.get() == null || name.get().isEmpty()) {
+				return;
+			}
+			if (currentConversation.getPlayerOption(name.get()) == null) {
+				PlayerOption option = currentConversation.newPlayerOption(name.get());
+				option.setIndex(currentConversation.getPlayerOptions().size() - 1);
+				BetonQuestEditor.refresh();
+				displayOption(option);
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void renamePlayerOption() {
-		PlayerOption option = playerList.getSelectionModel().getSelectedItem();
-		if (option != null) {
-			NameEditController.display(option.getId());
-			BetonQuestEditor.refresh();
+		try {
+			PlayerOption option = playerList.getSelectionModel().getSelectedItem();
+			if (option != null) {
+				NameEditController.display(option.getId());
+				BetonQuestEditor.refresh();
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void delPlayerOption() {
-		PlayerOption option = playerList.getSelectionModel().getSelectedItem();
-		if (option != null) {
-			playerList.getItems().remove(option);
-			if (playerList.getItems().size() > 0) {
-				displayOption((playerList.getItems().get(0)));
-			} else {
-				clearOption();
+		try {
+			PlayerOption option = playerList.getSelectionModel().getSelectedItem();
+			if (option != null) {
+				playerList.getItems().remove(option);
+				if (playerList.getItems().size() > 0) {
+					displayOption((playerList.getItems().get(0)));
+				} else {
+					clearOption();
+				}
+				for (NpcOption o : currentConversation.getNpcOptions()) {
+					o.getPointers().remove(option);
+				}
+				BetonQuestEditor.refresh();
 			}
-			for (NpcOption o : currentConversation.getNpcOptions()) {
-				o.getPointers().remove(option);
-			}
-			BetonQuestEditor.refresh();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void addConversation() {
-		StringProperty string = new SimpleStringProperty();
-		NameEditController.display(string);
-		String name = string.get();
-		if (name == null || name.isEmpty()) {
-			return;
-		}
-//		for (Conversation conv : currentConversation.getPack().getConversations()) {
-//			if (name.equals(conv.getId().getName())) {
-//				// TODO alert about name conflict
+		try {
+			StringProperty string = new SimpleStringProperty();
+			NameEditController.display(string);
+			String name = string.get();
+			if (name == null || name.isEmpty()) {
+				return;
+			}
+//			for (Conversation conv : currentConversation.getPack().getConversations()) {
+//				if (name.equals(conv.getId().getName())) {
+//					// TODO alert about name conflict
+//				}
 //			}
-//		}
-		Conversation conv = new Conversation(BetonQuestEditor.getInstance().getDisplayedPackage(), name);
-		
-		BetonQuestEditor.getInstance().getDisplayedPackage().getConversations().add(conv);
-		displayConversation(conv);
-		BetonQuestEditor.refresh();
+			Conversation conv = new Conversation(BetonQuestEditor.getInstance().getDisplayedPackage(), name);
+			
+			BetonQuestEditor.getInstance().getDisplayedPackage().getConversations().add(conv);
+			displayConversation(conv);
+			BetonQuestEditor.refresh();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	@FXML private void renameConversation() {
-		NameEditController.display(currentConversation.getId());
-		BetonQuestEditor.refresh();
+		try {
+			NameEditController.display(currentConversation.getId());
+			BetonQuestEditor.refresh();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	@FXML private void delConversation() {
-		Conversation conv = conversation.getValue();
-		if (conv != null) {
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("confirm-action"));
-			Optional<ButtonType> action = alert.showAndWait();
-			if (action.isPresent() && action.get() == ButtonType.OK) {
-				conversation.getItems().remove(conv);
-				if (conversation.getItems().size() > 0) {
-					displayConversation(conversation.getItems().get(0));
-				} else {
-					clearConversation();
+		try {
+			Conversation conv = conversation.getValue();
+			if (conv != null) {
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("confirm-action"));
+				Optional<ButtonType> action = alert.showAndWait();
+				if (action.isPresent() && action.get() == ButtonType.OK) {
+					conversation.getItems().remove(conv);
+					if (conversation.getItems().size() > 0) {
+						displayConversation(conversation.getItems().get(0));
+					} else {
+						clearConversation();
+					}
+					BetonQuestEditor.refresh();
 				}
-				BetonQuestEditor.refresh();
 			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	

@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
@@ -86,8 +87,8 @@ public class QuestCanceler implements ID {
 	}
 
 	@Override
-	public void edit() {
-		// TODO edit canceler name
+	public EditResult edit() {
+		return NameEditController.display(id); // TODO edit a quest canceler in a custom window
 	}
 
 }

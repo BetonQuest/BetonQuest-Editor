@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
+import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Event;
 import pl.betoncraft.betonquest.editor.model.Objective;
@@ -45,69 +46,108 @@ public class EcoController {
 	}
 	
 	@FXML private void addEvent() {
-		Event event = new Event("new_event");
-		event.setIndex(eventsList.getItems().size());
-		eventsList.getItems().add(event);
-		InstructionEditController.display(event);
+		try {
+			Event event = new Event(new String());
+			if (event.edit() == EditResult.SUCCESS) {
+				event.setIndex(eventsList.getItems().size());
+				eventsList.getItems().add(event);
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	@FXML private void addCondition() {
-		Condition condition = new Condition("new_condition");
-		condition.setIndex(conditionsList.getItems().size());
-		conditionsList.getItems().add(condition);
-		InstructionEditController.display(condition);
+		try {
+			Condition condition = new Condition(new String());
+			if (condition.edit() == EditResult.SUCCESS) {
+				condition.setIndex(conditionsList.getItems().size());
+				conditionsList.getItems().add(condition);
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	@FXML private void addObjective() {
-		Objective objective = new Objective("new_objective");
-		objective.setIndex(objectivesList.getItems().size());
-		objectivesList.getItems().add(objective);
-		InstructionEditController.display(objective);
+		try {
+			Objective objective = new Objective(new String());
+			if (objective.edit() == EditResult.SUCCESS) {
+				objective.setIndex(objectivesList.getItems().size());
+				objectivesList.getItems().add(objective);
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	@FXML private void editEvent() {
-		Event event = eventsList.getSelectionModel().getSelectedItem();
-		if (event != null) {
-			InstructionEditController.display(event);
+		try {
+			Event event = eventsList.getSelectionModel().getSelectedItem();
+			if (event != null) {
+				event.edit();
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void editCondition() {
-		Condition condition = conditionsList.getSelectionModel().getSelectedItem();
-		if (condition != null) {
-			InstructionEditController.display(condition);
+		try {
+			Condition condition = conditionsList.getSelectionModel().getSelectedItem();
+			if (condition != null) {
+				condition.edit();
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void editObjective() {
-		Objective objective = objectivesList.getSelectionModel().getSelectedItem();
-		if (objective != null) {
-			InstructionEditController.display(objective);
+		try {
+			Objective objective = objectivesList.getSelectionModel().getSelectedItem();
+			if (objective != null) {
+				objective.edit();
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void delEvent() {
-		Event event = eventsList.getSelectionModel().getSelectedItem();
-		if (event != null) {
-			eventsList.getItems().remove(event);
+		try {
+			Event event = eventsList.getSelectionModel().getSelectedItem();
+			if (event != null) {
+				eventsList.getItems().remove(event);
+			}
+			BetonQuestEditor.refresh();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
-		BetonQuestEditor.refresh();
 	}
 	
 	@FXML private void delCondition() {
-		Condition condition = conditionsList.getSelectionModel().getSelectedItem();
-		if (condition != null) {
-			conditionsList.getItems().remove(condition);
+		try {
+			Condition condition = conditionsList.getSelectionModel().getSelectedItem();
+			if (condition != null) {
+				conditionsList.getItems().remove(condition);
+			}
+			BetonQuestEditor.refresh();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
-		BetonQuestEditor.refresh();
 	}
 	
 	@FXML private void delObjective() {
-		Objective objective = objectivesList.getSelectionModel().getSelectedItem();
-		if (objective != null) {
-			objectivesList.getItems().remove(objective);
+		try {
+			Objective objective = objectivesList.getSelectionModel().getSelectedItem();
+			if (objective != null) {
+				objectivesList.getItems().remove(objective);
+			}
+			BetonQuestEditor.refresh();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
-		BetonQuestEditor.refresh();
 	}
 	
 }

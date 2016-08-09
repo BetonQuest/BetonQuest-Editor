@@ -21,6 +21,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
@@ -77,8 +78,8 @@ public abstract class ConversationOption implements ID {
 	}
 
 	@Override
-	public void edit() {
-		// TODO edit option name
+	public EditResult edit() {
+		return NameEditController.display(id);
 	}
 
 }

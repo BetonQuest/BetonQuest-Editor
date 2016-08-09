@@ -36,12 +36,13 @@
 	<Label id="option-label" GridPane.rowIndex="1"
 		GridPane.columnIndex="0" text="%instruction" />
 	<TextArea GridPane.rowIndex="1" GridPane.columnIndex="1"
-		fx:id="text" />
+		fx:id="text" wrapText="true" />
 
 	<ButtonBar GridPane.rowIndex="2" GridPane.columnIndex="0"
 		GridPane.columnSpan="2">
 		<buttons>
 			<Button text="%ok" onAction="#ok" />
+			<Button text="%cancel" onAction="#cancel" />
 		</buttons>
 	</ButtonBar>
 

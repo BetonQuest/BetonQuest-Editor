@@ -18,7 +18,6 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -37,6 +36,7 @@ import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
+import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 
@@ -82,58 +82,73 @@ public class SortedChoiceController<T extends ID> {
 	}
 
 	@FXML private void add() {
-		String name = field.getText();
-		// check if name is not null
-		if (name == null || name.isEmpty()) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("name-not-null"));
-			alert.showAndWait();
-			return;
-		}
-		// check if it's not already there
-		for (IdWrapper<T> wrapped : chosen) {
-			if (wrapped.getId().get().equals(name)) {
+		try {
+			String name = field.getText();
+			// check if name is not null
+			if (name == null || name.isEmpty()) {
 				Alert alert = new Alert(AlertType.ERROR);
-				alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("already-exists"));
+				alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("name-not-null"));
 				alert.showAndWait();
 				return;
 			}
-		}
-		// add it
-		T object = null;
-		// check if it already exists
-		for (T id : available) {
-			if (id.getId().get().equals(name)) {
-				object = id;
-				break;
+			// check if it's not already there
+			for (IdWrapper<T> wrapped : chosen) {
+				if (wrapped.getId().get().equals(name)) {
+					Alert alert = new Alert(AlertType.ERROR);
+					alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("already-exists"));
+					alert.showAndWait();
+					return;
+				}
 			}
+			// add it
+			T object = null;
+			// check if it already exists
+			for (T id : available) {
+				if (id.getId().get().equals(name)) {
+					object = id;
+					break;
+				}
+			}
+			// create one if not
+			if (object == null) {
+				object = (T) creator.create(name);
+				if (object.edit() == EditResult.SUCCESS) {
+					object.setIndex(available.size());
+					available.add(object);
+				} else {
+					return;
+				}
+			}
+			IdWrapper<T> wrapped = new IdWrapper<T>(object);
+			wrapped.setIndex(chosen.size());
+			chosen.add(wrapped);
+			refresh();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
-		// create one if not
-		if (object == null) {
-			object = (T) creator.create(name);
-			object.edit();
-			object.setIndex(available.size());
-			available.add(object);
-		}
-		IdWrapper<T> wrapped = new IdWrapper<T>(object);
-		wrapped.setIndex(chosen.size());
-		chosen.add(wrapped);
-		refresh();
 	}
 	
 	@FXML private void edit() {
-		IdWrapper<T> object = list.getSelectionModel().getSelectedItem();
-		if (object != null) {
-			object.edit();
-			refresh();
+		try {
+			IdWrapper<T> object = list.getSelectionModel().getSelectedItem();
+			if (object != null) {
+				object.edit();
+				refresh();
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
 	@FXML private void delete() {
-		IdWrapper<T> object = list.getSelectionModel().getSelectedItem();
-		if (object != null) {
-			chosen.remove(object);
-			refresh();
+		try {
+			IdWrapper<T> object = list.getSelectionModel().getSelectedItem();
+			if (object != null) {
+				chosen.remove(object);
+				refresh();
+			}
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
 	}
 	
@@ -158,8 +173,8 @@ public class SortedChoiceController<T extends ID> {
 			@SuppressWarnings("unchecked")
 			SortedChoiceController<E> controller = (SortedChoiceController<E>) fxmlLoader.getController();
 			controller.setData(labelText, chosen, available, creator);
-			window.show();
-		} catch (IOException e) {
+			window.showAndWait();
+		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
 	}

@@ -21,6 +21,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 
 /**
@@ -55,8 +56,8 @@ public class StaticEvent implements ID {
 	}
 
 	@Override
-	public void edit() {
-		// TODO edit static event
+	public EditResult edit() {
+		return NameEditController.display(time); // TODO edit static event in a custom window
 	}
 
 }

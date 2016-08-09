@@ -63,8 +63,8 @@ public class IdWrapper<T extends ID> implements ID {
 	}
 
 	@Override
-	public void edit() {
-		object.edit();
+	public EditResult edit() {
+		return object.edit();
 	}
 
 }

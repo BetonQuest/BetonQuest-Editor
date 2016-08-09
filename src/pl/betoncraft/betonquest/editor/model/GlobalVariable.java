@@ -19,6 +19,7 @@ package pl.betoncraft.betonquest.editor.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import pl.betoncraft.betonquest.editor.controller.InstructionEditController;
 import pl.betoncraft.betonquest.editor.data.Instruction;
 
 /**
@@ -58,8 +59,8 @@ public class GlobalVariable implements Instruction {
 	}
 
 	@Override
-	public void edit() {
-		// TODO edit a global variable
+	public EditResult edit() {
+		return InstructionEditController.display(this);
 	}
 	
 }

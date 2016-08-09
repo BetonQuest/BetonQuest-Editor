@@ -33,9 +33,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 
 /**
- * Controls the pop-up window for editing instruction strings.
+ * Controls the pop-up window for editing a StringProperty.
  *
  * @author Jakub Sapalski
  */
@@ -43,6 +44,7 @@ public class NameEditController {
 	
 	private Stage stage;
 	private StringProperty name;
+	private EditResult result = EditResult.CANCEL;;
 	
 	@FXML private TextField field;
 	
@@ -62,23 +64,32 @@ public class NameEditController {
 	 * Checks if the name is inserted and changes the StringProperty.
 	 */
 	@FXML private void ok() {
-		String text = field.getText();
-		if (text == null || text.isEmpty()) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("name-not-null"));
-			alert.showAndWait();
-			return;
+		try {
+			String text = field.getText();
+			if (text == null || text.isEmpty()) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("name-not-null"));
+				alert.showAndWait();
+				return;
+			}
+			name.set(text.trim());
+			BetonQuestEditor.refresh();
+			result = EditResult.SUCCESS;
+			stage.close();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
 		}
-		name.set(text.trim());
-		BetonQuestEditor.refresh();
-		stage.close();
 	}
 	
 	/**
 	 * Closes the window without changing StringProperty object.
 	 */
 	@FXML private void cancel() {
-		stage.close();
+		try {
+			stage.close();
+		} catch (Exception e) {
+			BetonQuestEditor.showStackTrace(e);
+		}
 	}
 	
 	/**
@@ -86,7 +97,7 @@ public class NameEditController {
 	 * 
 	 * @param data StringProperty to edit
 	 */
-	public static void display(StringProperty data) {
+	public static EditResult display(StringProperty data) {
 		try {
 			Stage window = new Stage();
 			URL location = BetonQuestEditor.class.getResource("view/window/NameEditWindow.fxml");
@@ -104,8 +115,10 @@ public class NameEditController {
 			NameEditController controller = (NameEditController) fxmlLoader.getController();
 			controller.setData(window, data);
 			window.showAndWait();
+			return controller.result;
 		} catch (IOException e) {
 			BetonQuestEditor.showStackTrace(e);
+			return EditResult.CANCEL;
 		}
 	}
 

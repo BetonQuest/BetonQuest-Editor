@@ -26,12 +26,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.data.Instruction;
 
 /**
@@ -43,6 +44,7 @@ public class InstructionEditController {
 	
 	private Stage stage;
 	private Instruction data;
+	private EditResult result = EditResult.CANCEL;;
 	
 	@FXML private TextField id;
 	@FXML private TextField instruction;
@@ -75,8 +77,11 @@ public class InstructionEditController {
 		String instructionString = instruction.getText();
 		if (instructionString != null) {
 			data.getInstruction().set(instructionString.trim());
+		} else {
+			data.getInstruction().set(new String());
 		}
 		BetonQuestEditor.refresh();
+		result = EditResult.SUCCESS;
 		stage.close();
 	}
 	
@@ -92,7 +97,7 @@ public class InstructionEditController {
 	 * 
 	 * @param data the Instruction object to edit
 	 */
-	public static void display(Instruction data) {
+	public static EditResult display(Instruction data) {
 		try {
 			Stage window = new Stage();
 			URL location = BetonQuestEditor.class.getResource("view/window/InstructionEditWindow.fxml");
@@ -109,9 +114,11 @@ public class InstructionEditController {
 			window.setResizable(false);
 			InstructionEditController controller = (InstructionEditController) fxmlLoader.getController();
 			controller.setData(window, data);
-			window.show();
+			window.showAndWait();
+			return controller.result;
 		} catch (IOException e) {
 			BetonQuestEditor.showStackTrace(e);
+			return EditResult.CANCEL;
 		}
 	}
 
