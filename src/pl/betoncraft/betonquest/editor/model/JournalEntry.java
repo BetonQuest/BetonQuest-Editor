@@ -4,11 +4,11 @@
 package pl.betoncraft.betonquest.editor.model;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.JournalEntryEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.SimpleID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
@@ -16,11 +16,8 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
  *
  * @author Jakub Sapalski
  */
-public class JournalEntry implements ID {
+public class JournalEntry extends SimpleID {
 	
-	private StringProperty id;
-	private QuestPackage pack;
-	private int index = -1;
 	private TranslatableText text = new TranslatableText();
 	
 	public JournalEntry(QuestPackage pack, String id) {
@@ -31,26 +28,6 @@ public class JournalEntry implements ID {
 	@Override
 	public EditResult edit() {
 		return JournalEntryEditController.display(this);
-	}
-	
-	@Override
-	public StringProperty getId() {
-		return id;
-	}
-
-	@Override
-	public QuestPackage getPack() {
-		return pack;
-	}
-	
-	@Override
-	public int getIndex() {
-		return index;
-	}
-	
-	@Override
-	public void setIndex(int index) {
-		this.index = index;
 	}
 
 	@Override

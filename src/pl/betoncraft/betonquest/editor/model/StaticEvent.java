@@ -20,52 +20,29 @@ package pl.betoncraft.betonquest.editor.model;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.SimpleID;
 
 /**
  * Represents a static event, which is fired at exact hour each day.
  *
  * @author Jakub Sapalski
  */
-public class StaticEvent implements ID {
-	
-	private StringProperty time;
-	private QuestPackage pack;
-	private int index = -1;
+public class StaticEvent extends SimpleID {
+
 	private ObjectProperty<Event> event = new SimpleObjectProperty<>();
 	
 	public StaticEvent(QuestPackage pack, String time) {
 		this.pack = ID.parsePackage(pack, time);
-		this.time = new SimpleStringProperty(ID.parseId(time));
+		this.id = new SimpleStringProperty(ID.parseId(time));
 	}
 
 	@Override
 	public EditResult edit() {
-		return NameEditController.display(time); // TODO edit static event in a custom window
-	}
-
-	@Override
-	public StringProperty getId() {
-		return time;
-	}
-
-	@Override
-	public QuestPackage getPack() {
-		return pack;
-	}
-	
-	@Override
-	public int getIndex() {
-		return index;
-	}
-	
-	@Override
-	public void setIndex(int index) {
-		this.index = index;
+		return NameEditController.display(id); // TODO edit static event in a custom window
 	}
 
 	@Override
@@ -80,7 +57,7 @@ public class StaticEvent implements ID {
 	
 	@Override
 	public String toString() {
-		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? time.get() : pack.getName().get() + "." + time.get();
+		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? id.get() : pack.getName().get() + "." + id.get();
 	}
 
 }

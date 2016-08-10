@@ -21,12 +21,12 @@ package pl.betoncraft.betonquest.editor.model;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.SimpleID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
@@ -34,11 +34,8 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
  *
  * @author Jakub Sapalski
  */
-public class MainPageLine implements ID {
-	
-	private StringProperty id;
-	private QuestPackage pack;
-	private int index = -1;
+public class MainPageLine extends SimpleID {
+
 	private TranslatableText text = new TranslatableText();
 	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
 	private IntegerProperty priority = new SimpleIntegerProperty();
@@ -51,26 +48,6 @@ public class MainPageLine implements ID {
 	@Override
 	public EditResult edit() {
 		return NameEditController.display(id); // TODO edit main page line in a custom window
-	}
-	
-	@Override
-	public StringProperty getId() {
-		return id;
-	}
-
-	@Override
-	public QuestPackage getPack() {
-		return pack;
-	}
-	
-	@Override
-	public int getIndex() {
-		return index;
-	}
-	
-	@Override
-	public void setIndex(int index) {
-		this.index = index;
 	}
 
 	@Override

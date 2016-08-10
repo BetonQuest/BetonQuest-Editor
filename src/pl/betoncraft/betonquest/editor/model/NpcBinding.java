@@ -20,22 +20,19 @@ package pl.betoncraft.betonquest.editor.model;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.SimpleID;
 
 /**
  * Represents an NPC binding with a conversation.
  *
  * @author Jakub Sapalski
  */
-public class NpcBinding implements ID {
-	
-	private StringProperty id;
-	private QuestPackage pack;
-	private int index = -1;
+public class NpcBinding extends SimpleID {
+
 	private ObjectProperty<Conversation> conversation = new SimpleObjectProperty<>();
 	
 	public NpcBinding(QuestPackage pack, String id) {
@@ -51,26 +48,6 @@ public class NpcBinding implements ID {
 	@Override
 	public EditResult edit() {
 		return NameEditController.display(id); // TODO edit npc binding in a custom window
-	}
-
-	@Override
-	public StringProperty getId() {
-		return id;
-	}
-
-	@Override
-	public QuestPackage getPack() {
-		return pack;
-	}
-	
-	@Override
-	public int getIndex() {
-		return index;
-	}
-	
-	@Override
-	public void setIndex(int index) {
-		this.index = index;
 	}
 
 	@Override

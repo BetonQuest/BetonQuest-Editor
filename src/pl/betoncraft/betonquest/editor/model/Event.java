@@ -24,17 +24,15 @@ import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.InstructionEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.Instruction;
+import pl.betoncraft.betonquest.editor.data.SimpleID;
 
 /**
  * Represents BetonQuest event. 
  *
  * @author Jakub Sapalski
  */
-public class Event implements Instruction {
+public class Event extends SimpleID implements Instruction {
 	
-	private StringProperty id;
-	private QuestPackage pack;
-	private int index = -1;
 	private StringProperty instruction = new SimpleStringProperty();
 	
 	public Event(QuestPackage pack, String id) {
@@ -50,26 +48,6 @@ public class Event implements Instruction {
 	@Override
 	public EditResult edit() {
 		return InstructionEditController.display(this);
-	}
-
-	@Override
-	public StringProperty getId() {
-		return id;
-	}
-
-	@Override
-	public QuestPackage getPack() {
-		return pack;
-	}
-	
-	@Override
-	public int getIndex() {
-		return index;
-	}
-	
-	@Override
-	public void setIndex(int index) {
-		this.index = index;
 	}
 
 	@Override

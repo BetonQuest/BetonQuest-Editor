@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.SimpleID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
@@ -17,11 +18,8 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
  *
  * @author Jakub Sapalski
  */
-public class QuestCanceler implements ID {
-	
-	private StringProperty id;
-	private QuestPackage pack;
-	private int index = -1;
+public class QuestCanceler extends SimpleID {
+
 	private TranslatableText name = new TranslatableText();
 	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
 	private ObservableList<Event> events = FXCollections.observableArrayList();
@@ -39,26 +37,6 @@ public class QuestCanceler implements ID {
 	@Override
 	public EditResult edit() {
 		return NameEditController.display(id); // TODO edit a quest canceler in a custom window
-	}
-
-	@Override
-	public StringProperty getId() {
-		return id;
-	}
-	
-	@Override
-	public QuestPackage getPack() {
-		return pack;
-	}
-	
-	@Override
-	public int getIndex() {
-		return index;
-	}
-	
-	@Override
-	public void setIndex(int index) {
-		this.index = index;
 	}
 
 	@Override

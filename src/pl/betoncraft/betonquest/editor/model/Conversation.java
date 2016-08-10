@@ -6,13 +6,13 @@ package pl.betoncraft.betonquest.editor.model;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
+import pl.betoncraft.betonquest.editor.data.SimpleID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
@@ -20,11 +20,8 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
  *
  * @author Jakub Sapalski
  */
-public class Conversation implements ID {
+public class Conversation extends SimpleID {
 
-	private QuestPackage pack;
-	private StringProperty id;
-	private int index = -1;
 	private TranslatableText npc = new TranslatableText();
 	private BooleanProperty stop = new SimpleBooleanProperty();
 	private ObservableList<NpcOption> npcOptions = FXCollections.observableArrayList();
@@ -40,26 +37,6 @@ public class Conversation implements ID {
 	@Override
 	public EditResult edit() {
 		return NameEditController.display(id);
-	}
-	
-	@Override
-	public StringProperty getId() {
-		return id;
-	}
-
-	@Override
-	public QuestPackage getPack() {
-		return pack;
-	}
-	
-	@Override
-	public int getIndex() {
-		return index;
-	}
-	
-	@Override
-	public void setIndex(int index) {
-		this.index = index;
 	}
 
 	@Override
