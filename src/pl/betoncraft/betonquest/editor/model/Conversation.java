@@ -9,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
@@ -22,7 +23,7 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
 public class Conversation implements ID {
 
 	private QuestPackage pack;
-	private StringProperty convName;
+	private StringProperty id;
 	private int index = -1;
 	private TranslatableText npc = new TranslatableText();
 	private BooleanProperty stop = new SimpleBooleanProperty();
@@ -31,25 +32,40 @@ public class Conversation implements ID {
 	private ObservableList<IdWrapper<NpcOption>> startingOptions = FXCollections.observableArrayList();
 	private ObservableList<IdWrapper<Event>> finalEvents = FXCollections.observableArrayList();
 
-	public Conversation(QuestPackage pack, String convName) {
-		this.pack = pack;
-		this.convName = new SimpleStringProperty(convName);
+	public Conversation(QuestPackage pack, String id) {
+		this.pack = ID.parsePackage(pack, id);
+		this.id = new SimpleStringProperty(ID.parseId(id));
+	}
+
+	@Override
+	public EditResult edit() {
+		return NameEditController.display(id);
 	}
 	
+	@Override
 	public StringProperty getId() {
-		return convName;
+		return id;
+	}
+
+	@Override
+	public QuestPackage getPack() {
+		return pack;
 	}
 	
+	@Override
 	public int getIndex() {
 		return index;
 	}
 	
+	@Override
 	public void setIndex(int index) {
 		this.index = index;
 	}
 
-	public QuestPackage getPack() {
-		return pack;
+	@Override
+	@SuppressWarnings("unchecked")
+	public ObservableList<Conversation> getList() {
+		return pack.getConversations();
 	}
 
 	public BooleanProperty getStop() {
@@ -59,37 +75,36 @@ public class Conversation implements ID {
 	public TranslatableText getNPC() {
 		return npc;
 	}
-	
-	private static <T extends ConversationOption> T getByID(ObservableList<T> list, String id) {
-		for (T object : list) {
-			if (object.getId().get().equals(id)) {
-				return object;
-			}
-		}
-		return null;
-	}
 
 	public ObservableList<NpcOption> getNpcOptions() {
 		return npcOptions;
-	}
-	
-	public NpcOption newNpcOption(String id) {
-		NpcOption option = getByID(npcOptions, id);
-		if (option == null) {
-			option = new NpcOption(id);
-			npcOptions.add(option);
-		}
-		return option;
 	}
 
 	public ObservableList<PlayerOption> getPlayerOptions() {
 		return playerOptions;
 	}
 	
+	public NpcOption getNpcOption(String id) {
+		return getByID(npcOptions, id);
+	}
+	
+	public PlayerOption getPlayerOption(String id) {
+		return getByID(playerOptions, id);
+	}
+	
+	public NpcOption newNpcOption(String id) {
+		NpcOption option = getByID(npcOptions, id);
+		if (option == null) {
+			option = new NpcOption(this, id);
+			npcOptions.add(option);
+		}
+		return option;
+	}
+	
 	public PlayerOption newPlayerOption(String id) {
 		PlayerOption option = getByID(playerOptions, id);
 		if (option == null) {
-			option = new PlayerOption(id);
+			option = new PlayerOption(this, id);
 			playerOptions.add(option);
 		}
 		return option;
@@ -103,22 +118,18 @@ public class Conversation implements ID {
 		return finalEvents;
 	}
 	
-	public NpcOption getNpcOption(String id) {
-		return getByID(npcOptions, id);
-	}
-	
-	public PlayerOption getPlayerOption(String id) {
-		return getByID(playerOptions, id);
+	private <T extends ConversationOption> T getByID(ObservableList<T> list, String id) {
+		for (T object : list) {
+			if (object.getId().get().equals(id)) {
+				return object;
+			}
+		}
+		return null;
 	}
 	
 	@Override
 	public String toString() {
-		return convName.get();
-	}
-
-	@Override
-	public EditResult edit() {
-		return NameEditController.display(convName);
+		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? id.get() : pack.getName().get() + "." + id.get();
 	}
 
 }

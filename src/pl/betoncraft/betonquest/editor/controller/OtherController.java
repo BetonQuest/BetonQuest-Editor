@@ -57,7 +57,7 @@ public class OtherController {
 	
 	@FXML private void addItem() {
 		try {
-			Item item = new Item(new String());
+			Item item = new Item(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (item.edit() == EditResult.SUCCESS) {
 				item.setIndex(itemsList.getItems().size());
 				itemsList.getItems().add(item);
@@ -84,7 +84,7 @@ public class OtherController {
 			if (item != null) {
 				itemsList.getItems().remove(item);
 			}
-			BetonQuestEditor.refresh();
+			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
@@ -92,7 +92,7 @@ public class OtherController {
 	
 	@FXML private void addEntry() {
 		try {
-			JournalEntry entry = new JournalEntry(new String());
+			JournalEntry entry = new JournalEntry(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (entry.edit() == EditResult.SUCCESS) {
 				entry.setIndex(journalList.getItems().size());
 				journalList.getItems().add(entry);

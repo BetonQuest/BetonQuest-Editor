@@ -24,6 +24,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
@@ -36,25 +37,46 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
 public class MainPageLine implements ID {
 	
 	private StringProperty id;
+	private QuestPackage pack;
 	private int index = -1;
 	private TranslatableText text = new TranslatableText();
 	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
 	private IntegerProperty priority = new SimpleIntegerProperty();
 	
-	public MainPageLine(String id) {
-		this.id = new SimpleStringProperty(id);
+	public MainPageLine(QuestPackage pack, String id) {
+		this.pack = ID.parsePackage(pack, id);
+		this.id = new SimpleStringProperty(ID.parseId(id));
+	}
+
+	@Override
+	public EditResult edit() {
+		return NameEditController.display(id); // TODO edit main page line in a custom window
 	}
 	
+	@Override
 	public StringProperty getId() {
 		return id;
 	}
+
+	@Override
+	public QuestPackage getPack() {
+		return pack;
+	}
 	
+	@Override
 	public int getIndex() {
 		return index;
 	}
 	
+	@Override
 	public void setIndex(int index) {
 		this.index = index;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ObservableList<MainPageLine> getList() {
+		return pack.getMainPage();
 	}
 
 	public TranslatableText getText() {
@@ -69,12 +91,7 @@ public class MainPageLine implements ID {
 	
 	@Override
 	public String toString() {
-		return id.get();
-	}
-
-	@Override
-	public EditResult edit() {
-		return NameEditController.display(id); // TODO edit main page line in a custom window
+		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? id.get() : pack.getName().get() + "." + id.get();
 	}
 
 }

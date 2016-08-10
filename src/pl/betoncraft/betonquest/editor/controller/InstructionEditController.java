@@ -80,7 +80,7 @@ public class InstructionEditController {
 		} else {
 			data.getInstruction().set(new String());
 		}
-		BetonQuestEditor.refresh();
+		BetonQuestEditor.getInstance().refresh();
 		result = EditResult.SUCCESS;
 		stage.close();
 	}

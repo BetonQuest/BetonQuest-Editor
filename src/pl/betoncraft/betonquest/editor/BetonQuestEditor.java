@@ -28,6 +28,8 @@ import java.util.ResourceBundle;
 import java.util.zip.ZipFile;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -44,6 +46,11 @@ import pl.betoncraft.betonquest.editor.controller.EcoController;
 import pl.betoncraft.betonquest.editor.controller.MainController;
 import pl.betoncraft.betonquest.editor.controller.OtherController;
 import pl.betoncraft.betonquest.editor.controller.TabsController;
+import pl.betoncraft.betonquest.editor.model.Condition;
+import pl.betoncraft.betonquest.editor.model.Conversation;
+import pl.betoncraft.betonquest.editor.model.Event;
+import pl.betoncraft.betonquest.editor.model.Item;
+import pl.betoncraft.betonquest.editor.model.Objective;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
 /**
@@ -136,28 +143,109 @@ public class BetonQuestEditor extends Application {
 	 * Displays a package in the view.
 	 */
 	public void display(QuestPackage pack) {
-		 currentPackage = pack;
-		 currentPackage.sort();
-		 MainController.setNpcBindings(pack.getNpcBindings());
-		 MainController.setGlobVariables(pack.getVariables());
-		 MainController.setStaticEvents(pack.getStaticEvents());
-		 MainController.setGlobalLocations(pack.getLocations());
-		 MainController.setQuestCancelers(pack.getCancelers());
-		 MainController.setMainPageLines(pack.getMainPage());
-		 ConversationController.setConversations(pack.getConversations());
-		 EcoController.setConditions(pack.getConditions());
-		 EcoController.setEvents(pack.getEvents());
-		 EcoController.setObjectives(pack.getObjectives());
-		 OtherController.setItems(pack.getItems());
-		 OtherController.setJournal(pack.getJournal());
-		 TabsController.setDisabled(false);
+		currentPackage = pack;
+		currentPackage.sort();
+		MainController.setNpcBindings(pack.getNpcBindings());
+		MainController.setGlobVariables(pack.getVariables());
+		MainController.setStaticEvents(pack.getStaticEvents());
+		MainController.setGlobalLocations(pack.getLocations());
+		MainController.setQuestCancelers(pack.getCancelers());
+		MainController.setMainPageLines(pack.getMainPage());
+		ConversationController.setConversations(pack.getConversations());
+		EcoController.setConditions(pack.getConditions());
+		EcoController.setEvents(pack.getEvents());
+		EcoController.setObjectives(pack.getObjectives());
+		OtherController.setItems(pack.getItems());
+		OtherController.setJournal(pack.getJournal());
+		TabsController.setDisabled(false);
+	}
+	
+	/**
+	 * Clears the view. Should be called before displaying different package,
+	 * but not before refreshing. That way current conversation, option etc. are
+	 * kept.
+	 */
+	public void clearView() {
+		currentPackage = null;
+		// TODO clear view
+		TabsController.setDisabled(true);
 	}
 	
 	/**
 	 * Refreshes the currently displayed package
 	 */
-	public static void refresh() {
-		instance.display(instance.currentPackage);
+	public void refresh() {
+		display(currentPackage);
+	}
+	
+	/**
+	 * @return all conditions from loaded packages, the ones from current package first
+	 */
+	public ObservableList<Condition> getAllConditions() {
+		ObservableList<Condition> list = FXCollections.observableArrayList();
+		list.addAll(currentPackage.getConditions());
+		loadedPackages.values().forEach(pack -> {
+			if (!pack.equals(currentPackage)) {
+				list.addAll(pack.getConditions());
+			}
+		});
+		return list;
+	}
+	
+	/**
+	 * @return all events from loaded packages, the ones from current package first
+	 */
+	public ObservableList<Event> getAllEvents() {
+		ObservableList<Event> list = FXCollections.observableArrayList();
+		list.addAll(currentPackage.getEvents());
+		loadedPackages.values().forEach(pack -> {
+			if (!pack.equals(currentPackage)) {
+				list.addAll(pack.getEvents());
+			}
+		});
+		return list;
+	}
+	
+	/**
+	 * @return all objectives from loaded packages, the ones from current package first
+	 */
+	public ObservableList<Objective> getAllObjectives() {
+		ObservableList<Objective> list = FXCollections.observableArrayList();
+		list.addAll(currentPackage.getObjectives());
+		loadedPackages.values().forEach(pack -> {
+			if (!pack.equals(currentPackage)) {
+				list.addAll(pack.getObjectives());
+			}
+		});
+		return list;
+	}
+	
+	/**
+	 * @return all conversations from loaded packages, the ones from current package first
+	 */
+	public ObservableList<Conversation> getAllConversations() {
+		ObservableList<Conversation> list = FXCollections.observableArrayList();
+		list.addAll(currentPackage.getConversations());
+		loadedPackages.values().forEach(pack -> {
+			if (!pack.equals(currentPackage)) {
+				list.addAll(pack.getConversations());
+			}
+		});
+		return list;
+	}
+	
+	/**
+	 * @return all items from loaded packages, the ones from current package first
+	 */
+	public ObservableList<Item> getAllItems() {
+		ObservableList<Item> list = FXCollections.observableArrayList();
+		list.addAll(currentPackage.getItems());
+		loadedPackages.values().forEach(pack -> {
+			if (!pack.equals(currentPackage)) {
+				list.addAll(pack.getItems());
+			}
+		});
+		return list;
 	}
 
 	/**

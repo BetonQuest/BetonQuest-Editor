@@ -19,6 +19,8 @@
 package pl.betoncraft.betonquest.editor.data;
 
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
 /**
  * Wraps an ID so the index can be modified without touching the underlying object.
@@ -28,23 +30,27 @@ import javafx.beans.property.StringProperty;
 public class IdWrapper<T extends ID> implements ID {
 	
 	private T object;
+	private QuestPackage pack;
 	private int index = -1;
 	
-	public IdWrapper(T object) {
+	public IdWrapper(QuestPackage pack, T object) {
+		this.pack = pack;
 		this.object = object;
 	}
-	
-	public T get() {
-		return object;
-	}
-	
-	public void set(T object) {
-		this.object = object;
+
+	@Override
+	public EditResult edit() {
+		return object.edit();
 	}
 
 	@Override
 	public StringProperty getId() {
 		return object.getId();
+	}
+
+	@Override
+	public QuestPackage getPack() {
+		return pack;
 	}
 
 	@Override
@@ -58,13 +64,22 @@ public class IdWrapper<T extends ID> implements ID {
 	}
 	
 	@Override
+	@SuppressWarnings("unchecked")
+	public ObservableList<IdWrapper<T>> getList() {
+		return null; // wrappers do not have their own list in the package
+	}
+	
+	public T get() {
+		return object;
+	}
+	
+	public void set(T object) {
+		this.object = object;
+	}
+	
+	@Override
 	public String toString() {
 		return object.toString();
-	}
-
-	@Override
-	public EditResult edit() {
-		return object.edit();
 	}
 
 }

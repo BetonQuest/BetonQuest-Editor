@@ -17,6 +17,8 @@
  */
 package pl.betoncraft.betonquest.editor.model;
 
+import javafx.collections.ObservableList;
+
 /**
  * Represents an NPC option in a conversation.
  *
@@ -24,8 +26,14 @@ package pl.betoncraft.betonquest.editor.model;
  */
 public class NpcOption extends ConversationOption {
 
-	public NpcOption(String id) {
-		super(id);
+	public NpcOption(Conversation conversation, String id) {
+		super(conversation, id);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ObservableList<NpcOption> getList() {
+		return getConversation().getNpcOptions();
 	}
 	
 }

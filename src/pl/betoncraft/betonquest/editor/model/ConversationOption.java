@@ -21,10 +21,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.controller.ConversationController;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
-import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
+import pl.betoncraft.betonquest.editor.data.OptionID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
@@ -32,27 +33,47 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
  *
  * @author Jakub Sapalski
  */
-public abstract class ConversationOption implements ID {
+public abstract class ConversationOption implements OptionID {
 	
 	private StringProperty id;
+	private Conversation conversation;
 	private int index = -1;
 	private TranslatableText text = new TranslatableText();
 	private ObservableList<IdWrapper<Event>> events = FXCollections.observableArrayList();
 	private ObservableList<ConditionWrapper> conditions = FXCollections.observableArrayList();
 	private ObservableList<IdWrapper<ConversationOption>> pointers = FXCollections.observableArrayList();
 
-	public ConversationOption(String id) {
-		this.id = new SimpleStringProperty(id);
+	public ConversationOption(Conversation conv, String id) {
+		this.conversation = OptionID.parseConversation(conv, id);
+		this.id = new SimpleStringProperty(OptionID.parseId(id));
 	}
 
+	@Override
+	public EditResult edit() {
+		return NameEditController.display(id);
+	}
+
+	@Override
 	public StringProperty getId() {
 		return id;
 	}
 	
+	@Override
+	public Conversation getConversation() {
+		return conversation;
+	}
+
+	@Override
+	public QuestPackage getPack() {
+		return conversation.getPack();
+	}
+	
+	@Override
 	public int getIndex() {
 		return index;
 	}
 	
+	@Override
 	public void setIndex(int index) {
 		this.index = index;
 	}
@@ -75,12 +96,7 @@ public abstract class ConversationOption implements ID {
 	
 	@Override
 	public String toString() {
-		return id.get();
-	}
-
-	@Override
-	public EditResult edit() {
-		return NameEditController.display(id);
+		return ConversationController.getDisplayedConversation().equals(conversation) ? id.get() : conversation.getId().get() + "." + id.get();
 	}
 
 }

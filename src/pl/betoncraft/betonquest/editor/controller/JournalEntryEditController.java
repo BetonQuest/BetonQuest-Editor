@@ -85,7 +85,7 @@ public class JournalEntryEditController {
 			} else {
 				entry.set(new String());
 			}
-			BetonQuestEditor.refresh();
+			BetonQuestEditor.getInstance().refresh();
 			result = EditResult.SUCCESS;
 			stage.close();
 		} catch (Exception e) {

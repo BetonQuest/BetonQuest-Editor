@@ -42,7 +42,10 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.controller.ConversationController;
+import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
+import pl.betoncraft.betonquest.editor.data.Editable;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
@@ -53,7 +56,7 @@ import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
  *
  * @author Jakub Sapalski
  */
-public class QuestPackage {
+public class QuestPackage implements Editable {
 
 	private final StringProperty packName;
 	private String defLang;
@@ -88,7 +91,7 @@ public class QuestPackage {
 				String value = entry.getValue();
 				String[] parts = entry.getKey().split("\\.");
 				// getting the right entry
-				JournalEntry journalEntry = newJournalEntry(parts[0]);
+				JournalEntry journalEntry = newByID(parts[0], name -> new JournalEntry(this, name));
 				if (journalEntry.getIndex() < 0) journalEntry.setIndex(journalIndex++);
 				// handling entry data
 				if (parts.length > 1) {
@@ -107,7 +110,7 @@ public class QuestPackage {
 			HashMap<String, String> itemsMap = data.get("items");
 			int itemIndex = 0;
 			for (String key : itemsMap.keySet()) {
-				Item item = newItem(key);
+				Item item = newByID(key, name -> new Item(this, name));
 				item.getInstruction().set(itemsMap.get(key));
 				if (item.getIndex() < 0) item.setIndex(itemIndex++);
 			}
@@ -115,7 +118,7 @@ public class QuestPackage {
 			HashMap<String, String> conditionsMap = data.get("conditions");
 			int conditionIndex = 0;
 			for (String key : conditionsMap.keySet()) {
-				Condition condition = newCondition(key);
+				Condition condition = newByID(key, name -> new Condition(this, name));
 				condition.getInstruction().set(conditionsMap.get(key));
 				if (condition.getIndex() < 0) condition.setIndex(conditionIndex++);
 			}
@@ -123,7 +126,7 @@ public class QuestPackage {
 			HashMap<String, String> eventsMap = data.get("events");
 			int eventIndex = 0;
 			for (String key : eventsMap.keySet()) {
-				Event event = newEvent(key);
+				Event event = newByID(key, name -> new Event(this, name));
 				event.getInstruction().set(eventsMap.get(key));
 				if (event.getIndex() < 0) event.setIndex(eventIndex++);
 			}
@@ -131,7 +134,7 @@ public class QuestPackage {
 			HashMap<String, String> objectivesMap = data.get("objectives");
 			int objectiveIndex = 0;
 			for (String key : objectivesMap.keySet()) {
-				Objective objective = newObjective(key);
+				Objective objective = newByID(key, name -> new Objective(this, name));
 				objective.getInstruction().set(objectivesMap.get(key));
 				if (objective.getIndex() < 0) objective.setIndex(objectiveIndex++);
 			}
@@ -143,7 +146,7 @@ public class QuestPackage {
 				if (key.startsWith("conversations.")) {
 					HashMap<String, String> convData = value;
 					String convName = key.substring(14);
-					Conversation conv = newConversation(convName);
+					Conversation conv = newByID(convName, name -> new Conversation(this, name));
 					if (conv.getIndex() < 0) conv.setIndex(convIndex++);
 					int playerIndex = 0;
 					int npcIndex = 0;
@@ -172,7 +175,7 @@ public class QuestPackage {
 							String[] pointerNames = subValue.split(",");
 							ArrayList<IdWrapper<NpcOption>> options = new ArrayList<>(pointerNames.length);
 							for (int i = 0; i < pointerNames.length; i++) {
-								IdWrapper<NpcOption> startingOption = new IdWrapper<>(conv.newNpcOption(pointerNames[i].trim()));
+								IdWrapper<NpcOption> startingOption = new IdWrapper<>(this, conv.newNpcOption(pointerNames[i].trim()));
 								options.add(i, startingOption);
 								startingOption.setIndex(i); 
 							}
@@ -183,7 +186,7 @@ public class QuestPackage {
 							String[] eventNames = subValue.split(",");
 							ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
 							for (int i = 0; i < eventNames.length; i++) {
-								IdWrapper<Event> finalEvent = new IdWrapper<>(newEvent(eventNames[i].trim()));
+								IdWrapper<Event> finalEvent = new IdWrapper<>(this, newByID(eventNames[i].trim(), name -> new Event(this, name)));
 								events.add(i, finalEvent);
 								finalEvent.setIndex(i);
 							}
@@ -218,7 +221,7 @@ public class QuestPackage {
 										String[] eventNames = subValue.split(",");
 										ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
 										for (int i = 0; i < eventNames.length; i++) {
-											IdWrapper<Event> event = new IdWrapper<>(newEvent(eventNames[i].trim()));
+											IdWrapper<Event> event = new IdWrapper<>(this, newByID(eventNames[i].trim(), name -> new Event(this, name)));
 											events.add(i, event);
 											event.setIndex(i);
 										}
@@ -235,7 +238,7 @@ public class QuestPackage {
 												name = name.substring(1, name.length());
 												negated = true;
 											}
-											ConditionWrapper condition = new ConditionWrapper(newCondition(name));
+											ConditionWrapper condition = new ConditionWrapper(this, newByID(name, idString -> new Condition(this, idString)));
 											condition.setNegated(negated);
 											conditions.add(i, condition);
 											condition.setIndex(i);
@@ -247,7 +250,7 @@ public class QuestPackage {
 										String[] pointerNames = subValue.split(",");
 										ArrayList<IdWrapper<ConversationOption>> options = new ArrayList<>(pointerNames.length);
 										for (int i = 0; i < pointerNames.length; i++) {
-											IdWrapper<ConversationOption> pointer = new IdWrapper<>(conv.newPlayerOption(pointerNames[i].trim()));
+											IdWrapper<ConversationOption> pointer = new IdWrapper<>(this, conv.newPlayerOption(pointerNames[i].trim()));
 											options.add(i, pointer);
 											pointer.setIndex(i);
 										}
@@ -288,7 +291,7 @@ public class QuestPackage {
 										String[] eventNames = subValue.split(",");
 										ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
 										for (int i = 0; i < eventNames.length; i++) {
-											IdWrapper<Event> event = new IdWrapper<>(newEvent(eventNames[i].trim()));
+											IdWrapper<Event> event = new IdWrapper<>(this, newByID(eventNames[i].trim(), name -> new Event(this, name)));
 											events.add(i, event);
 											event.setIndex(i);
 										}
@@ -305,7 +308,7 @@ public class QuestPackage {
 												name = name.substring(1, name.length());
 												negated = true;
 											}
-											ConditionWrapper condition = new ConditionWrapper(newCondition(name));
+											ConditionWrapper condition = new ConditionWrapper(this, newByID(name, idString -> new Condition(this, idString)));
 											condition.setNegated(negated);
 											conditions.add(i, condition);
 											condition.setIndex(i);
@@ -317,7 +320,7 @@ public class QuestPackage {
 										String[] pointerNames = subValue.split(",");
 										ArrayList<IdWrapper<ConversationOption>> options = new ArrayList<>(pointerNames.length);
 										for (int i = 0; i < pointerNames.length; i++) {
-											IdWrapper<ConversationOption> pointer = new IdWrapper<>(conv.newNpcOption(pointerNames[i].trim()));
+											IdWrapper<ConversationOption> pointer = new IdWrapper<>(this, conv.newNpcOption(pointerNames[i].trim()));
 											options.add(i, pointer);
 											pointer.setIndex(i);
 										}
@@ -337,30 +340,30 @@ public class QuestPackage {
 				String value = entry.getValue();
 				// handling variables
 				if (key.startsWith("variables.")) {
-					variables.add(new GlobalVariable(key.substring(10), value));
+					variables.add(new GlobalVariable(this, key.substring(10), value));
 				}
 				// handling global locations
 				else if (key.startsWith("global_locations")) {
 					for (String globLoc : value.split(",")) {
-						locations.add(new GlobalLocation(newObjective(globLoc)));
+						locations.add(new GlobalLocation(newByID(globLoc, name -> new Objective(this, name))));
 					}
 				}
 				// handling static events
 				else if (key.startsWith("static_events.")) {
-					StaticEvent staticEvent = new StaticEvent(key.substring(14));
-					staticEvent.getEvent().set(newEvent(value));
+					StaticEvent staticEvent = new StaticEvent(this, key.substring(14));
+					staticEvent.getEvent().set(newByID(value, name -> new Event(this, name)));
 					staticEvents.add(staticEvent);
 				}
 				// handling NPC-conversation bindings
 				else if (key.startsWith("npcs.")) {
-					npcBindings.add(new NpcBinding(key.substring(5), newConversation(value)));
+					npcBindings.add(new NpcBinding(this, key.substring(5), newByID(value, name -> new Conversation(this, name))));
 				}
 				// handling quest cancelers
 				else if (key.startsWith("cancel.")) {
 					String[] parts = key.split("\\.");
 					if (parts.length > 1) {
 						// getting the right canceler or creating new one
-						QuestCanceler canceler = newQuestCanceler(parts[1]);
+						QuestCanceler canceler = newByID(parts[1], name -> new QuestCanceler(this, name));
 						// handling canceler properties
 						if (parts.length > 2) {
 							switch (parts[2]) {
@@ -381,7 +384,7 @@ public class QuestPackage {
 								String[] eventNames = value.split(",");
 								Event[] events = new Event[eventNames.length];
 								for (int i = 0; i < eventNames.length; i++) {
-									events[i] = newEvent(eventNames[i].trim());
+									events[i] = newByID(eventNames[i].trim(), name -> new Event(this, name));
 								}
 								canceler.getEvents().addAll(events);
 								break;
@@ -389,7 +392,7 @@ public class QuestPackage {
 								String[] conditionNames = value.split(",");
 								Condition[] conditions = new Condition[conditionNames.length];
 								for (int i = 0; i < conditionNames.length; i++) {
-									conditions[i] = newCondition(conditionNames[i].trim());
+									conditions[i] = newByID(conditionNames[i].trim(), name -> new Condition(this, name));
 								}
 								canceler.getConditions().addAll(conditions);
 								break;
@@ -397,7 +400,7 @@ public class QuestPackage {
 								String[] objectiveNames = value.split(",");
 								Objective[] objectives = new Objective[objectiveNames.length];
 								for (int i = 0; i < objectiveNames.length; i++) {
-									objectives[i] = newObjective(objectiveNames[i].trim());
+									objectives[i] = newByID(objectiveNames[i].trim(), name -> new Objective(this, name));
 								}
 								canceler.getObjectives().addAll(objectives);
 								break;
@@ -411,7 +414,7 @@ public class QuestPackage {
 								String[] journalNames = value.split(",");
 								JournalEntry[] journal = new JournalEntry[journalNames.length];
 								for (int i = 0; i < journalNames.length; i++) {
-									journal[i] = newJournalEntry(journalNames[i].trim());
+									journal[i] = newByID(journalNames[i].trim(), name -> new JournalEntry(this, name));
 								}
 								canceler.getJournal().addAll(journal);
 								break;
@@ -426,7 +429,7 @@ public class QuestPackage {
 				else if (key.startsWith("journal_main_page")) {
 					String[] parts = key.split("\\.");
 					if (parts.length > 1) {
-						MainPageLine line = newMainPageLine(parts[1]);
+						MainPageLine line = newByID(parts[1], name -> new MainPageLine(this, name));
 						if (parts.length > 2) {
 							switch (parts[2]) {
 							case "text":
@@ -453,7 +456,7 @@ public class QuestPackage {
 								String[] conditionNames = value.split(",");
 								Condition[] conditions = new Condition[conditionNames.length];
 								for (int i = 0; i < conditionNames.length; i++) {
-									conditions[i] = newCondition(conditionNames[i].trim());
+									conditions[i] = newByID(conditionNames[i].trim(), name -> new Condition(this, name));
 								}
 								line.getConditions().addAll(conditions);
 								break;
@@ -483,6 +486,11 @@ public class QuestPackage {
 		}
 	}
 
+	@Override
+	public EditResult edit() {
+		return NameEditController.display(packName);
+	}
+
 	public StringProperty getName() {
 		return packName;
 	}
@@ -495,104 +503,32 @@ public class QuestPackage {
 		this.defLang = defLang;
 	}
 
-	public static <T extends ID> T getByID(ObservableList<T> list, String id) {
-		for (T object : list) {
-			if (object.getId().get().equals(id)) {
-				return object;
-			}
-		}
-		return null;
-	}
-
 	public ObservableList<Conversation> getConversations() {
 		return conversations;
-	}
-
-	public Conversation newConversation(String id) {
-		Conversation conv = getByID(conversations, id);
-		if (conv == null) {
-			conv = new Conversation(this, id);
-			conversations.add(conv);
-		}
-		return conv;
 	}
 
 	public ObservableList<Event> getEvents() {
 		return events;
 	}
 
-	public Event newEvent(String id) {
-		Event event = getByID(events, id);
-		if (event == null) {
-			event = new Event(id);
-			events.add(event);
-		}
-		return event;
-	}
-
 	public ObservableList<Condition> getConditions() {
 		return conditions;
-	}
-
-	public Condition newCondition(String id) {
-		Condition condition = getByID(conditions, id);
-		if (condition == null) {
-			condition = new Condition(id);
-			conditions.add(condition);
-		}
-		return condition;
 	}
 
 	public ObservableList<Objective> getObjectives() {
 		return objectives;
 	}
 
-	public Objective newObjective(String id) {
-		Objective objective = getByID(objectives, id);
-		if (objective == null) {
-			objective = new Objective(id);
-			objectives.add(objective);
-		}
-		return objective;
-	}
-
 	public ObservableList<JournalEntry> getJournal() {
 		return journal;
-	}
-
-	public JournalEntry newJournalEntry(String id) {
-		JournalEntry journalEntry = getByID(journal, id);
-		if (journalEntry == null) {
-			journalEntry = new JournalEntry(id);
-			journal.add(journalEntry);
-		}
-		return journalEntry;
 	}
 
 	public ObservableList<Item> getItems() {
 		return items;
 	}
 
-	public Item newItem(String id) {
-		Item item = getByID(items, id);
-		if (item == null) {
-			item = new Item(id);
-			items.add(item);
-		}
-		return item;
-	}
-
 	public ObservableList<GlobalVariable> getVariables() {
 		return variables;
-	}
-
-	public GlobalVariable newGlobalVariable(String id) {
-		GlobalVariable globalVariable = getByID(variables, id);
-		if (globalVariable == null) {
-			globalVariable = new GlobalVariable(id);
-			variables.add(globalVariable);
-		}
-		return globalVariable;
 	}
 
 	public ObservableList<GlobalLocation> getLocations() {
@@ -603,52 +539,44 @@ public class QuestPackage {
 		return staticEvents;
 	}
 
-	public StaticEvent newStaticEvent(String id) {
-		StaticEvent staticEvent = getByID(staticEvents, id);
-		if (staticEvent == null) {
-			staticEvent = new StaticEvent(id);
-			staticEvents.add(staticEvent);
-		}
-		return staticEvent;
-	}
-
 	public ObservableList<QuestCanceler> getCancelers() {
 		return cancelers;
-	}
-
-	public QuestCanceler newQuestCanceler(String id) {
-		QuestCanceler questCanceler = getByID(cancelers, id);
-		if (questCanceler == null) {
-			questCanceler = new QuestCanceler(id);
-			cancelers.add(questCanceler);
-		}
-		return questCanceler;
 	}
 
 	public ObservableList<NpcBinding> getNpcBindings() {
 		return npcBindings;
 	}
 
-	public NpcBinding newNpcBinding(String id) {
-		NpcBinding npcBinding = getByID(npcBindings, id);
-		if (npcBinding == null) {
-			npcBinding = new NpcBinding(id);
-			npcBindings.add(npcBinding);
-		}
-		return npcBinding;
-	}
-
 	public ObservableList<MainPageLine> getMainPage() {
 		return mainPage;
 	}
-
-	public MainPageLine newMainPageLine(String id) {
-		MainPageLine mainPageLine = getByID(mainPage, id);
-		if (mainPageLine == null) {
-			mainPageLine = new MainPageLine(id);
-			mainPage.add(mainPageLine);
-		}
-		return mainPageLine;
+	
+	/**
+	 * @return all NpcOptions from loaded conversations in this package, the ones from current conversation first
+	 */
+	public ObservableList<NpcOption> getAllNpcOptions() {
+		ObservableList<NpcOption> list = FXCollections.observableArrayList();
+		list.addAll(ConversationController.getDisplayedConversation().getNpcOptions());
+		conversations.forEach(conv -> {
+			if (!conv.equals(ConversationController.getDisplayedConversation())) {
+				list.addAll(conv.getNpcOptions());
+			}
+		});
+		return list;
+	}
+	
+	/**
+	 * @return all PlayerOptions from loaded conversations in this package, the ones from current conversation first
+	 */
+	public ObservableList<PlayerOption> getAllPlayerOptions() {
+		ObservableList<PlayerOption> list = FXCollections.observableArrayList();
+		list.addAll(ConversationController.getDisplayedConversation().getPlayerOptions());
+		conversations.forEach(conv -> {
+			if (!conv.equals(ConversationController.getDisplayedConversation())) {
+				list.addAll(conv.getPlayerOptions());
+			}
+		});
+		return list;
 	}
 
 	public void sort() {
@@ -690,9 +618,29 @@ public class QuestPackage {
 	public String toString() {
 		return packName.get();
 	}
+	
+	public <T extends ID> T newByID(String id, Generator<T> generator) {
+		T object = generator.generate(id);
+		ObservableList<T> list = object.getList();
+		T existing = null;
+		for (T check : list) {
+			if (check.getId().get().equals(id)) {
+				existing = check;
+				break;
+			}
+		}
+		if (existing == null) {
+			existing = object;
+			list.add(existing);
+		}
+		return existing;
+	}
+	
+	public interface Generator<T> {
+		public T generate(String id);
+	}
 
 	public static QuestPackage loadFromZip(ZipFile file) throws IOException, PackageNotFoundException {
-		// TODO fix incorrect order of loaded entries
 		HashMap<String, ZipEntry> zipEntries = new HashMap<>();
 		Enumeration<? extends ZipEntry> entries = file.entries();
 		String packName = null;

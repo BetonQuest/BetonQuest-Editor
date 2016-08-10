@@ -73,7 +73,7 @@ public class NameEditController {
 				return;
 			}
 			name.set(text.trim());
-			BetonQuestEditor.refresh();
+			BetonQuestEditor.getInstance().refresh();
 			result = EditResult.SUCCESS;
 			stage.close();
 		} catch (Exception e) {

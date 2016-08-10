@@ -33,6 +33,11 @@ public class GlobalLocation implements Editable {
 	public GlobalLocation(Objective objective) {
 		this.objective.set(objective);
 	}
+
+	@Override
+	public EditResult edit() {
+		return null; // TODO edit global location in a custom window
+	}
 	
 	public ObjectProperty<Objective> getObjective() {
 		return objective;
@@ -41,11 +46,6 @@ public class GlobalLocation implements Editable {
 	@Override
 	public String toString() {
 		return objective.get().getId().get();
-	}
-
-	@Override
-	public EditResult edit() {
-		return null; // TODO edit global location in a custom window
 	}
 
 }

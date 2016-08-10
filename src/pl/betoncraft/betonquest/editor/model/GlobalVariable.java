@@ -19,7 +19,10 @@ package pl.betoncraft.betonquest.editor.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.InstructionEditController;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.Instruction;
 
 /**
@@ -30,37 +33,59 @@ import pl.betoncraft.betonquest.editor.data.Instruction;
 public class GlobalVariable implements Instruction {
 	
 	private StringProperty id;
+	private QuestPackage pack;
 	private int index = -1;
 	private StringProperty value = new SimpleStringProperty();
 	
-	public GlobalVariable(String id, String value) {
-		this(id);
+	public GlobalVariable(QuestPackage pack, String id) {
+		this.pack = ID.parsePackage(pack, id);
+		this.id = new SimpleStringProperty(ID.parseId(id));
+	}
+	
+	public GlobalVariable(QuestPackage pack, String id, String value) {
+		this(pack, id);
 		this.value.set(value);
-	}
-	
-	public GlobalVariable(String id) {
-		this.id = new SimpleStringProperty(id);
-	}
-
-	public StringProperty getId() {
-		return id;
-	}
-	
-	public int getIndex() {
-		return index;
-	}
-	
-	public void setIndex(int index) {
-		this.index = index;
-	}
-
-	public StringProperty getInstruction() {
-		return value;
 	}
 
 	@Override
 	public EditResult edit() {
 		return InstructionEditController.display(this);
+	}
+
+	@Override
+	public StringProperty getId() {
+		return id;
+	}
+
+	@Override
+	public QuestPackage getPack() {
+		return pack;
+	}
+	
+	@Override
+	public int getIndex() {
+		return index;
+	}
+	
+	@Override
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ObservableList<GlobalVariable> getList() {
+		return pack.getVariables();
+	}
+
+	@Override
+	public StringProperty getInstruction() {
+		return value;
+	}
+
+	@Override
+	public String toString() {
+		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? id.get() : pack.getName().get() + "." + id.get();
 	}
 	
 }

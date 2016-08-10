@@ -142,7 +142,7 @@ public class ConversationController {
 		} else {
 			if (conversation.getNpcOptions().isEmpty()) {
 				NpcOption option = conversation.newNpcOption("start");
-				conversation.getStartingOptions().add(new IdWrapper<>(option));
+				conversation.getStartingOptions().add(new IdWrapper<>(conversation.getPack(), option));
 			}
 			displayOption(conversation.getNpcOptions().get(0));
 		}
@@ -177,12 +177,17 @@ public class ConversationController {
 	 */
 	public void displayOption(ConversationOption option) {
 		clearOption();
+		currentOption = option;
+		// if the option belongs to another conversation, display that conversation
+		if (!option.getConversation().equals(currentConversation)) {
+			displayConversation(option.getConversation());
+			return;
+		}
 		if (option instanceof NpcOption) {
 			npcList.getSelectionModel().select((NpcOption) option);
 		} else {
 			playerList.getSelectionModel().select((PlayerOption) option);
 		}
-		currentOption = option;
 		if (option instanceof NpcOption) {
 			optionType.setText(BetonQuestEditor.getInstance().getLanguage().getString("npc-option") + " \"" + currentOption.getId().get() + "\"");
 			pointsToLabel.setText(BetonQuestEditor.getInstance().getLanguage().getString("points-to-player"));
@@ -199,9 +204,9 @@ public class ConversationController {
 		pointsToList.setItems(option.getPointers());
 		ObservableList<? extends ConversationOption> oppositeOptions;
 		if (option instanceof NpcOption) {
-			oppositeOptions = currentConversation.getPlayerOptions();
+			oppositeOptions = currentConversation.getPack().getAllPlayerOptions();
 		} else {
-			oppositeOptions = currentConversation.getNpcOptions();
+			oppositeOptions = currentConversation.getPack().getAllNpcOptions();
 		}
 		ObservableList<? extends ConversationOption> notPointers = FXCollections.observableArrayList(oppositeOptions);
 		for (IdWrapper<ConversationOption> o : option.getPointers()) {
@@ -209,14 +214,14 @@ public class ConversationController {
 		}
 		SortedSet<String> notPointersSet = new TreeSet<>();
 		for (ConversationOption o : notPointers) {
-			notPointersSet.add(o.getId().get());
+			notPointersSet.add(o.toString());
 		}
 		pointsToField.getEntries().addAll(notPointersSet);
 		ObservableList<IdWrapper<ConversationOption>> pointedByOptions = FXCollections.observableArrayList();
 		for (ConversationOption opposite : oppositeOptions) {
 			for (IdWrapper<ConversationOption> pointer : opposite.getPointers()) {
 				if (pointer.get().equals(option)) {
-					pointedByOptions.add(new IdWrapper<>(opposite));
+					pointedByOptions.add(new IdWrapper<>(currentConversation.getPack(), opposite));
 				}
 			}
 		}
@@ -313,8 +318,8 @@ public class ConversationController {
 	@FXML private void editStartingOptions() {
 		try {
 			SortedChoiceController.display("starting-options", currentConversation.getStartingOptions(),
-					currentConversation.getNpcOptions(), name -> new NpcOption(name), () -> new DraggableListCell<>(),
-					item -> new IdWrapper<>(item));
+					currentConversation.getPack().getAllNpcOptions(), name -> new NpcOption(currentConversation, name),
+					() -> new DraggableListCell<>(), item -> new IdWrapper<>(currentConversation.getPack(), item));
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
@@ -323,8 +328,8 @@ public class ConversationController {
 	@FXML private void editFinalEvents() {
 		try {
 			SortedChoiceController.display("final-events", currentConversation.getFinalEvents(),
-					currentConversation.getPack().getEvents(), name -> new Event(name), () -> new DraggableListCell<>(),
-					item -> new IdWrapper<>(item));
+					BetonQuestEditor.getInstance().getAllEvents(), name -> new Event(currentConversation.getPack(), name),
+					() -> new DraggableListCell<>(), item -> new IdWrapper<>(currentConversation.getPack(), item));
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
@@ -333,8 +338,8 @@ public class ConversationController {
 	@FXML private void editConditions() {
 		try {
 			SortedChoiceController.display("conditions", currentOption.getConditions(),
-					currentConversation.getPack().getConditions(), name -> new Condition(name),
-					() -> new ConditionListCell(), item -> new ConditionWrapper(item));
+					BetonQuestEditor.getInstance().getAllConditions(), name -> new Condition(currentConversation.getPack(), name),
+					() -> new ConditionListCell(), item -> new ConditionWrapper(currentConversation.getPack(), item));
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
@@ -343,8 +348,8 @@ public class ConversationController {
 	@FXML private void editEvents() {
 		try {
 			SortedChoiceController.display("events", currentOption.getEvents(),
-					currentConversation.getPack().getEvents(), name -> new Event(name), () -> new DraggableListCell<>(),
-					item -> new IdWrapper<>(item));
+					BetonQuestEditor.getInstance().getAllEvents(), name -> new Event(currentConversation.getPack(), name),
+					() -> new DraggableListCell<>(), item -> new IdWrapper<>(currentConversation.getPack(), item));
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
@@ -356,20 +361,20 @@ public class ConversationController {
 			pointsToField.clear();
 			ConversationOption option;
 			if (currentOption instanceof NpcOption) {
-				option = getById(currentConversation.getPlayerOptions(), name);
+				option = getById(currentConversation.getPack().getAllPlayerOptions(), name);
 				if (option == null) {
 					option = currentConversation.newPlayerOption(name);
 				}
 			} else {
-				option = getById(currentConversation.getNpcOptions(), name);
+				option = getById(currentConversation.getPack().getAllNpcOptions(), name);
 				if (option == null) {
 					option = currentConversation.newNpcOption(name);
 				}
 			}
-			IdWrapper<ConversationOption> wrapped = new IdWrapper<>(option);
+			IdWrapper<ConversationOption> wrapped = new IdWrapper<>(currentConversation.getPack(), option);
 			wrapped.setIndex(pointsToList.getItems().size());
 			pointsToList.getItems().add(wrapped);
-			BetonQuestEditor.refresh();
+			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
@@ -396,7 +401,7 @@ public class ConversationController {
 			if (currentConversation.getNpcOption(name.get()) == null) {
 				NpcOption option = currentConversation.newNpcOption(name.get());
 				option.setIndex(currentConversation.getNpcOptions().size() - 1);
-				BetonQuestEditor.refresh();
+				BetonQuestEditor.getInstance().refresh();
 				displayOption(option);
 			}
 		} catch (Exception e) {
@@ -409,7 +414,7 @@ public class ConversationController {
 			NpcOption option = npcList.getSelectionModel().getSelectedItem();
 			if (option != null) {
 				NameEditController.display(option.getId());
-				BetonQuestEditor.refresh();
+				BetonQuestEditor.getInstance().refresh();
 			}
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
@@ -436,7 +441,7 @@ public class ConversationController {
 					}
 				}
 				displayOption((npcList.getItems().get(0)));
-				BetonQuestEditor.refresh();
+				BetonQuestEditor.getInstance().refresh();
 			}
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
@@ -453,7 +458,7 @@ public class ConversationController {
 			if (currentConversation.getPlayerOption(name.get()) == null) {
 				PlayerOption option = currentConversation.newPlayerOption(name.get());
 				option.setIndex(currentConversation.getPlayerOptions().size() - 1);
-				BetonQuestEditor.refresh();
+				BetonQuestEditor.getInstance().refresh();
 				displayOption(option);
 			}
 		} catch (Exception e) {
@@ -466,7 +471,7 @@ public class ConversationController {
 			PlayerOption option = playerList.getSelectionModel().getSelectedItem();
 			if (option != null) {
 				NameEditController.display(option.getId());
-				BetonQuestEditor.refresh();
+				BetonQuestEditor.getInstance().refresh();
 			}
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
@@ -486,7 +491,7 @@ public class ConversationController {
 				for (NpcOption o : currentConversation.getNpcOptions()) {
 					o.getPointers().remove(option);
 				}
-				BetonQuestEditor.refresh();
+				BetonQuestEditor.getInstance().refresh();
 			}
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
@@ -510,7 +515,7 @@ public class ConversationController {
 			
 			BetonQuestEditor.getInstance().getDisplayedPackage().getConversations().add(conv);
 			displayConversation(conv);
-			BetonQuestEditor.refresh();
+			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
@@ -519,7 +524,7 @@ public class ConversationController {
 	@FXML private void renameConversation() {
 		try {
 			NameEditController.display(currentConversation.getId());
-			BetonQuestEditor.refresh();
+			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
@@ -539,7 +544,7 @@ public class ConversationController {
 					} else {
 						clearConversation();
 					}
-					BetonQuestEditor.refresh();
+					BetonQuestEditor.getInstance().refresh();
 				}
 			}
 		} catch (Exception e) {
@@ -549,11 +554,15 @@ public class ConversationController {
 	
 	private <T extends ID> T getById(Collection<T> collection, String id) {
 		for (T object : collection) {
-			if (object.getId().get().equals(id)) {
+			if (object.toString().equals(id)) {
 				return object;
 			}
 		}
 		return null;
+	}
+	
+	public static Conversation getDisplayedConversation() {
+		return instance.currentConversation;
 	}
 
 }

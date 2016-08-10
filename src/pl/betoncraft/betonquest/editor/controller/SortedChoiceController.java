@@ -71,12 +71,11 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 	
 	private void refresh() {
 		chosen.sort((ID o1, ID o2) -> o1.getIndex() - o2.getIndex());
-		available.sort((ID o1, ID o2) -> o1.getIndex() - o2.getIndex());
 		label.setText(BetonQuestEditor.getInstance().getLanguage().getString(labelText));
 		list.setCellFactory(param -> cellFactory.getListCell());
 		list.getItems().setAll(chosen);
 		ObservableList<ID> toChoose = FXCollections.observableArrayList(available);
-		for (IdWrapper<O> wrapped : chosen) {
+		for (W wrapped : chosen) {
 			toChoose.remove(wrapped.get());
 		}
 		field.getEntries().clear();
@@ -88,6 +87,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 	@FXML private void add() {
 		try {
 			String name = field.getText();
+			field.clear();
 			// check if name is not null
 			if (name == null || name.isEmpty()) {
 				Alert alert = new Alert(AlertType.ERROR);
@@ -96,8 +96,8 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 				return;
 			}
 			// check if it's not already there
-			for (IdWrapper<O> wrapped : chosen) {
-				if (wrapped.getId().get().equals(name)) {
+			for (W wrapped : chosen) {
+				if (wrapped.get().toString().equals(name)) {
 					Alert alert = new Alert(AlertType.ERROR);
 					alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("already-exists"));
 					alert.showAndWait();
@@ -108,7 +108,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			O object = null;
 			// check if it already exists
 			for (O id : available) {
-				if (id.getId().get().equals(name)) {
+				if (id.toString().equals(name)) {
 					object = id;
 					break;
 				}
@@ -117,8 +117,9 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			if (object == null) {
 				object = (O) creator.create(name);
 				if (object.edit() == EditResult.SUCCESS) {
-					object.setIndex(available.size());
-					available.add(object);
+					ObservableList<O> list = object.getList();
+					object.setIndex(list.size());
+					list.add(object);
 				} else {
 					return;
 				}
@@ -174,7 +175,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			window.setWidth(400);
 			window.setResizable(false);
 			window.setOnCloseRequest(event -> {
-				BetonQuestEditor.refresh();
+				BetonQuestEditor.getInstance().refresh();
 			});
 			@SuppressWarnings("unchecked")
 			SortedChoiceController<O, W, F> controller = (SortedChoiceController<O, W, F>) fxmlLoader.getController();

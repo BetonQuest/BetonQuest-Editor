@@ -17,6 +17,8 @@
  */
 package pl.betoncraft.betonquest.editor.model;
 
+import javafx.collections.ObservableList;
+
 /**
  * Represents a player's option in a conversation.
  *
@@ -24,8 +26,14 @@ package pl.betoncraft.betonquest.editor.model;
  */
 public class PlayerOption extends ConversationOption {
 
-	public PlayerOption(String id) {
-		super(id);
+	public PlayerOption(Conversation conversation, String id) {
+		super(conversation, id);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ObservableList<PlayerOption> getList() {
+		return getConversation().getPlayerOptions();
 	}
 
 }

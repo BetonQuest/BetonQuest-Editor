@@ -19,6 +19,7 @@
 package pl.betoncraft.betonquest.editor.data;
 
 import pl.betoncraft.betonquest.editor.model.Condition;
+import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
 /**
  * Wraps a condition object so it can be negated independently of the original.
@@ -29,8 +30,8 @@ public class ConditionWrapper extends IdWrapper<Condition> {
 	
 	private boolean negated = false;
 
-	public ConditionWrapper(Condition object) {
-		super(object);
+	public ConditionWrapper(QuestPackage pack, Condition object) {
+		super(pack, object);
 	}
 	
 	public boolean getNegated() {

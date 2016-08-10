@@ -47,7 +47,7 @@ public class EcoController {
 	
 	@FXML private void addEvent() {
 		try {
-			Event event = new Event(new String());
+			Event event = new Event(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (event.edit() == EditResult.SUCCESS) {
 				event.setIndex(eventsList.getItems().size());
 				eventsList.getItems().add(event);
@@ -59,7 +59,7 @@ public class EcoController {
 	
 	@FXML private void addCondition() {
 		try {
-			Condition condition = new Condition(new String());
+			Condition condition = new Condition(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (condition.edit() == EditResult.SUCCESS) {
 				condition.setIndex(conditionsList.getItems().size());
 				conditionsList.getItems().add(condition);
@@ -71,7 +71,7 @@ public class EcoController {
 	
 	@FXML private void addObjective() {
 		try {
-			Objective objective = new Objective(new String());
+			Objective objective = new Objective(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (objective.edit() == EditResult.SUCCESS) {
 				objective.setIndex(objectivesList.getItems().size());
 				objectivesList.getItems().add(objective);
@@ -120,7 +120,7 @@ public class EcoController {
 			if (event != null) {
 				eventsList.getItems().remove(event);
 			}
-			BetonQuestEditor.refresh();
+			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
@@ -132,7 +132,7 @@ public class EcoController {
 			if (condition != null) {
 				conditionsList.getItems().remove(condition);
 			}
-			BetonQuestEditor.refresh();
+			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}
@@ -144,7 +144,7 @@ public class EcoController {
 			if (objective != null) {
 				objectivesList.getItems().remove(objective);
 			}
-			BetonQuestEditor.refresh();
+			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
 			BetonQuestEditor.showStackTrace(e);
 		}

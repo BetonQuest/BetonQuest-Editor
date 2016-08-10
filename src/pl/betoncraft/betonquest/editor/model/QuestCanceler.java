@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
@@ -19,6 +20,7 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
 public class QuestCanceler implements ID {
 	
 	private StringProperty id;
+	private QuestPackage pack;
 	private int index = -1;
 	private TranslatableText name = new TranslatableText();
 	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
@@ -29,20 +31,40 @@ public class QuestCanceler implements ID {
 	private ObservableList<JournalEntry> journal = FXCollections.observableArrayList();
 	private StringProperty location = new SimpleStringProperty();
 	
-	public QuestCanceler(String id) {
-		this.id = new SimpleStringProperty(id);
+	public QuestCanceler(QuestPackage pack, String id) {
+		this.pack = ID.parsePackage(pack, id);
+		this.id = new SimpleStringProperty(ID.parseId(id));
 	}
 
+	@Override
+	public EditResult edit() {
+		return NameEditController.display(id); // TODO edit a quest canceler in a custom window
+	}
+
+	@Override
 	public StringProperty getId() {
 		return id;
 	}
 	
+	@Override
+	public QuestPackage getPack() {
+		return pack;
+	}
+	
+	@Override
 	public int getIndex() {
 		return index;
 	}
 	
+	@Override
 	public void setIndex(int index) {
 		this.index = index;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ObservableList<QuestCanceler> getList() {
+		return pack.getCancelers();
 	}
 
 	public String getLocation() {
@@ -83,12 +105,7 @@ public class QuestCanceler implements ID {
 	
 	@Override
 	public String toString() {
-		return id.get();
-	}
-
-	@Override
-	public EditResult edit() {
-		return NameEditController.display(id); // TODO edit a quest canceler in a custom window
+		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? id.get() : pack.getName().get() + "." + id.get();
 	}
 
 }

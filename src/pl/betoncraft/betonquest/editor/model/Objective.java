@@ -19,8 +19,10 @@ package pl.betoncraft.betonquest.editor.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.InstructionEditController;
-import pl.betoncraft.betonquest.editor.data.Editable;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.Instruction;
 
 /**
@@ -28,44 +30,62 @@ import pl.betoncraft.betonquest.editor.data.Instruction;
  *
  * @author Jakub Sapalski
  */
-public class Objective implements Instruction, Editable {
+public class Objective implements Instruction {
 	
 	private StringProperty id;
+	private QuestPackage pack;
 	private int index = -1;
 	private StringProperty instruction = new SimpleStringProperty();
 	
-	public Objective(String id, String instruction) {
-		this(id);
+	public Objective(QuestPackage pack, String id) {
+		this.pack = ID.parsePackage(pack, id);
+		this.id = new SimpleStringProperty(ID.parseId(id));
+	}
+	
+	public Objective(QuestPackage pack, String id, String instruction) {
+		this(pack, id);
 		this.instruction.set(instruction);
 	}
 	
-	public Objective(String id) {
-		this.id = new SimpleStringProperty(id);
-	}
-
-	public StringProperty getId() {
-		return id;
-	}
-	
-	public int getIndex() {
-		return index;
-	}
-	
-	public void setIndex(int index) {
-		this.index = index;
-	}
-
-	public StringProperty getInstruction() {
-		return instruction;
-	}
-	
+	@Override
 	public EditResult edit() {
 		return InstructionEditController.display(this);
 	}
 
 	@Override
+	public StringProperty getId() {
+		return id;
+	}
+
+	@Override
+	public QuestPackage getPack() {
+		return pack;
+	}
+	
+	@Override
+	public int getIndex() {
+		return index;
+	}
+	
+	@Override
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ObservableList<Objective> getList() {
+		return pack.getObjectives();
+	}
+
+	@Override
+	public StringProperty getInstruction() {
+		return instruction;
+	}
+
+	@Override
 	public String toString() {
-		return id.get();
+		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? id.get() : pack.getName().get() + "." + id.get();
 	}
 
 }

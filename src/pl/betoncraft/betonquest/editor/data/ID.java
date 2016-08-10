@@ -19,6 +19,9 @@
 package pl.betoncraft.betonquest.editor.data;
 
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
 /**
  * Represents a model object with ID.
@@ -33,6 +36,11 @@ public interface ID extends Editable {
 	public StringProperty getId();
 	
 	/**
+	 * @return the QuestPackage in which this object is defined
+	 */
+	public QuestPackage getPack();
+	
+	/**
 	 * @return the index of this object, as ordered in the file
 	 */
 	public int getIndex();
@@ -43,5 +51,53 @@ public interface ID extends Editable {
 	 * @param index index of the object related to other objects in the same file
 	 */
 	public void setIndex(int index);
+	
+	/**
+	 * This method <b>MUST</b> return implementing type or there will be errors.
+	 * 
+	 * @return the main ObservableList containing this object in the package.
+	 */
+	public <T extends ID> ObservableList<T> getList();
+	
+	/**
+	 * Parses the ID string to get name of the package. If no package is defined
+	 * in the ID, it will return the package passed to the method. It will
+	 * return null if defined package does not exist.
+	 * 
+	 * @param def
+	 *            default package to return in case there is none defined
+	 * @param id
+	 *            ID string to parse
+	 * @return the package defined in the ID string, "def" package or null.
+	 */
+	public static QuestPackage parsePackage(QuestPackage def, String id) {
+		if (id.contains(".")) {
+			String packName = id.split("\\.")[0];
+			for (QuestPackage pack : BetonQuestEditor.getInstance().getPackages().values()) {
+				if (pack.getName().get().equals(packName)) {
+					return pack;
+				}
+			}
+			return null;
+		} else {
+			return def;
+		}
+	}
+	
+	/**
+	 * Parses the ID string to get name of the object, without package name if
+	 * it's defined.
+	 * 
+	 * @param id
+	 *            ID string to parse
+	 * @return the name of the object
+	 */
+	public static String parseId(String id) {
+		if (id.contains(".")) {
+			return id.split("\\.")[1];
+		} else {
+			return id;
+		}
+	}
 	
 }

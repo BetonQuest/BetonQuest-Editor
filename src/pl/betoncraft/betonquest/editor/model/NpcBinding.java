@@ -21,6 +21,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 
@@ -32,37 +34,58 @@ import pl.betoncraft.betonquest.editor.data.ID;
 public class NpcBinding implements ID {
 	
 	private StringProperty id;
+	private QuestPackage pack;
 	private int index = -1;
 	private ObjectProperty<Conversation> conversation = new SimpleObjectProperty<>();
 	
-	public NpcBinding(String id, Conversation conversation) {
-		this(id);
+	public NpcBinding(QuestPackage pack, String id) {
+		this.pack = ID.parsePackage(pack, id);
+		this.id = new SimpleStringProperty(ID.parseId(id));
+	}
+	
+	public NpcBinding(QuestPackage pack, String id, Conversation conversation) {
+		this(pack, id);
 		this.conversation.set(conversation);
-	}
-	
-	public NpcBinding(String id) {
-		this.id = new SimpleStringProperty(id);
-	}
-
-	public StringProperty getId() {
-		return id;
-	}
-	
-	public int getIndex() {
-		return index;
-	}
-	
-	public void setIndex(int index) {
-		this.index = index;
-	}
-
-	public ObjectProperty<Conversation> getConversation() {
-		return conversation;
 	}
 
 	@Override
 	public EditResult edit() {
 		return NameEditController.display(id); // TODO edit npc binding in a custom window
+	}
+
+	@Override
+	public StringProperty getId() {
+		return id;
+	}
+
+	@Override
+	public QuestPackage getPack() {
+		return pack;
+	}
+	
+	@Override
+	public int getIndex() {
+		return index;
+	}
+	
+	@Override
+	public void setIndex(int index) {
+		this.index = index;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public ObservableList<NpcBinding> getList() {
+		return pack.getNpcBindings();
+	}
+
+	public ObjectProperty<Conversation> getConversation() {
+		return conversation;
+	}
+	
+	@Override
+	public String toString() {
+		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? id.get() : pack.getName().get() + "." + id.get();
 	}
 
 }
