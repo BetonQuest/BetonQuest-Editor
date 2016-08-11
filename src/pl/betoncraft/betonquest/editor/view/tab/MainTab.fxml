@@ -47,9 +47,9 @@
 						<Insets top="5" />
 					</padding>
 					<buttons>
-						<Button text="%add" />
-						<Button text="%edit" />
-						<Button text="%del" />
+						<Button text="%add" onAction="#addNpcBinding" />
+						<Button text="%edit" onAction="#editNpcBinding" />
+						<Button text="%del" onAction="#delNpcBinding" />
 					</buttons>
 				</ButtonBar>
 			</VBox>

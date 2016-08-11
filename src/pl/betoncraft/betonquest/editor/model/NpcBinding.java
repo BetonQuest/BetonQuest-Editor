@@ -22,7 +22,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.controller.NameEditController;
+import pl.betoncraft.betonquest.editor.controller.NpcBindingEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
 
@@ -47,7 +47,7 @@ public class NpcBinding extends SimpleID {
 
 	@Override
 	public EditResult edit() {
-		return NameEditController.display(id); // TODO edit npc binding in a custom window
+		return NpcBindingEditController.display(this);
 	}
 
 	@Override

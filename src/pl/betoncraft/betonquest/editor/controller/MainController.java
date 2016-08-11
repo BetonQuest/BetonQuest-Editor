@@ -23,6 +23,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.model.Conversation;
 import pl.betoncraft.betonquest.editor.model.Event;
 import pl.betoncraft.betonquest.editor.model.GlobalLocation;
@@ -92,6 +94,28 @@ public class MainController {
 	public static void setMainPageLines(ObservableList<MainPageLine> mainPageLines) {
 		instance.mainPageList.setItems(null);
 		instance.mainPageList.setItems(mainPageLines);
+	}
+	
+	@FXML private void addNpcBinding() {
+		NpcBinding binding = new NpcBinding(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
+		if (binding.edit() == EditResult.SUCCESS) {
+			binding.setIndex(npcTable.getItems().size());
+			npcTable.getItems().add(binding);
+		}
+	}
+	
+	@FXML private void editNpcBinding() {
+		NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
+		if (binding != null) {
+			binding.edit();
+		}
+	}
+	
+	@FXML private void delNpcBinding() {
+		NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
+		if (binding != null) {
+			npcTable.getItems().remove(binding);
+		}
 	}
 	
 }
