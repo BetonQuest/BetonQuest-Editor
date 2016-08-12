@@ -31,7 +31,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 
 /**
  * Controls the pop-up window for editing a StringProperty.
@@ -42,7 +41,7 @@ public class NameEditController {
 	
 	private Stage stage;
 	private StringProperty name;
-	private EditResult result = EditResult.CANCEL;;
+	private boolean result = false;
 	
 	@FXML private TextField field;
 	
@@ -70,7 +69,7 @@ public class NameEditController {
 			}
 			name.set(text.trim());
 			BetonQuestEditor.getInstance().refresh();
-			result = EditResult.SUCCESS;
+			result = true;
 			stage.close();
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -93,7 +92,7 @@ public class NameEditController {
 	 * 
 	 * @param data StringProperty to edit
 	 */
-	public static EditResult display(StringProperty data) {
+	public static boolean display(StringProperty data) {
 		try {
 			Stage window = new Stage();
 			URL location = BetonQuestEditor.class.getResource("view/window/NameEditWindow.fxml");
@@ -114,7 +113,7 @@ public class NameEditController {
 			return controller.result;
 		} catch (IOException e) {
 			ExceptionController.display(e);
-			return EditResult.CANCEL;
+			return false;
 		}
 	}
 

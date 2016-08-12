@@ -46,7 +46,7 @@ public class Event extends SimpleID implements Instruction {
 	}
 	
 	@Override
-	public EditResult edit() {
+	public boolean edit() {
 		return InstructionEditController.display(this);
 	}
 

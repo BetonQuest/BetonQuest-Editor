@@ -487,7 +487,7 @@ public class QuestPackage implements Editable {
 	}
 
 	@Override
-	public EditResult edit() {
+	public boolean edit() {
 		return NameEditController.display(packName);
 	}
 

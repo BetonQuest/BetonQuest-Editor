@@ -46,7 +46,7 @@ public class MainPageLine extends SimpleID {
 	}
 
 	@Override
-	public EditResult edit() {
+	public boolean edit() {
 		return NameEditController.display(id); // TODO edit main page line in a custom window
 	}
 

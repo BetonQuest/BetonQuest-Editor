@@ -35,7 +35,7 @@ public class Conversation extends SimpleID {
 	}
 
 	@Override
-	public EditResult edit() {
+	public boolean edit() {
 		return NameEditController.display(id);
 	}
 

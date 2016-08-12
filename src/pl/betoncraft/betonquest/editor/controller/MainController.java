@@ -24,7 +24,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.model.Conversation;
 import pl.betoncraft.betonquest.editor.model.Event;
 import pl.betoncraft.betonquest.editor.model.GlobalLocation;
@@ -98,7 +97,7 @@ public class MainController {
 	
 	@FXML private void addNpcBinding() {
 		NpcBinding binding = new NpcBinding(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-		if (binding.edit() == EditResult.SUCCESS) {
+		if (binding.edit()) {
 			binding.setIndex(npcTable.getItems().size());
 			npcTable.getItems().add(binding);
 		}

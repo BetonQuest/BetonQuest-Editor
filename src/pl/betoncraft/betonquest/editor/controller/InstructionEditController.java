@@ -30,7 +30,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.data.Instruction;
 
 /**
@@ -42,7 +41,7 @@ public class InstructionEditController {
 	
 	private Stage stage;
 	private Instruction data;
-	private EditResult result = EditResult.CANCEL;;
+	private boolean result = false;
 	
 	@FXML private TextField id;
 	@FXML private TextField instruction;
@@ -77,7 +76,7 @@ public class InstructionEditController {
 			data.getInstruction().set(new String());
 		}
 		BetonQuestEditor.getInstance().refresh();
-		result = EditResult.SUCCESS;
+		result = true;
 		stage.close();
 	}
 	
@@ -93,7 +92,7 @@ public class InstructionEditController {
 	 * 
 	 * @param data the Instruction object to edit
 	 */
-	public static EditResult display(Instruction data) {
+	public static boolean display(Instruction data) {
 		try {
 			Stage window = new Stage();
 			URL location = BetonQuestEditor.class.getResource("view/window/InstructionEditWindow.fxml");
@@ -114,7 +113,7 @@ public class InstructionEditController {
 			return controller.result;
 		} catch (IOException e) {
 			ExceptionController.display(e);
-			return EditResult.CANCEL;
+			return false;
 		}
 	}
 

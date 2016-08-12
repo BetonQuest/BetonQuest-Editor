@@ -47,7 +47,7 @@ public abstract class ConversationOption extends SimpleID implements OptionID {
 	}
 
 	@Override
-	public EditResult edit() {
+	public boolean edit() {
 		return NameEditController.display(id);
 	}
 	

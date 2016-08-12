@@ -46,7 +46,7 @@ public class NpcBinding extends SimpleID {
 	}
 
 	@Override
-	public EditResult edit() {
+	public boolean edit() {
 		return NpcBindingEditController.display(this);
 	}
 

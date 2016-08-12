@@ -35,8 +35,8 @@ public class GlobalLocation implements Editable {
 	}
 
 	@Override
-	public EditResult edit() {
-		return null; // TODO edit global location in a custom window
+	public boolean edit() {
+		return true; // TODO edit global location in a custom window
 	}
 	
 	public ObjectProperty<Objective> getObjective() {

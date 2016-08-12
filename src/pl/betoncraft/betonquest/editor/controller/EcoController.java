@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
-import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Event;
 import pl.betoncraft.betonquest.editor.model.Objective;
@@ -48,7 +47,7 @@ public class EcoController {
 	@FXML private void addEvent() {
 		try {
 			Event event = new Event(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-			if (event.edit() == EditResult.SUCCESS) {
+			if (event.edit()) {
 				event.setIndex(eventsList.getItems().size());
 				eventsList.getItems().add(event);
 			}
@@ -60,7 +59,7 @@ public class EcoController {
 	@FXML private void addCondition() {
 		try {
 			Condition condition = new Condition(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-			if (condition.edit() == EditResult.SUCCESS) {
+			if (condition.edit()) {
 				condition.setIndex(conditionsList.getItems().size());
 				conditionsList.getItems().add(condition);
 			}
@@ -72,7 +71,7 @@ public class EcoController {
 	@FXML private void addObjective() {
 		try {
 			Objective objective = new Objective(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-			if (objective.edit() == EditResult.SUCCESS) {
+			if (objective.edit()) {
 				objective.setIndex(objectivesList.getItems().size());
 				objectivesList.getItems().add(objective);
 			}

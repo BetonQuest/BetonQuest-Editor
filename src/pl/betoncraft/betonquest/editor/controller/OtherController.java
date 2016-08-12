@@ -24,7 +24,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
-import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.model.Item;
 import pl.betoncraft.betonquest.editor.model.JournalEntry;
 
@@ -58,7 +57,7 @@ public class OtherController {
 	@FXML private void addItem() {
 		try {
 			Item item = new Item(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-			if (item.edit() == EditResult.SUCCESS) {
+			if (item.edit()) {
 				item.setIndex(itemsList.getItems().size());
 				itemsList.getItems().add(item);
 			}
@@ -93,7 +92,7 @@ public class OtherController {
 	@FXML private void addEntry() {
 		try {
 			JournalEntry entry = new JournalEntry(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-			if (entry.edit() == EditResult.SUCCESS) {
+			if (entry.edit()) {
 				entry.setIndex(journalList.getItems().size());
 				journalList.getItems().add(entry);
 			}

@@ -39,7 +39,7 @@ public class IdWrapper<T extends ID> implements ID {
 	}
 
 	@Override
-	public EditResult edit() {
+	public boolean edit() {
 		return object.edit();
 	}
 

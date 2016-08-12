@@ -32,7 +32,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.model.JournalEntry;
 
 /**
@@ -45,7 +44,7 @@ public class JournalEntryEditController {
 	private Stage stage;
 	private JournalEntry data;
 	private StringProperty entry;
-	private EditResult result = EditResult.CANCEL;
+	private boolean result = false;
 	
 	@FXML private TextField id;
 	@FXML private TextArea text;
@@ -82,7 +81,7 @@ public class JournalEntryEditController {
 				entry.set(new String());
 			}
 			BetonQuestEditor.getInstance().refresh();
-			result = EditResult.SUCCESS;
+			result = true;
 			stage.close();
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -101,7 +100,7 @@ public class JournalEntryEditController {
 	 * 
 	 * @param data the JournalEntry object to edit
 	 */
-	public static EditResult display(JournalEntry data) {
+	public static boolean display(JournalEntry data) {
 		try {
 			Stage window = new Stage();
 			URL location = BetonQuestEditor.class.getResource("view/window/JournalEntryEditWindow.fxml");
@@ -122,7 +121,7 @@ public class JournalEntryEditController {
 			return controller.result;
 		} catch (IOException e) {
 			ExceptionController.display(e);
-			return EditResult.CANCEL;
+			return false;
 		}
 	}
 

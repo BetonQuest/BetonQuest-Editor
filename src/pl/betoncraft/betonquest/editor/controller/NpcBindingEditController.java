@@ -31,7 +31,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.model.Conversation;
 import pl.betoncraft.betonquest.editor.model.NpcBinding;
 
@@ -44,7 +43,7 @@ public class NpcBindingEditController {
 	
 	private Stage stage;
 	private NpcBinding data;
-	private EditResult result = EditResult.CANCEL;
+	private boolean result = false;
 	
 	@FXML private TextField field;
 	@FXML private ChoiceBox<Conversation> conversation;
@@ -74,7 +73,7 @@ public class NpcBindingEditController {
 		data.getId().set(idString.trim());
 		data.getConversation().set(conv);
 		BetonQuestEditor.getInstance().refresh();
-		result = EditResult.SUCCESS;
+		result = true;
 		stage.close();
 	}
 	
@@ -82,7 +81,7 @@ public class NpcBindingEditController {
 		stage.close();
 	}
 	
-	public static EditResult display(NpcBinding data) {
+	public static boolean display(NpcBinding data) {
 		try {
 			Stage window = new Stage();
 			URL location = BetonQuestEditor.class.getResource("view/window/NpcBindingEditWindow.fxml");
@@ -103,7 +102,7 @@ public class NpcBindingEditController {
 			return controller.result;
 		} catch (IOException e) {
 			ExceptionController.display(e);
-			return EditResult.CANCEL;
+			return false;
 		}
 	}
 

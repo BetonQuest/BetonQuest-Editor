@@ -35,7 +35,7 @@ public class QuestCanceler extends SimpleID {
 	}
 
 	@Override
-	public EditResult edit() {
+	public boolean edit() {
 		return NameEditController.display(id); // TODO edit a quest canceler in a custom window
 	}
 

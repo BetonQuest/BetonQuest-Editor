@@ -26,7 +26,7 @@ public class JournalEntry extends SimpleID {
 	}
 
 	@Override
-	public EditResult edit() {
+	public boolean edit() {
 		return JournalEntryEditController.display(this);
 	}
 

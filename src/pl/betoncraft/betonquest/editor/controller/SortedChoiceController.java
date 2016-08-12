@@ -34,7 +34,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField;
-import pl.betoncraft.betonquest.editor.data.Editable.EditResult;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 
@@ -110,7 +109,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			// create one if not
 			if (object == null) {
 				object = (O) creator.create(name);
-				if (object.edit() == EditResult.SUCCESS) {
+				if (object.edit()) {
 					ObservableList<O> list = object.getList();
 					object.setIndex(list.size());
 					list.add(object);

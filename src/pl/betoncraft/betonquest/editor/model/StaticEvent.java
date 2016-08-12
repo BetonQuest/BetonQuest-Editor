@@ -41,7 +41,7 @@ public class StaticEvent extends SimpleID {
 	}
 
 	@Override
-	public EditResult edit() {
+	public boolean edit() {
 		return NameEditController.display(id); // TODO edit static event in a custom window
 	}
 
