@@ -25,8 +25,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -65,16 +63,12 @@ public class NpcBindingEditController {
 	@FXML private void ok() {
 		String idString = field.getText();
 		if (idString == null || idString.isEmpty()) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("identifier-not-null"));
-			alert.showAndWait();
+			BetonQuestEditor.showError("identifier-not-null");
 			return;
 		}
 		Conversation conv = conversation.getValue();
 		if (conv == null) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("binding-not-null"));
-			alert.showAndWait();
+			BetonQuestEditor.showError("binding-not-null");
 			return;
 		}
 		data.getId().set(idString.trim());
@@ -108,7 +102,7 @@ public class NpcBindingEditController {
 			window.showAndWait();
 			return controller.result;
 		} catch (IOException e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 			return EditResult.CANCEL;
 		}
 	}

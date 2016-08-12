@@ -63,7 +63,7 @@ public class OtherController {
 				itemsList.getItems().add(item);
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -74,7 +74,7 @@ public class OtherController {
 				item.edit();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -86,7 +86,7 @@ public class OtherController {
 			}
 			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -98,7 +98,7 @@ public class OtherController {
 				journalList.getItems().add(entry);
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -109,7 +109,7 @@ public class OtherController {
 				entry.edit();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -120,7 +120,7 @@ public class OtherController {
 				journalList.getItems().remove(entry);
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -131,7 +131,7 @@ public class OtherController {
 				entryText.setText(entry.getText().getLang(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).get());
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	

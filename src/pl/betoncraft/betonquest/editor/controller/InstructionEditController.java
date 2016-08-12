@@ -25,8 +25,6 @@ import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -68,9 +66,7 @@ public class InstructionEditController {
 	@FXML private void ok() {
 		String idString = id.getText();
 		if (idString == null || idString.isEmpty()) {
-			Alert alert = new Alert(AlertType.ERROR); // TODO apply CSS to alert/exception windows
-			alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("name-not-null"));
-			alert.showAndWait();
+			BetonQuestEditor.showError("name-not-null");
 			return;
 		}
 		data.getId().set(idString.trim());
@@ -117,7 +113,7 @@ public class InstructionEditController {
 			window.showAndWait();
 			return controller.result;
 		} catch (IOException e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 			return EditResult.CANCEL;
 		}
 	}

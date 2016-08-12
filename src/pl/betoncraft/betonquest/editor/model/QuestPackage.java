@@ -41,8 +41,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.ConversationController;
+import pl.betoncraft.betonquest.editor.controller.ExceptionController;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.Editable;
@@ -482,7 +482,7 @@ public class QuestPackage implements Editable {
 				defLang = maxLang;
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 
@@ -1030,7 +1030,7 @@ public class QuestPackage implements Editable {
 			// done
 			out.close();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 

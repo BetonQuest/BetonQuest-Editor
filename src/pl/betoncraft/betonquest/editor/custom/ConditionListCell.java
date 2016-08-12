@@ -26,6 +26,7 @@ import javafx.scene.control.ContentDisplay;
 import javafx.scene.layout.HBox;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.ConditionListCellController;
+import pl.betoncraft.betonquest.editor.controller.ExceptionController;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 
 /**
@@ -47,7 +48,7 @@ public class ConditionListCell extends DraggableListCell<ConditionWrapper> {
 			node = (HBox) fxmlLoader.load();
 			controller = (ConditionListCellController) fxmlLoader.getController();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	

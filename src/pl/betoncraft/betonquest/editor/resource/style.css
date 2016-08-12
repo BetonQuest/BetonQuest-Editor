@@ -153,27 +153,27 @@
     -fx-background-radius: 0;
 }
 
-.scroll-pane .scroll-bar:horizontal .track {
+#tab-scroll .scroll-bar:horizontal .track {
 	-fx-background-color: -fx-medium-dark;
 	-fx-border-color: -fx-dark transparent transparent transparent;
 	-fx-background-radius: 0;
 	-fx-border-radius: 0;
 }
 
-.scroll-pane .scroll-bar:horizontal .increment-button ,
-.scroll-pane .scroll-bar:horizontal .decrement-button {
+#tab-scroll .scroll-bar:horizontal .increment-button ,
+#tab-scroll .scroll-bar:horizontal .decrement-button {
 	-fx-background-color: -fx-medium-dark;
 	-fx-background-radius: 0;
 	-fx-padding: 0 0 10 0;
 }
 
-.scroll-pane .scroll-bar .increment-arrow,
-.scroll-pane .scroll-bar .decrement-arrow {
+#tab-scroll .scroll-bar .increment-arrow,
+#tab-scroll .scroll-bar .decrement-arrow {
 	-fx-shape: " ";
 	-fx-padding: 0;
 }
 
-.scroll-pane .scroll-bar:horizontal .thumb {
+#tab-scroll .scroll-bar:horizontal .thumb {
 	-fx-background-color: -fx-dark;
 	-fx-background-insets: 2 0 0;
 	-fx-background-radius: 2;
@@ -181,6 +181,7 @@
 
 .text-area .content {
 	-fx-background-color: -fx-light;
+	-fx-background-radius: 0;
 }
 
 .text-area .scroll-pane {
@@ -195,6 +196,60 @@
 .text-area:focused, .text-area:selected {
 	-fx-focus-color: transparent;
 	-fx-faint-focus-color: transparent;
+}
+
+.text-area .scroll-bar {
+	-fx-background-color: -fx-medium-dark;
+	-fx-background-radius: 0;
+	-fx-background-insets: 0;
+}
+
+.text-area .scroll-bar:horizontal {
+	-fx-border-width: 1 0 0 0;
+	-fx-border-color: -fx-dark;
+}
+
+.text-area .scroll-bar:vertical {
+	-fx-border-width: 0 0 0 1;
+	-fx-border-color: -fx-dark;
+}
+
+.text-area .scroll-bar:horizontal .increment-button,
+.text-area .scroll-bar:horizontal .decrement-button {
+	-fx-padding: 0 0 5 0;
+}
+
+.text-area .scroll-bar:vertical .increment-button,
+.text-area .scroll-bar:vertical .decrement-button {
+	-fx-padding: 0 5 0 0;
+}
+
+.text-area .increment-arrow,
+.text-area .decrement-arrow {
+	-fx-shape: " ";
+	-fx-padding: 2;
+}
+
+.text-area .thumb {
+	-fx-background-color: -fx-dark;
+}
+
+.text-area .corner {
+	-fx-background-color: -fx-medium-dark;
+	-fx-background-radius: 0;
+	-fx-background-insets: 0;
+	-fx-border-width: 1 0 0 1;
+	-fx-border-color: -fx-dark;
+}
+
+.dialog-pane .label {
+	-fx-font-size: 20;
+	-fx-font-weight: bold;
+	-fx-text-fill: -fx-dark;
+}
+
+.hyperlink {
+	-fx-text-fill: -fx-dark;
 }
 
 #entry-text .content {

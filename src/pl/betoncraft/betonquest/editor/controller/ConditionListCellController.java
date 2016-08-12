@@ -21,7 +21,6 @@ package pl.betoncraft.betonquest.editor.controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.text.Text;
-import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 
 /**
@@ -39,7 +38,7 @@ public class ConditionListCellController {
 		try {
 			condition.setNegated(box.isSelected());
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 

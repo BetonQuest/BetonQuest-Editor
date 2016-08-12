@@ -55,7 +55,7 @@ public class MainMenuController {
 				instance.getPackages().put(pack.getName().get(), pack);
 				instance.display(pack);
 			} catch (Exception e) {
-				BetonQuestEditor.showStackTrace(e);
+				ExceptionController.display(e);
 			}
 		}
 	}
@@ -79,11 +79,11 @@ public class MainMenuController {
 					}
 					pack.saveToZip(selectedFile);
 				} catch (Exception e) {
-					BetonQuestEditor.showStackTrace(e);
+					ExceptionController.display(e);
 				}
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -95,7 +95,7 @@ public class MainMenuController {
 		try {
 			System.exit(0);
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -107,7 +107,7 @@ public class MainMenuController {
 		try {
 			Desktop.getDesktop().browse(new URI("http://betonquest.betoncraft.pl/BetonQuestDocumentation.pdf"));
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 }

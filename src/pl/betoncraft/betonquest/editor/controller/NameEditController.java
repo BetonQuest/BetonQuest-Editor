@@ -26,8 +26,6 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.GridPane;
@@ -67,9 +65,7 @@ public class NameEditController {
 		try {
 			String text = field.getText();
 			if (text == null || text.isEmpty()) {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("name-not-null"));
-				alert.showAndWait();
+				BetonQuestEditor.showError("name-not-null");
 				return;
 			}
 			name.set(text.trim());
@@ -77,7 +73,7 @@ public class NameEditController {
 			result = EditResult.SUCCESS;
 			stage.close();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -88,7 +84,7 @@ public class NameEditController {
 		try {
 			stage.close();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -117,7 +113,7 @@ public class NameEditController {
 			window.showAndWait();
 			return controller.result;
 		} catch (IOException e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 			return EditResult.CANCEL;
 		}
 	}

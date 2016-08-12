@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.TextFlow?>
+
+<VBox fx:controller="pl.betoncraft.betonquest.editor.controller.ExceptionController"
+	xmlns:fx="http://javafx.com/fxml/1" spacing="5">
+
+	<padding>
+		<Insets top="10" bottom="10" left="10" right="10" />
+	</padding>
+
+	<Label id="option-label" text="%exception" />
+	
+	<TextFlow>
+		<Text text="%send-it" />
+		<Hyperlink text="%address" onAction="#link" />
+	</TextFlow>
+
+	<TextArea VBox.vgrow="ALWAYS" editable="false" wrapText="false" fx:id="stackTrace" />
+
+	<ButtonBar>
+		<buttons>
+			<Button text="%copy" onAction="#copy" />
+			<Button text="%close" onAction="#close" />
+		</buttons>
+	</ButtonBar>
+
+</VBox>
+

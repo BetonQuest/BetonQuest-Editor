@@ -53,7 +53,7 @@ public class EcoController {
 				eventsList.getItems().add(event);
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -65,7 +65,7 @@ public class EcoController {
 				conditionsList.getItems().add(condition);
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class EcoController {
 				objectivesList.getItems().add(objective);
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -88,7 +88,7 @@ public class EcoController {
 				event.edit();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -99,7 +99,7 @@ public class EcoController {
 				condition.edit();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -110,7 +110,7 @@ public class EcoController {
 				objective.edit();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -122,7 +122,7 @@ public class EcoController {
 			}
 			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -134,7 +134,7 @@ public class EcoController {
 			}
 			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -146,7 +146,7 @@ public class EcoController {
 			}
 			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	

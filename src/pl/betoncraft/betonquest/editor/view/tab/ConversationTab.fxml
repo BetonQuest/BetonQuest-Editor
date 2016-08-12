@@ -25,7 +25,7 @@
 <Tab fx:controller="pl.betoncraft.betonquest.editor.controller.ConversationController"
 	xmlns:fx="http://javafx.com/fxml/1" text="%conv">
 	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true"
-		fitToWidth="true">
+		fitToWidth="true" id="tab-scroll">
 		<VBox>
 
 			<!-- conversation choosing -->

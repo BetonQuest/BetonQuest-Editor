@@ -19,11 +19,9 @@ package pl.betoncraft.betonquest.editor;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.zip.ZipFile;
 
@@ -34,15 +32,13 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.controller.ConversationController;
 import pl.betoncraft.betonquest.editor.controller.EcoController;
+import pl.betoncraft.betonquest.editor.controller.ExceptionController;
 import pl.betoncraft.betonquest.editor.controller.MainController;
 import pl.betoncraft.betonquest.editor.controller.OtherController;
 import pl.betoncraft.betonquest.editor.controller.TabsController;
@@ -73,7 +69,6 @@ public class BetonQuestEditor extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		instance = this;
-		Locale.setDefault(Locale.US); // TODO remove this later
 		stage = primaryStage;
 		try {
 			URL location = getClass().getResource("view/Root.fxml");
@@ -100,7 +95,7 @@ public class BetonQuestEditor extends Application {
 				TabsController.selectTab(autoSelect);
 			}
 		} catch (Exception e) {
-			showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -267,43 +262,26 @@ public class BetonQuestEditor extends Application {
 	}
 	
 	/**
-	 * Shows an exception to the user.
+	 * Shows an error pop-up window with specified translated message.
 	 * 
-	 * @param e
-	 *            exception to show
+	 * @param message ID of message
 	 */
-	public static void showStackTrace(Exception e) {
+	public static void showError(String message) {
 		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Exception");
-		alert.setHeaderText("There was some unexpected exception!");
-		alert.setContentText("Please send this stack trace to the author: coosheck@gmail.com");
-
-		// create expandable Exception.
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw);
-		e.printStackTrace(pw);
-		String exceptionText = sw.toString();
-
-		Label label = new Label("The exception stacktrace:");
-
-		TextArea textArea = new TextArea(exceptionText);
-		textArea.setEditable(false);
-		textArea.setWrapText(false);
-
-		textArea.setMaxWidth(Double.MAX_VALUE);
-		textArea.setMaxHeight(Double.MAX_VALUE);
-		GridPane.setVgrow(textArea, Priority.ALWAYS);
-		GridPane.setHgrow(textArea, Priority.ALWAYS);
-
-		GridPane expContent = new GridPane();
-		expContent.setMaxWidth(Double.MAX_VALUE);
-		expContent.add(label, 0, 0);
-		expContent.add(textArea, 0, 1);
-
-		// set expandable Exception into the dialog pane.
-		alert.getDialogPane().setExpandableContent(expContent);
-
+		alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString(message));
+		alert.getDialogPane().getStylesheets().add(instance.getClass().getResource("resource/style.css").toExternalForm());
 		alert.showAndWait();
+	}
+	
+	public static boolean confirm(String message) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString(message));
+		alert.getDialogPane().getStylesheets().add(instance.getClass().getResource("resource/style.css").toExternalForm());
+		Optional<ButtonType> action = alert.showAndWait();
+		if (action.isPresent() && action.get() == ButtonType.OK) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

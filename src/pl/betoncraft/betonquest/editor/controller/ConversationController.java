@@ -20,7 +20,6 @@ package pl.betoncraft.betonquest.editor.controller;
 
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -29,10 +28,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -151,6 +147,17 @@ public class ConversationController {
 	}
 	
 	/**
+	 * Displays the first available conversation or clears the view if there are no conversations.
+	 */
+	public void displayConversation() {
+		if (conversation.getItems().size() > 0) {
+			displayConversation(conversation.getItems().get(0));
+		} else {
+			clearConversation();
+		}
+	}
+	
+	/**
 	 * Removes the current conversation from the view.
 	 */
 	public void clearConversation() {
@@ -259,7 +266,7 @@ public class ConversationController {
 			}
 			displayConversation(selected);
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -271,7 +278,7 @@ public class ConversationController {
 			}
 			displayOption(option);
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -283,7 +290,7 @@ public class ConversationController {
 			}
 			displayOption(option);
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -297,7 +304,7 @@ public class ConversationController {
 				displayOption(option.get());
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -311,7 +318,7 @@ public class ConversationController {
 				displayOption(option.get());
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -321,7 +328,7 @@ public class ConversationController {
 					currentConversation.getPack().getAllNpcOptions(), name -> new NpcOption(currentConversation, name),
 					() -> new DraggableListCell<>(), item -> new IdWrapper<>(currentConversation.getPack(), item));
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 
@@ -331,7 +338,7 @@ public class ConversationController {
 					BetonQuestEditor.getInstance().getAllEvents(), name -> new Event(currentConversation.getPack(), name),
 					() -> new DraggableListCell<>(), item -> new IdWrapper<>(currentConversation.getPack(), item));
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 
@@ -341,7 +348,7 @@ public class ConversationController {
 					BetonQuestEditor.getInstance().getAllConditions(), name -> new Condition(currentConversation.getPack(), name),
 					() -> new ConditionListCell(), item -> new ConditionWrapper(currentConversation.getPack(), item));
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 
@@ -351,7 +358,7 @@ public class ConversationController {
 					BetonQuestEditor.getInstance().getAllEvents(), name -> new Event(currentConversation.getPack(), name),
 					() -> new DraggableListCell<>(), item -> new IdWrapper<>(currentConversation.getPack(), item));
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -376,7 +383,7 @@ public class ConversationController {
 			pointsToList.getItems().add(wrapped);
 			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -387,7 +394,7 @@ public class ConversationController {
 				pointsToList.getItems().remove(option);
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -405,7 +412,7 @@ public class ConversationController {
 				displayOption(option);
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -417,7 +424,7 @@ public class ConversationController {
 				BetonQuestEditor.getInstance().refresh();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -426,9 +433,7 @@ public class ConversationController {
 			NpcOption option = npcList.getSelectionModel().getSelectedItem();
 			if (option != null) {
 				if (npcList.getItems().size() == 1) {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString("cannot-delete-last-option"));
-					alert.show();
+					BetonQuestEditor.showError("cannot-delete-last-option");
 					return;
 				}
 				npcList.getItems().remove(option);
@@ -444,7 +449,7 @@ public class ConversationController {
 				BetonQuestEditor.getInstance().refresh();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -462,7 +467,7 @@ public class ConversationController {
 				displayOption(option);
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -474,7 +479,7 @@ public class ConversationController {
 				BetonQuestEditor.getInstance().refresh();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -494,7 +499,7 @@ public class ConversationController {
 				BetonQuestEditor.getInstance().refresh();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -517,7 +522,7 @@ public class ConversationController {
 			displayConversation(conv);
 			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -526,29 +531,20 @@ public class ConversationController {
 			NameEditController.display(currentConversation.getId());
 			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void delConversation() {
 		try {
 			Conversation conv = conversation.getValue();
-			if (conv != null) {
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("confirm-action"));
-				Optional<ButtonType> action = alert.showAndWait();
-				if (action.isPresent() && action.get() == ButtonType.OK) {
-					conversation.getItems().remove(conv);
-					if (conversation.getItems().size() > 0) {
-						displayConversation(conversation.getItems().get(0));
-					} else {
-						clearConversation();
-					}
-					BetonQuestEditor.getInstance().refresh();
-				}
+			if (conv != null && BetonQuestEditor.confirm("confirm-action")) {
+				conversation.getItems().remove(conv);
+				displayConversation();
+				BetonQuestEditor.getInstance().refresh();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	

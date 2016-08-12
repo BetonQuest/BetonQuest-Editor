@@ -26,8 +26,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -90,17 +88,13 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			field.clear();
 			// check if name is not null
 			if (name == null || name.isEmpty()) {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("name-not-null"));
-				alert.showAndWait();
+				BetonQuestEditor.showError("name-not-null");
 				return;
 			}
 			// check if it's not already there
 			for (W wrapped : chosen) {
 				if (wrapped.get().toString().equals(name)) {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setContentText(BetonQuestEditor.getInstance().getLanguage().getString("already-exists"));
-					alert.showAndWait();
+					BetonQuestEditor.showError("already-exists");
 					return;
 				}
 			}
@@ -129,7 +123,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			chosen.add(wrapped);
 			refresh();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -141,7 +135,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 				refresh();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -153,7 +147,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 				refresh();
 			}
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -182,7 +176,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			controller.setData(labelText, chosen, available, creator, cellFactory, wrapper);
 			window.showAndWait();
 		} catch (Exception e) {
-			BetonQuestEditor.showStackTrace(e);
+			ExceptionController.display(e);
 		}
 	}
 	
