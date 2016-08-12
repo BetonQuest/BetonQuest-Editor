@@ -22,7 +22,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.controller.NameEditController;
+import pl.betoncraft.betonquest.editor.controller.StaticEventEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
 
@@ -42,7 +42,7 @@ public class StaticEvent extends SimpleID {
 
 	@Override
 	public boolean edit() {
-		return NameEditController.display(id); // TODO edit static event in a custom window
+		return StaticEventEditController.display(this);
 	}
 
 	@Override

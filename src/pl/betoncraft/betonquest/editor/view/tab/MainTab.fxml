@@ -87,9 +87,9 @@
 						<Insets top="5" />
 					</padding>
 					<buttons>
-						<Button text="%add" />
-						<Button text="%edit" />
-						<Button text="%del" />
+						<Button text="%add" onAction="#addStaticEvent" />
+						<Button text="%edit" onAction="#editStaticEvent" />
+						<Button text="%del" onAction="#delStaticEvent" />
 					</buttons>
 				</ButtonBar>
 			</VBox>

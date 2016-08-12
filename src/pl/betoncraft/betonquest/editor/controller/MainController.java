@@ -139,4 +139,26 @@ public class MainController {
 		}
 	}
 	
+	@FXML private void addStaticEvent() {
+		StaticEvent staticEvent = new StaticEvent(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
+		if (staticEvent.edit()) {
+			staticEvent.setIndex(staticEventsTable.getItems().size());
+			staticEventsTable.getItems().add(staticEvent);
+		}
+	}
+	
+	@FXML private void editStaticEvent() {
+		StaticEvent staticEvent = staticEventsTable.getSelectionModel().getSelectedItem();
+		if (staticEvent != null) {
+			staticEvent.edit();
+		}
+	}
+	
+	@FXML private void delStaticEvent() {
+		StaticEvent staticEvent = staticEventsTable.getSelectionModel().getSelectedItem();
+		if (staticEvent != null) {
+			staticEventsTable.getItems().remove(staticEvent);
+		}
+	}
+	
 }
