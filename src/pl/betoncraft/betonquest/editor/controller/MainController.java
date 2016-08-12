@@ -117,4 +117,26 @@ public class MainController {
 		}
 	}
 	
+	@FXML private void addVariable() {
+		GlobalVariable variable = new GlobalVariable(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
+		if (variable.edit()) {
+			variable.setIndex(globVarTable.getItems().size());
+			globVarTable.getItems().add(variable);
+		}
+	}
+	
+	@FXML private void editVariable() {
+		GlobalVariable variable = globVarTable.getSelectionModel().getSelectedItem();
+		if (variable != null) {
+			variable.edit();
+		}
+	}
+	
+	@FXML private void delVariable() {
+		GlobalVariable variable = globVarTable.getSelectionModel().getSelectedItem();
+		if (variable != null) {
+			globVarTable.getItems().remove(variable);
+		}
+	}
+	
 }
