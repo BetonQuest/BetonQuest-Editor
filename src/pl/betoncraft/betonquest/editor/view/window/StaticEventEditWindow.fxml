@@ -8,27 +8,38 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Button?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.ColumnConstraints?>
 
 <GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="5" vgap="5"
 	fx:controller="pl.betoncraft.betonquest.editor.controller.StaticEventEditController">
-	
+
+	<columnConstraints>
+		<ColumnConstraints percentWidth="30" />
+		<ColumnConstraints percentWidth="70" />
+	</columnConstraints>
+
 	<padding>
 		<Insets top="10" left="10" right="10" bottom="10" />
 	</padding>
 
-	<Label id="option-label" text="%static-event" GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" />
-	
-	<Label id="option-label" text="%time" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+	<Label id="option-label" text="%static-event" GridPane.rowIndex="0"
+		GridPane.columnIndex="0" GridPane.columnSpan="2" />
+
+	<Label id="option-label" text="%time" GridPane.rowIndex="1"
+		GridPane.columnIndex="0" />
 	<HBox GridPane.rowIndex="1" GridPane.columnIndex="1" spacing="3">
-		<ChoiceBox fx:id="hours" prefWidth="20" />
+		<ChoiceBox fx:id="hours" maxWidth="25" />
 		<Text text=":" />
-		<ChoiceBox fx:id="minutes" prefWidth="20" />
+		<ChoiceBox fx:id="minutes" maxWidth="25" />
 	</HBox>
-	
-	<Label id="option-label" text="%event" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-	<ChoiceBox fx:id="events" GridPane.rowIndex="2" GridPane.columnIndex="1" />
-	
-	<ButtonBar GridPane.rowIndex="3" GridPane.columnIndex="0" GridPane.columnSpan="2">
+
+	<Label id="option-label" text="%event" GridPane.rowIndex="2"
+		GridPane.columnIndex="0" />
+	<ChoiceBox fx:id="events" GridPane.rowIndex="2"
+		GridPane.columnIndex="1" maxWidth="9000" />
+
+	<ButtonBar GridPane.rowIndex="3" GridPane.columnIndex="0"
+		GridPane.columnSpan="2">
 		<buttons>
 			<Button text="%ok" onAction="#add" />
 			<Button text="%cancel" onAction="#cancel" />

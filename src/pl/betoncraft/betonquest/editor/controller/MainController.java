@@ -161,4 +161,25 @@ public class MainController {
 		}
 	}
 	
+	@FXML private void addGlobalLocation() {
+		GlobalLocation globalLocation = new GlobalLocation(null);
+		if (globalLocation.edit()) {
+			globLocList.getItems().add(globalLocation);
+		}
+	}
+	
+	@FXML private void editGlobalLocation() {
+		GlobalLocation globalLocation = globLocList.getSelectionModel().getSelectedItem();
+		if (globalLocation != null) {
+			globalLocation.edit();
+		}
+	}
+	
+	@FXML private void delGlobalLocation() {
+		GlobalLocation globalLocation = globLocList.getSelectionModel().getSelectedItem();
+		if (globalLocation != null) {
+			globLocList.getItems().remove(globalLocation);
+		}
+	}
+	
 }

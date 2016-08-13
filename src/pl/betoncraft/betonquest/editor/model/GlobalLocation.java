@@ -19,6 +19,7 @@ package pl.betoncraft.betonquest.editor.model;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import pl.betoncraft.betonquest.editor.controller.GlobalLocationEditController;
 import pl.betoncraft.betonquest.editor.data.Editable;
 
 /**
@@ -28,7 +29,7 @@ import pl.betoncraft.betonquest.editor.data.Editable;
  */
 public class GlobalLocation implements Editable {
 	
-	private ObjectProperty<Objective> objective = new SimpleObjectProperty<>(); // TODO use IdWrapper in global locations
+	private ObjectProperty<Objective> objective = new SimpleObjectProperty<>();
 	
 	public GlobalLocation(Objective objective) {
 		this.objective.set(objective);
@@ -36,7 +37,7 @@ public class GlobalLocation implements Editable {
 
 	@Override
 	public boolean edit() {
-		return true; // TODO edit global location in a custom window
+		return GlobalLocationEditController.display(this);
 	}
 	
 	public ObjectProperty<Objective> getObjective() {

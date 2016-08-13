@@ -111,9 +111,9 @@ public class StaticEventEditController {
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(BetonQuestEditor.class.getResource("resource/style.css").toExternalForm());
 			window.setScene(scene);
-			window.setTitle(resources.getString("edit-npc-binding"));
+			window.setTitle(resources.getString("edit-static-event"));
 			window.getIcons().add(new Image(BetonQuestEditor.class.getResourceAsStream("resource/icon.png")));
-			window.setHeight(170);
+			window.setHeight(175);
 			window.setWidth(300);
 			window.setResizable(false);
 			StaticEventEditController controller = (StaticEventEditController) fxmlLoader.getController();
