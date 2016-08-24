@@ -70,8 +70,6 @@ public class QuestCancelerEditController {
 	@FXML private TextField teleport;
 	
 	private void refresh() {
-		name.setText(canceler.toString());
-		text.setText(canceler.getName().getLang(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).get());
 		ResourceBundle lang = BetonQuestEditor.getInstance().getLanguage();
 		conditions.setText(lang.getString("conditions") + " (" + conditionList.size() + ")");
 		events.setText(lang.getString("events") + " (" + eventList.size() + ")");
@@ -79,7 +77,6 @@ public class QuestCancelerEditController {
 		points.setText(lang.getString("point-categories") + " (" + pointList.size() + ")");
 		objectives.setText(lang.getString("objectives") + " (" + objectiveList.size() + ")");
 		entries.setText(lang.getString("journal-entries") + " (" + entryList.size() + ")");
-		teleport.setText(canceler.getLocation());
 	}
 
 	@FXML private void condition() {
@@ -196,6 +193,9 @@ public class QuestCancelerEditController {
 			controller.pointList = FXCollections.observableArrayList(canceler.getPoints());
 			controller.objectiveList = FXCollections.observableArrayList(canceler.getObjectives());
 			controller.entryList = FXCollections.observableArrayList(canceler.getJournal());
+			controller.name.setText(canceler.toString());
+			controller.text.setText(canceler.getName().getLang(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).get());
+			controller.teleport.setText(canceler.getLocation());
 			controller.refresh();
 			controller.stage.showAndWait();
 			return controller.result;

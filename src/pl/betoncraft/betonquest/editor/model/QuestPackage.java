@@ -485,9 +485,18 @@ public class QuestPackage implements Editable {
 								break;
 							case "conditions":
 								String[] conditionNames = value.split(",");
-								Condition[] conditions = new Condition[conditionNames.length];
+								ArrayList<ConditionWrapper> conditions = new ArrayList<>(conditionNames.length);
 								for (int i = 0; i < conditionNames.length; i++) {
-									conditions[i] = newByID(conditionNames[i].trim(), name -> new Condition(this, name));
+									String name = conditionNames[i].trim();
+									boolean negated = false;
+									while (name.startsWith("!")) {
+										name = name.substring(1, name.length());
+										negated = true;
+									}
+									ConditionWrapper condition = new ConditionWrapper(this, newByID(name, idString -> new Condition(this, idString)));
+									condition.setNegated(negated);
+									conditions.add(i, condition);
+									condition.setIndex(i);
 								}
 								line.getConditions().addAll(conditions);
 								break;
@@ -865,7 +874,7 @@ public class QuestPackage implements Editable {
 				addTranslatedNode(mapper, node, "text", line.getText());
 				node.put("priority", line.getPriority().get());
 				StringBuilder conditions = new StringBuilder();
-				for (Condition condition : line.getConditions()) {
+				for (ConditionWrapper condition : line.getConditions()) {
 					conditions.append(condition.toString() + ',');
 				}
 				node.put("conditions", conditions.substring(0, conditions.length() - 1));

@@ -96,110 +96,203 @@ public class MainController {
 	}
 	
 	@FXML private void addNpcBinding() {
-		NpcBinding binding = new NpcBinding(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-		if (binding.edit()) {
-			binding.setIndex(npcTable.getItems().size());
-			npcTable.getItems().add(binding);
+		try {
+			NpcBinding binding = new NpcBinding(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
+			if (binding.edit()) {
+				binding.setIndex(npcTable.getItems().size());
+				npcTable.getItems().add(binding);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void editNpcBinding() {
-		NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
-		if (binding != null) {
-			binding.edit();
+		try {
+			NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
+			if (binding != null) {
+				binding.edit();
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void delNpcBinding() {
-		NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
-		if (binding != null) {
-			npcTable.getItems().remove(binding);
+		try {
+			NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
+			if (binding != null) {
+				npcTable.getItems().remove(binding);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void addVariable() {
-		GlobalVariable variable = new GlobalVariable(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-		if (variable.edit()) {
-			variable.setIndex(globVarTable.getItems().size());
-			globVarTable.getItems().add(variable);
+		try {
+			GlobalVariable variable = new GlobalVariable(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
+			if (variable.edit()) {
+				variable.setIndex(globVarTable.getItems().size());
+				globVarTable.getItems().add(variable);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void editVariable() {
-		GlobalVariable variable = globVarTable.getSelectionModel().getSelectedItem();
-		if (variable != null) {
-			variable.edit();
+		try {
+			GlobalVariable variable = globVarTable.getSelectionModel().getSelectedItem();
+			if (variable != null) {
+				variable.edit();
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void delVariable() {
-		GlobalVariable variable = globVarTable.getSelectionModel().getSelectedItem();
-		if (variable != null) {
-			globVarTable.getItems().remove(variable);
+		try {
+			GlobalVariable variable = globVarTable.getSelectionModel().getSelectedItem();
+			if (variable != null) {
+				globVarTable.getItems().remove(variable);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void addStaticEvent() {
-		StaticEvent staticEvent = new StaticEvent(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-		if (staticEvent.edit()) {
-			staticEvent.setIndex(staticEventsTable.getItems().size());
-			staticEventsTable.getItems().add(staticEvent);
+		try {
+			StaticEvent staticEvent = new StaticEvent(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
+			if (staticEvent.edit()) {
+				staticEvent.setIndex(staticEventsTable.getItems().size());
+				staticEventsTable.getItems().add(staticEvent);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void editStaticEvent() {
-		StaticEvent staticEvent = staticEventsTable.getSelectionModel().getSelectedItem();
-		if (staticEvent != null) {
-			staticEvent.edit();
+		try {
+			StaticEvent staticEvent = staticEventsTable.getSelectionModel().getSelectedItem();
+			if (staticEvent != null) {
+				staticEvent.edit();
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void delStaticEvent() {
-		StaticEvent staticEvent = staticEventsTable.getSelectionModel().getSelectedItem();
-		if (staticEvent != null) {
-			staticEventsTable.getItems().remove(staticEvent);
+		try {
+			StaticEvent staticEvent = staticEventsTable.getSelectionModel().getSelectedItem();
+			if (staticEvent != null) {
+				staticEventsTable.getItems().remove(staticEvent);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void addGlobalLocation() {
-		GlobalLocation globalLocation = new GlobalLocation(null);
-		if (globalLocation.edit()) {
-			globLocList.getItems().add(globalLocation);
+		try {
+			GlobalLocation globalLocation = new GlobalLocation(null);
+			if (globalLocation.edit()) {
+				globLocList.getItems().add(globalLocation);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void editGlobalLocation() {
-		GlobalLocation globalLocation = globLocList.getSelectionModel().getSelectedItem();
-		if (globalLocation != null) {
-			globalLocation.edit();
+		try {
+			GlobalLocation globalLocation = globLocList.getSelectionModel().getSelectedItem();
+			if (globalLocation != null) {
+				globalLocation.edit();
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void delGlobalLocation() {
-		GlobalLocation globalLocation = globLocList.getSelectionModel().getSelectedItem();
-		if (globalLocation != null) {
-			globLocList.getItems().remove(globalLocation);
+		try {
+			GlobalLocation globalLocation = globLocList.getSelectionModel().getSelectedItem();
+			if (globalLocation != null) {
+				globLocList.getItems().remove(globalLocation);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void addQuestCanceler() {
-		QuestCanceler questCanceler = new QuestCanceler(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-		if (questCanceler.edit()) {
-			cancelList.getItems().add(questCanceler);
+		try {
+			QuestCanceler questCanceler = new QuestCanceler(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
+			if (questCanceler.edit()) {
+				cancelList.getItems().add(questCanceler);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void editQuestCanceler() {
-		QuestCanceler questCanceler = cancelList.getSelectionModel().getSelectedItem();
-		if (questCanceler != null) {
-			questCanceler.edit();
+		try {
+			QuestCanceler questCanceler = cancelList.getSelectionModel().getSelectedItem();
+			if (questCanceler != null) {
+				questCanceler.edit();
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
 	@FXML private void delQuestCanceler() {
-		QuestCanceler questCanceler = cancelList.getSelectionModel().getSelectedItem();
-		if (questCanceler != null) {
-			cancelList.getItems().remove(questCanceler);
+		try {
+			QuestCanceler questCanceler = cancelList.getSelectionModel().getSelectedItem();
+			if (questCanceler != null) {
+				cancelList.getItems().remove(questCanceler);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
+	
+	@FXML private void addMainPageLine() {
+		try {
+			MainPageLine mainPageLine = new MainPageLine(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
+			if (mainPageLine.edit()) {
+				mainPageList.getItems().add(mainPageLine);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
+	
+	@FXML private void editMainPageLine() {
+		try {
+			MainPageLine mainPageLine = mainPageList.getSelectionModel().getSelectedItem();
+			if (mainPageLine != null) {
+				mainPageLine.edit();
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
+	
+	@FXML private void delMainPageLine() {
+		try {
+			MainPageLine mainPageLine = mainPageList.getSelectionModel().getSelectedItem();
+			if (mainPageLine != null) {
+				mainPageList.getItems().remove(mainPageLine);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	

@@ -23,7 +23,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import pl.betoncraft.betonquest.editor.controller.NameEditController;
+import pl.betoncraft.betonquest.editor.controller.MainPageLineEditController;
+import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
@@ -36,7 +37,7 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
 public class MainPageLine extends SimpleID {
 
 	private TranslatableText text = new TranslatableText();
-	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
+	private ObservableList<ConditionWrapper> conditions = FXCollections.observableArrayList();
 	private IntegerProperty priority = new SimpleIntegerProperty();
 	
 	public MainPageLine(QuestPackage pack, String id) {
@@ -46,7 +47,7 @@ public class MainPageLine extends SimpleID {
 
 	@Override
 	public boolean edit() {
-		return NameEditController.display(id); // TODO edit main page line in a custom window
+		return MainPageLineEditController.display(this);
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class MainPageLine extends SimpleID {
 	public TranslatableText getText() {
 		return text;
 	}
-	public ObservableList<Condition> getConditions() {
+	public ObservableList<ConditionWrapper> getConditions() {
 		return conditions;
 	}
 	public IntegerProperty getPriority() {
