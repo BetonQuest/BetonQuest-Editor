@@ -19,6 +19,7 @@
 package pl.betoncraft.betonquest.editor.data;
 
 import javafx.beans.property.StringProperty;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
 /**
@@ -50,6 +51,11 @@ public abstract class SimpleID implements ID {
 	@Override
 	public void setIndex(int index) {
 		this.index = index;
+	}
+	
+	@Override
+	public String toString() {
+		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? id.get() : pack.getName().get() + "." + id.get();
 	}
 
 }

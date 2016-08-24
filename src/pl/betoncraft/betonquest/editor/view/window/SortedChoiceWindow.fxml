@@ -7,9 +7,8 @@
 <?import javafx.scene.control.Button?>
 <?import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField?>
 
-<VBox
-	fx:controller="pl.betoncraft.betonquest.editor.controller.SortedChoiceController"
-	xmlns:fx="http://javafx.com/fxml/1" spacing="5">
+<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1" spacing="5"
+	fx:controller="pl.betoncraft.betonquest.editor.controller.SortedChoiceController">
 
 	<padding>
 		<Insets top="10" left="10" bottom="10" right="10" />

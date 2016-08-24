@@ -10,9 +10,9 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Button?>
 
-<GridPane
-	fx:controller="pl.betoncraft.betonquest.editor.controller.NameEditController"
-	xmlns:fx="http://javafx.com/fxml/1" hgap="10" vgap="10">
+<GridPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1"
+	hgap="10" vgap="10"
+	fx:controller="pl.betoncraft.betonquest.editor.controller.NameEditController">
 
 	<padding>
 		<Insets bottom="10" top="10" left="10" right="10" />

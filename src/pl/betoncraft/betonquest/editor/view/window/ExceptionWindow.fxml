@@ -11,7 +11,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.TextFlow?>
 
-<VBox fx:controller="pl.betoncraft.betonquest.editor.controller.ExceptionController"
+<VBox fx:id="root" fx:controller="pl.betoncraft.betonquest.editor.controller.ExceptionController"
 	xmlns:fx="http://javafx.com/fxml/1" spacing="5">
 
 	<padding>

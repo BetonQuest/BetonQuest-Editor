@@ -18,16 +18,9 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.data.Instruction;
@@ -43,21 +36,9 @@ public class InstructionEditController {
 	private Instruction data;
 	private boolean result = false;
 	
+	@FXML private Pane root;
 	@FXML private TextField id;
 	@FXML private TextField instruction;
-	
-	/**
-	 * Sets the data in the window.
-	 * 
-	 * @param stage the pop-up window
-	 * @param data Instruction to display in text fields
-	 */
-	private void setData(Stage stage, Instruction data) {
-		this.stage = stage;
-		this.data = data;
-		id.setText(data.getId().get());
-		instruction.setText(data.getInstruction().get());
-	}
 	
 	/**
 	 * Checks if the name is inserted and changes the StringProperties of the Instruction object.
@@ -94,24 +75,18 @@ public class InstructionEditController {
 	 */
 	public static boolean display(Instruction data) {
 		try {
-			Stage window = new Stage();
-			URL location = BetonQuestEditor.class.getResource("view/window/InstructionEditWindow.fxml");
-			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
-			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
-			GridPane root = (GridPane) fxmlLoader.load();
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(BetonQuestEditor.class.getResource("resource/style.css").toExternalForm());
-			window.setScene(scene);
-			window.setTitle(resources.getString("edit-instruction"));
-			window.getIcons().add(new Image(BetonQuestEditor.class.getResourceAsStream("resource/icon.png")));
-			window.setHeight(150);
-			window.setWidth(500);
-			window.setResizable(false);
-			InstructionEditController controller = (InstructionEditController) fxmlLoader.getController();
-			controller.setData(window, data);
-			window.showAndWait();
+			InstructionEditController controller = (InstructionEditController) BetonQuestEditor
+					.createWindow("view/window/InstructionEditWindow.fxml", "edit-instruction", 500, 150);
+			if (controller == null) {
+				return false;
+			}
+			controller.stage = (Stage) controller.root.getScene().getWindow();
+			controller.data = data;
+			controller.id.setText(data.getId().get());
+			controller.instruction.setText(data.getInstruction().get());
+			controller.stage.showAndWait();
 			return controller.result;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			ExceptionController.display(e);
 			return false;
 		}

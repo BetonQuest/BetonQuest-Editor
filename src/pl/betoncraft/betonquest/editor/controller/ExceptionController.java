@@ -24,17 +24,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
-import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 
@@ -46,16 +41,9 @@ import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 public class ExceptionController {
 
 	private Stage stage;
+
+	@FXML private Pane root;
 	@FXML private TextArea stackTrace;
-	
-	private void setException(Stage stage, Exception e) {
-		this.stage = stage;
-		StringWriter stringWriter = new StringWriter();
-		PrintWriter printWriter = new PrintWriter(stringWriter);
-		e.printStackTrace(printWriter);
-		String string = stringWriter.toString();
-		stackTrace.setText(string);
-	}
 	
 	@FXML private void link() {
 		try {
@@ -80,23 +68,20 @@ public class ExceptionController {
 	
 	public static void display(Exception exception) {
 		try {
-			Stage window = new Stage();
-			URL location = BetonQuestEditor.class.getResource("view/window/ExceptionWindow.fxml");
-			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
-			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
-			VBox root = (VBox) fxmlLoader.load();
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(BetonQuestEditor.class.getResource("resource/style.css").toExternalForm());
-			window.setScene(scene);
-			window.setTitle(resources.getString("exception"));
-			window.getIcons().add(new Image(BetonQuestEditor.class.getResourceAsStream("resource/icon.png")));
-			window.setHeight(500);
-			window.setWidth(700);
-			window.setResizable(false);
-			ExceptionController controller = (ExceptionController) fxmlLoader.getController();
-			controller.setException(window, exception);
-			window.showAndWait();
+			ExceptionController controller = (ExceptionController) BetonQuestEditor
+					.createWindow("view/window/ExceptionWindow.fxml", "exception", 700, 500);
+			controller.stage = (Stage) controller.root.getScene().getWindow();
+			StringWriter stringWriter = new StringWriter();
+			PrintWriter printWriter = new PrintWriter(stringWriter);
+			exception.printStackTrace(printWriter);
+			exception.printStackTrace(); // print to stderr as well
+			String string = stringWriter.toString();
+			controller.stackTrace.setText(string);
+			controller.stage.showAndWait();
 		} catch (Exception e) {
+			// there was an exception when trying to display another exception
+			// it's sad because now the only thing which can be done is to print both exceptions to stderr
+			exception.printStackTrace();
 			e.printStackTrace();
 		}
 	}

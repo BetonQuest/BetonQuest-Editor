@@ -10,25 +10,25 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.geometry.Insets?>
 
-<VBox fx:controller="pl.betoncraft.betonquest.editor.controller.NpcBindingEditController"
-	xmlns:fx="http://javafx.com/fxml/1" spacing="5">
-	
+<VBox fx:id="root" xmlns:fx="http://javafx.com/fxml/1" spacing="5"
+	fx:controller="pl.betoncraft.betonquest.editor.controller.NpcBindingEditController">
+
 	<padding>
 		<Insets top="10" left="10" bottom="10" right="10" />
 	</padding>
-	
+
 	<Label text="%npc-binding" id="option-label" />
-	
+
 	<TextField promptText="%npc-identifier" fx:id="field" />
-	
+
 	<ChoiceBox maxWidth="9000" fx:id="conversation" />
-	
+
 	<ButtonBar>
 		<buttons>
 			<Button text="%ok" onAction="#ok" />
 			<Button text="%cancel" onAction="#cancel" />
 		</buttons>
 	</ButtonBar>
-	
+
 </VBox>
 

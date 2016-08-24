@@ -182,4 +182,25 @@ public class MainController {
 		}
 	}
 	
+	@FXML private void addQuestCanceler() {
+		QuestCanceler questCanceler = new QuestCanceler(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
+		if (questCanceler.edit()) {
+			cancelList.getItems().add(questCanceler);
+		}
+	}
+	
+	@FXML private void editQuestCanceler() {
+		QuestCanceler questCanceler = cancelList.getSelectionModel().getSelectedItem();
+		if (questCanceler != null) {
+			questCanceler.edit();
+		}
+	}
+	
+	@FXML private void delQuestCanceler() {
+		QuestCanceler questCanceler = cancelList.getSelectionModel().getSelectedItem();
+		if (questCanceler != null) {
+			cancelList.getItems().remove(questCanceler);
+		}
+	}
+	
 }

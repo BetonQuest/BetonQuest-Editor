@@ -18,19 +18,13 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField;
@@ -44,6 +38,9 @@ import pl.betoncraft.betonquest.editor.data.IdWrapper;
  */
 public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F extends ListCell<W>> {
 	
+	@FXML private Pane root;
+	private Stage stage;
+	
 	private String labelText;
 	private ObservableList<W> chosen;
 	private ObservableList<O> available;
@@ -54,17 +51,6 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 	@FXML private Label label;
 	@FXML private ListView<W> list;
 	@FXML private AutoCompleteTextField field;
-	
-	public void setData(String labelText, ObservableList<W> chosen, ObservableList<O> available, Creator<O> creator, CellFactory<F> cellFactory, Wrapper<O, W> wrapper) {
-		this.labelText = labelText;
-		this.chosen = chosen;
-		this.available = available;
-		this.creator = creator;
-		this.cellFactory = cellFactory;
-		this.wrapper = wrapper;
-		// fill the view
-		refresh();
-	}
 	
 	private void refresh() {
 		chosen.sort((ID o1, ID o2) -> o1.getIndex() - o2.getIndex());
@@ -153,27 +139,33 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 	public static <O extends ID, W extends IdWrapper<O>, F extends ListCell<W>> void display(String labelText,
 			ObservableList<W> chosen, ObservableList<O> available, Creator<O> creator, CellFactory<F> cellFactory,
 			Wrapper<O, W> wrapper) {
+		display(labelText, chosen, available, creator, cellFactory, wrapper, () -> {
+			BetonQuestEditor.getInstance().refresh();
+		}); 
+	}
+	
+	public static <O extends ID, W extends IdWrapper<O>, F extends ListCell<W>> void display(String labelText,
+			ObservableList<W> chosen, ObservableList<O> available, Creator<O> creator, CellFactory<F> cellFactory,
+			Wrapper<O, W> wrapper, Refresher refresher) {
 		try {
-			Stage window = new Stage();
-			URL location = BetonQuestEditor.class.getResource("view/window/SortedChoiceWindow.fxml");
-			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
-			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
-			VBox root = (VBox) fxmlLoader.load();
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(BetonQuestEditor.class.getResource("resource/style.css").toExternalForm());
-			window.setScene(scene);
-			window.setTitle(resources.getString("choose-objects"));
-			window.getIcons().add(new Image(BetonQuestEditor.class.getResourceAsStream("resource/icon.png")));
-			window.setHeight(500);
-			window.setWidth(400);
-			window.setResizable(false);
-			window.setOnCloseRequest(event -> {
-				BetonQuestEditor.getInstance().refresh();
-			});
 			@SuppressWarnings("unchecked")
-			SortedChoiceController<O, W, F> controller = (SortedChoiceController<O, W, F>) fxmlLoader.getController();
-			controller.setData(labelText, chosen, available, creator, cellFactory, wrapper);
-			window.showAndWait();
+			SortedChoiceController<O, W, F> controller = (SortedChoiceController<O, W, F>) BetonQuestEditor
+					.createWindow("view/window/SortedChoiceWindow.fxml", "choose-objects", 400, 500);
+			if (controller == null) {
+				return;
+			}
+			controller.stage = (Stage) controller.root.getScene().getWindow();
+			controller.labelText = labelText;
+			controller.chosen = chosen;
+			controller.available = available;
+			controller.creator = creator;
+			controller.cellFactory = cellFactory;
+			controller.wrapper = wrapper;
+			controller.stage.setOnCloseRequest(event -> {
+				refresher.refresh();
+			});
+			controller.refresh(); // fill the view
+			controller.stage.showAndWait();
 		} catch (Exception e) {
 			ExceptionController.display(e);
 		}
@@ -189,6 +181,10 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 	
 	public static interface Wrapper<O, W> {
 		public W wrap(O item);
+	}
+	
+	public static interface Refresher {
+		public void refresh();
 	}
 
 }

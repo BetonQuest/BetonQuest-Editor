@@ -7,9 +7,10 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.controller.NameEditController;
+import pl.betoncraft.betonquest.editor.controller.QuestCancelerEditController;
+import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
@@ -21,12 +22,12 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
 public class QuestCanceler extends SimpleID {
 
 	private TranslatableText name = new TranslatableText();
-	private ObservableList<Condition> conditions = FXCollections.observableArrayList();
-	private ObservableList<Event> events = FXCollections.observableArrayList();
-	private ObservableList<Objective> objectives = FXCollections.observableArrayList();
-	private ObservableList<String> tags = FXCollections.observableArrayList();
-	private ObservableList<String> points = FXCollections.observableArrayList();
-	private ObservableList<JournalEntry> journal = FXCollections.observableArrayList();
+	private ObservableList<ConditionWrapper> conditions = FXCollections.observableArrayList();
+	private ObservableList<IdWrapper<Event>> events = FXCollections.observableArrayList();
+	private ObservableList<IdWrapper<Objective>> objectives = FXCollections.observableArrayList();
+	private ObservableList<IdWrapper<Tag>> tags = FXCollections.observableArrayList();
+	private ObservableList<IdWrapper<PointCategory>> points = FXCollections.observableArrayList();
+	private ObservableList<IdWrapper<JournalEntry>> journal = FXCollections.observableArrayList();
 	private StringProperty location = new SimpleStringProperty();
 	
 	public QuestCanceler(QuestPackage pack, String id) {
@@ -36,7 +37,7 @@ public class QuestCanceler extends SimpleID {
 
 	@Override
 	public boolean edit() {
-		return NameEditController.display(id); // TODO edit a quest canceler in a custom window
+		return QuestCancelerEditController.display(this);
 	}
 
 	@Override
@@ -57,33 +58,28 @@ public class QuestCanceler extends SimpleID {
 		return name;
 	}
 
-	public ObservableList<Condition> getConditions() {
+	public ObservableList<ConditionWrapper> getConditions() {
 		return conditions;
 	}
 
-	public ObservableList<Event> getEvents() {
+	public ObservableList<IdWrapper<Event>> getEvents() {
 		return events;
 	}
 
-	public ObservableList<Objective> getObjectives() {
+	public ObservableList<IdWrapper<Objective>> getObjectives() {
 		return objectives;
 	}
 
-	public ObservableList<String> getTags() {
+	public ObservableList<IdWrapper<Tag>> getTags() {
 		return tags;
 	}
 
-	public ObservableList<String> getPoints() {
+	public ObservableList<IdWrapper<PointCategory>> getPoints() {
 		return points;
 	}
 
-	public ObservableList<JournalEntry> getJournal() {
+	public ObservableList<IdWrapper<JournalEntry>> getJournal() {
 		return journal;
-	}
-	
-	@Override
-	public String toString() {
-		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? id.get() : pack.getName().get() + "." + id.get();
 	}
 
 }

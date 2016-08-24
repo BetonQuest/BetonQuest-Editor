@@ -29,12 +29,14 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.controller.ConversationController;
 import pl.betoncraft.betonquest.editor.controller.EcoController;
@@ -46,8 +48,11 @@ import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Conversation;
 import pl.betoncraft.betonquest.editor.model.Event;
 import pl.betoncraft.betonquest.editor.model.Item;
+import pl.betoncraft.betonquest.editor.model.JournalEntry;
 import pl.betoncraft.betonquest.editor.model.Objective;
+import pl.betoncraft.betonquest.editor.model.PointCategory;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
+import pl.betoncraft.betonquest.editor.model.Tag;
 
 /**
  * Main class for the application.
@@ -65,6 +70,24 @@ public class BetonQuestEditor extends Application {
 	private static File autoLoadPackage;
 	private static File autoSavePackage;
 	private static int autoSelect = -1;
+
+	/**
+	 * Parses the arguments and starts the application.
+	 */
+	public static void main(String[] args) {
+		if (args.length > 2) {
+			autoLoadPackage = new File(args[0]);
+			if (!autoLoadPackage.exists() || !autoLoadPackage.getName().endsWith(".zip")) {
+				autoLoadPackage = null;
+			}
+			autoSavePackage = new File(args[1]);
+			if (!autoSavePackage.getName().endsWith(".zip")) {
+				autoSavePackage = null;
+			}
+			autoSelect = Integer.parseInt(args[2]);
+		}
+		launch(args);
+	}
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -242,23 +265,30 @@ public class BetonQuestEditor extends Application {
 		});
 		return list;
 	}
+	
+	public ObservableList<JournalEntry> getAllEntries() {
+		ObservableList<JournalEntry> list = FXCollections.observableArrayList();
+		list.addAll(currentPackage.getJournal());
+		loadedPackages.values().forEach(pack -> {
+			if (!pack.equals(currentPackage)) {
+				list.addAll(pack.getJournal());
+			}
+		});
+		return list;
+	}
 
 	/**
-	 * Parses the arguments and starts the application.
+	 * @return all tags from loaded packages, the ones from current package first
 	 */
-	public static void main(String[] args) {
-		if (args.length > 2) {
-			autoLoadPackage = new File(args[0]);
-			if (!autoLoadPackage.exists() || !autoLoadPackage.getName().endsWith(".zip")) {
-				autoLoadPackage = null;
-			}
-			autoSavePackage = new File(args[1]);
-			if (!autoSavePackage.getName().endsWith(".zip")) {
-				autoSavePackage = null;
-			}
-			autoSelect = Integer.parseInt(args[2]);
-		}
-		launch(args);
+	public ObservableList<Tag> getAllTags() {
+		return FXCollections.observableArrayList(); // TODO extract tags from events, conditions etc.
+	}
+
+	/**
+	 * @return all point categories from loaded packages, the ones from current package first
+	 */
+	public ObservableList<PointCategory> getAllPoints() {
+		return FXCollections.observableArrayList(); // TODO extract points from events, conditions etc.
 	}
 	
 	/**
@@ -282,6 +312,30 @@ public class BetonQuestEditor extends Application {
 			return true;
 		}
 		return false;
+	}
+
+	public static Object createWindow(String controller, String title, int width, int height) {
+		try {
+			Stage window = new Stage();
+			URL location = BetonQuestEditor.class.getResource(controller);
+			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
+			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
+			Parent root = (Parent) fxmlLoader.load();
+			Scene scene = new Scene(root);
+			scene.getStylesheets().add(BetonQuestEditor.class.getResource("resource/style.css").toExternalForm());
+			window.setScene(scene);
+			window.setTitle(resources.getString(title));
+			window.getIcons().add(new Image(BetonQuestEditor.class.getResourceAsStream("resource/icon.png")));
+			window.setHeight(height);
+			window.setWidth(width);
+			window.setResizable(false);
+			window.initModality(Modality.WINDOW_MODAL);
+			window.initOwner(instance.stage);
+			return fxmlLoader.getController();
+		} catch (IOException e) {
+			ExceptionController.display(e);
+			return null;
+		}
 	}
 
 	@Override

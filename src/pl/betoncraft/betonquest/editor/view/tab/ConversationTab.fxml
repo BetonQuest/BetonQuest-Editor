@@ -36,7 +36,7 @@
 				<Label text="%conversation" id="option-label" />
 				<ChoiceBox fx:id="conversation" onAction="#selectConversation" />
 				<Button text="%add" onAction="#addConversation" />
-				<Button text="%rename" onAction="#renameConversation" />
+				<Button text="%edit" onAction="#renameConversation" />
 				<Button text="%del" onAction="#delConversation" />
 				<!-- stop option -->
 				<HBox spacing="5" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS"
@@ -94,7 +94,7 @@
 					<ButtonBar GridPane.rowIndex="4" GridPane.columnIndex="0">
 						<buttons>
 							<Button text="%add" onAction="#addNpcOption" />
-							<Button text="%rename" onAction="#renameNpcOption" />
+							<Button text="%edit" onAction="#renameNpcOption" />
 							<Button text="%del" onAction="#delNpcOption" />
 						</buttons>
 					</ButtonBar>
@@ -108,7 +108,7 @@
 					<ButtonBar GridPane.rowIndex="4" GridPane.columnIndex="1">
 						<buttons>
 							<Button text="%add" onAction="#addPlayerOption" />
-							<Button text="%rename" onAction="#renamePlayerOption" />
+							<Button text="%edit" onAction="#renamePlayerOption" />
 							<Button text="%del" onAction="#delPlayerOption" />
 						</buttons>
 					</ButtonBar>

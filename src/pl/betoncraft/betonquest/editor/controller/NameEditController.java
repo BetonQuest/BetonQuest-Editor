@@ -18,17 +18,10 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 
@@ -43,19 +36,8 @@ public class NameEditController {
 	private StringProperty name;
 	private boolean result = false;
 	
+	@FXML private Pane root;
 	@FXML private TextField field;
-	
-	/**
-	 * Sets the data in the window.
-	 * 
-	 * @param stage the pop-up window
-	 * @param name StringProperty to edit
-	 */
-	private void setData(Stage stage, StringProperty name) {
-		this.stage = stage;
-		this.name = name;
-		field.setText(name.get());
-	}
 	
 	/**
 	 * Checks if the name is inserted and changes the StringProperty.
@@ -94,24 +76,17 @@ public class NameEditController {
 	 */
 	public static boolean display(StringProperty data) {
 		try {
-			Stage window = new Stage();
-			URL location = BetonQuestEditor.class.getResource("view/window/NameEditWindow.fxml");
-			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
-			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
-			GridPane root = (GridPane) fxmlLoader.load();
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(BetonQuestEditor.class.getResource("resource/style.css").toExternalForm());
-			window.setScene(scene);
-			window.setTitle(resources.getString("edit-name"));
-			window.getIcons().add(new Image(BetonQuestEditor.class.getResourceAsStream("resource/icon.png")));
-			window.setHeight(100);
-			window.setWidth(500);
-			window.setResizable(false);
-			NameEditController controller = (NameEditController) fxmlLoader.getController();
-			controller.setData(window, data);
-			window.showAndWait();
+			NameEditController controller = (NameEditController) BetonQuestEditor
+					.createWindow("view/window/NameEditWindow.fxml", "edit-name", 500, 100);
+			if (controller == null) {
+				return false;
+			}
+			controller.stage = (Stage) controller.root.getScene().getWindow();
+			controller.name = data;
+			controller.field.setText(data.get());
+			controller.stage.showAndWait();
 			return controller.result;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			ExceptionController.display(e);
 			return false;
 		}

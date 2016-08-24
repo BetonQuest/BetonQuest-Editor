@@ -20,7 +20,6 @@ package pl.betoncraft.betonquest.editor.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.InstructionEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.Instruction;
@@ -59,11 +58,6 @@ public class Event extends SimpleID implements Instruction {
 	@Override
 	public StringProperty getInstruction() {
 		return instruction;
-	}
-
-	@Override
-	public String toString() {
-		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? id.get() : pack.getName().get() + "." + id.get();
 	}
 	
 }

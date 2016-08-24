@@ -18,15 +18,9 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.GlobalLocation;
@@ -43,16 +37,8 @@ public class GlobalLocationEditController {
 	private boolean result = false;
 	private GlobalLocation data;
 
+	@FXML private Pane root;
 	@FXML private ChoiceBox<Objective> objective;
-	
-	private void setData(Stage stage, GlobalLocation data) {
-		this.stage = stage;
-		this.data = data;
-		objective.getItems().setAll(BetonQuestEditor.getInstance().getAllObjectives());
-		if (objective.getItems().contains(data.getObjective().get())) {
-			objective.getSelectionModel().select(data.getObjective().get());
-		}
-	}
 	
 	@FXML private void ok() {
 		Objective chosen = objective.getValue();
@@ -71,22 +57,18 @@ public class GlobalLocationEditController {
 	
 	public static boolean display(GlobalLocation data) {
 		try {
-			Stage window = new Stage();
-			URL location = BetonQuestEditor.class.getResource("view/window/GlobalLocationEditWindow.fxml");
-			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
-			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
-			VBox root = (VBox) fxmlLoader.load();
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(BetonQuestEditor.class.getResource("resource/style.css").toExternalForm());
-			window.setScene(scene);
-			window.setTitle(resources.getString("edit-global-location"));
-			window.getIcons().add(new Image(BetonQuestEditor.class.getResourceAsStream("resource/icon.png")));
-			window.setHeight(135);
-			window.setWidth(300);
-			window.setResizable(false);
-			GlobalLocationEditController controller = (GlobalLocationEditController) fxmlLoader.getController();
-			controller.setData(window, data);
-			window.showAndWait();
+			GlobalLocationEditController controller = (GlobalLocationEditController) BetonQuestEditor
+					.createWindow("view/window/GlobalLocationEditWindow.fxml", "edit-global-location", 300, 135);
+			if (controller == null) {
+				return false;
+			}
+			controller.stage = (Stage) controller.root.getScene().getWindow();
+			controller.data = data;
+			controller.objective.getItems().setAll(BetonQuestEditor.getInstance().getAllObjectives());
+			if (controller.objective.getItems().contains(data.getObjective().get())) {
+				controller.objective.getSelectionModel().select(data.getObjective().get());
+			}
+			controller.stage.showAndWait();
 			return controller.result;
 		} catch (Exception e) {
 			ExceptionController.display(e);

@@ -18,17 +18,10 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.Conversation;
@@ -44,20 +37,10 @@ public class NpcBindingEditController {
 	private Stage stage;
 	private NpcBinding data;
 	private boolean result = false;
-	
+
+	@FXML private Pane root;
 	@FXML private TextField field;
 	@FXML private ChoiceBox<Conversation> conversation;
-	
-	private void setData(Stage stage, NpcBinding data) {
-		this.stage = stage;
-		this.data = data;
-		field.setText(data.getId().get());
-		conversation.setItems(BetonQuestEditor.getInstance().getAllConversations());
-		if (data.getConversation() != null && data.getConversation().get() != null
-				&& conversation.getItems().contains(data.getConversation().get())) {
-			conversation.getSelectionModel().select(data.getConversation().get());
-		}
-	}
 	
 	@FXML private void ok() {
 		String idString = field.getText();
@@ -83,24 +66,22 @@ public class NpcBindingEditController {
 	
 	public static boolean display(NpcBinding data) {
 		try {
-			Stage window = new Stage();
-			URL location = BetonQuestEditor.class.getResource("view/window/NpcBindingEditWindow.fxml");
-			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
-			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
-			VBox root = (VBox) fxmlLoader.load();
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(BetonQuestEditor.class.getResource("resource/style.css").toExternalForm());
-			window.setScene(scene);
-			window.setTitle(resources.getString("edit-npc-binding"));
-			window.getIcons().add(new Image(BetonQuestEditor.class.getResourceAsStream("resource/icon.png")));
-			window.setHeight(170);
-			window.setWidth(300);
-			window.setResizable(false);
-			NpcBindingEditController controller = (NpcBindingEditController) fxmlLoader.getController();
-			controller.setData(window, data);
-			window.showAndWait();
+			NpcBindingEditController controller = (NpcBindingEditController) BetonQuestEditor
+					.createWindow("view/window/NpcBindingEditWindow.fxml", "edit-npc-binding", 300, 170);
+			if (controller == null) {
+				return false;
+			}
+			controller.stage = (Stage) controller.root.getScene().getWindow();
+			controller.data = data;
+			controller.field.setText(data.getId().get());
+			controller.conversation.setItems(BetonQuestEditor.getInstance().getAllConversations());
+			if (data.getConversation() != null && data.getConversation().get() != null
+					&& controller.conversation.getItems().contains(data.getConversation().get())) {
+				controller.conversation.getSelectionModel().select(data.getConversation().get());
+			}
+			controller.stage.showAndWait();
 			return controller.result;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			ExceptionController.display(e);
 			return false;
 		}

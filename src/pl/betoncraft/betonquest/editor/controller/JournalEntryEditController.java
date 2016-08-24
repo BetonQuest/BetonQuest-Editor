@@ -18,18 +18,11 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.JournalEntry;
@@ -46,22 +39,9 @@ public class JournalEntryEditController {
 	private StringProperty entry;
 	private boolean result = false;
 	
+	@FXML private Pane root;
 	@FXML private TextField id;
 	@FXML private TextArea text;
-	
-	/**
-	 * Sets the data in the window.
-	 * 
-	 * @param stage the pop-up window
-	 * @param data JournalEntry to display in text fields
-	 */
-	private void setData(Stage stage, JournalEntry data) {
-		this.stage = stage;
-		this.data = data;
-		id.setText(data.getId().get());
-		entry = data.getText().get(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang());
-		text.setText(entry.get());
-	}
 	
 	/**
 	 * Checks if the name is inserted and changes the StringProperties of the JournalEntry object.
@@ -102,24 +82,19 @@ public class JournalEntryEditController {
 	 */
 	public static boolean display(JournalEntry data) {
 		try {
-			Stage window = new Stage();
-			URL location = BetonQuestEditor.class.getResource("view/window/JournalEntryEditWindow.fxml");
-			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
-			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
-			GridPane root = (GridPane) fxmlLoader.load();
-			Scene scene = new Scene(root);
-			scene.getStylesheets().add(BetonQuestEditor.class.getResource("resource/style.css").toExternalForm());
-			window.setScene(scene);
-			window.setTitle(resources.getString("edit-entry"));
-			window.getIcons().add(new Image(BetonQuestEditor.class.getResourceAsStream("resource/icon.png")));
-			window.setHeight(300);
-			window.setWidth(500);
-			window.setResizable(false);
-			JournalEntryEditController controller = (JournalEntryEditController) fxmlLoader.getController();
-			controller.setData(window, data);
-			window.showAndWait();
+			JournalEntryEditController controller = (JournalEntryEditController) BetonQuestEditor
+					.createWindow("view/window/JournalEntryEditWindow.fxml", "edit-entry", 500, 300);
+			if (controller == null) {
+				return false;
+			}
+			controller.stage = (Stage) controller.root.getScene().getWindow();
+			controller.data = data;
+			controller.id.setText(data.getId().get());
+			controller.entry = data.getText().get(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang());
+			controller.text.setText(controller.entry.get());
+			controller.stage.showAndWait();
 			return controller.result;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			ExceptionController.display(e);
 			return false;
 		}
