@@ -49,7 +49,7 @@ public interface OptionID extends ID {
 					return conv;
 				}
 			}
-			return null;
+			return def.getPack().newByID(packName, name -> new Conversation(def.getPack(), name));
 		} else {
 			return def;
 		}

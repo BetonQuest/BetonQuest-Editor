@@ -72,7 +72,7 @@ public class Conversation extends SimpleID {
 		NpcOption option = getByID(npcOptions, id);
 		if (option == null) {
 			option = new NpcOption(this, id);
-			npcOptions.add(option);
+			option.getConversation().getNpcOptions().add(option);
 		}
 		return option;
 	}
