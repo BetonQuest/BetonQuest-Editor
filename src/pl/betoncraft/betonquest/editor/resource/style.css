@@ -153,6 +153,18 @@
     -fx-background-radius: 0;
 }
 
+.tree-view {
+	-fx-padding: 0;
+}
+
+.tree-cell {
+	-fx-background-color: -fx-light;
+}
+
+.tree-cell:selected {
+	-fx-background-color: -fx-medium-dark;
+}
+
 #tab-scroll .scroll-bar:horizontal .track {
 	-fx-background-color: -fx-medium-dark;
 	-fx-border-color: -fx-dark transparent transparent transparent;

@@ -111,7 +111,6 @@ public class BetonQuestEditor extends Application {
 			// load package for debugging
 			if (autoLoadPackage != null) {
 				QuestPackage pack = QuestPackage.loadFromZip(new ZipFile(autoLoadPackage));
-				loadedPackages.put(pack.getName().get(), pack);
 				display(pack);
 			}
 			if (autoSelect > 0) {

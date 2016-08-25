@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.control.Button?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.betoncraft.betonquest.editor.controller.RootController">
 
 	<top>
 		<fx:include source="MainMenu.fxml" />
 	</top>
 
 	<center>
-		<fx:include source="Tabs.fxml" />
+		<StackPane alignment="TOP_LEFT">
+			<HBox>
+				<Button onAction="#show" maxHeight="9000" maxWidth="5" text="|" />
+				<fx:include source="Tabs.fxml" />
+			</HBox>
+
+			<HBox maxWidth="200" visible="false" fx:id="packages">
+				<TreeView fx:id="tree" HBox.hgrow="ALWAYS" maxHeight="9000" onMouseClicked="#select" />
+				<Button onAction="#hide" maxHeight="9000" maxWidth="5" text="|" />
+			</HBox>
+
+		</StackPane>
 	</center>
 
 </BorderPane>

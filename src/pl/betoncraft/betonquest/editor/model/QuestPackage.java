@@ -41,9 +41,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.ConversationController;
 import pl.betoncraft.betonquest.editor.controller.ExceptionController;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
+import pl.betoncraft.betonquest.editor.controller.RootController;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.Editable;
 import pl.betoncraft.betonquest.editor.data.ID;
@@ -521,6 +523,9 @@ public class QuestPackage implements Editable {
 				}
 				defLang = maxLang;
 			}
+			// add package to a list of loaded packages
+			BetonQuestEditor.getInstance().getPackages().put(packName.get(), this);
+			RootController.setPackages(BetonQuestEditor.getInstance().getPackages().values());
 		} catch (Exception e) {
 			ExceptionController.display(e);
 		}
@@ -1022,6 +1027,9 @@ public class QuestPackage implements Editable {
 		} else {
 			ObjectNode node = mapper.createObjectNode();
 			for (String lang : text.getLanguages()) {
+				if (lang == null) { // TODO find out why there's a null language
+					continue;
+				}
 				node.put(lang, text.get(lang).get());
 			}
 			root.set(name, node);

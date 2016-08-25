@@ -247,6 +247,7 @@ public class ConversationController {
 		optionType.setText(BetonQuestEditor.getInstance().getLanguage().getString("option"));
 		option.textProperty().unbindBidirectional(currentOption.getText().get(currentConversation.getPack().getDefLang()));
 		option.clear();
+		pointsToField.getEntries().clear();
 		conditionsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("conditions"));
 		eventsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("events"));
 		pointsToLabel.setText(BetonQuestEditor.getInstance().getLanguage().getString("points-to"));

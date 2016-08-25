@@ -52,7 +52,6 @@ public class MainMenuController {
 		if (selectedFile != null) {
 			try {
 				QuestPackage pack = QuestPackage.loadFromZip(new ZipFile(selectedFile));
-				instance.getPackages().put(pack.getName().get(), pack);
 				instance.display(pack);
 			} catch (Exception e) {
 				ExceptionController.display(e);
