@@ -24,6 +24,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
@@ -111,6 +113,18 @@ public class MainPageLineEditController {
 					BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).get());
 			controller.conditionList = FXCollections.observableArrayList(line.getConditions());
 			controller.priority.setText(String.valueOf(line.getPriority().get()));
+			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+				if (event.getCode() == KeyCode.ESCAPE) {
+					controller.cancel();
+					event.consume();
+					return;
+				}
+				if (event.getCode() == KeyCode.ENTER) {
+					controller.ok();
+					event.consume();
+					return;
+				}
+			});
 			controller.refresh();
 			controller.stage.showAndWait();
 			return controller.result;

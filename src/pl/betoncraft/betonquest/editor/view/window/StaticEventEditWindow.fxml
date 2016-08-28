@@ -28,21 +28,21 @@
 	<Label id="option-label" text="%time" GridPane.rowIndex="1"
 		GridPane.columnIndex="0" />
 	<HBox GridPane.rowIndex="1" GridPane.columnIndex="1" spacing="3">
-		<ChoiceBox fx:id="hours" maxWidth="25" />
+		<ChoiceBox focusTraversable="true" fx:id="hours" maxWidth="25" />
 		<Text text=":" />
-		<ChoiceBox fx:id="minutes" maxWidth="25" />
+		<ChoiceBox focusTraversable="true" fx:id="minutes" maxWidth="25" />
 	</HBox>
 
 	<Label id="option-label" text="%event" GridPane.rowIndex="2"
 		GridPane.columnIndex="0" />
-	<ChoiceBox fx:id="events" GridPane.rowIndex="2"
+	<ChoiceBox focusTraversable="true" fx:id="events" GridPane.rowIndex="2"
 		GridPane.columnIndex="1" maxWidth="9000" />
 
 	<ButtonBar GridPane.rowIndex="3" GridPane.columnIndex="0"
 		GridPane.columnSpan="2">
 		<buttons>
-			<Button text="%ok" onAction="#add" />
-			<Button text="%cancel" onAction="#cancel" />
+			<Button focusTraversable="false" text="%ok" onAction="#add" />
+			<Button focusTraversable="false" text="%cancel" onAction="#cancel" />
 		</buttons>
 	</ButtonBar>
 

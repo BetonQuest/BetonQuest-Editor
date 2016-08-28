@@ -16,12 +16,12 @@
 
 	<Label text="%global-location" id="option-label" />
 
-	<ChoiceBox fx:id="objective" maxWidth="9000" />
+	<ChoiceBox focusTraversable="true" fx:id="objective" maxWidth="9000" />
 
 	<ButtonBar>
 		<buttons>
-			<Button text="%ok" onAction="#ok" />
-			<Button text="%cancel" onAction="#cancel" />
+			<Button focusTraversable="false" text="%ok" onAction="#ok" />
+			<Button focusTraversable="false" text="%cancel" onAction="#cancel" />
 		</buttons>
 	</ButtonBar>
 

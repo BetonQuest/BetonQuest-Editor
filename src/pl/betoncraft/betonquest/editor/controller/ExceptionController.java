@@ -29,6 +29,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
@@ -77,6 +79,11 @@ public class ExceptionController {
 			exception.printStackTrace(); // print to stderr as well
 			String string = stringWriter.toString();
 			controller.stackTrace.setText(string);
+			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+				if (event.getCode() == KeyCode.ESCAPE || event.getCode() == KeyCode.ENTER) {
+					controller.close();
+				}
+			});
 			controller.stage.showAndWait();
 		} catch (Exception e) {
 			// there was an exception when trying to display another exception

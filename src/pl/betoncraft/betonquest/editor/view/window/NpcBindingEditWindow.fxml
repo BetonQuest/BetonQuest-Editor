@@ -19,14 +19,14 @@
 
 	<Label text="%npc-binding" id="option-label" />
 
-	<TextField promptText="%npc-identifier" fx:id="field" />
+	<TextField focusTraversable="true" promptText="%npc-identifier" fx:id="field" />
 
-	<ChoiceBox maxWidth="9000" fx:id="conversation" />
+	<ChoiceBox focusTraversable="true" maxWidth="9000" fx:id="conversation" />
 
 	<ButtonBar>
 		<buttons>
-			<Button text="%ok" onAction="#ok" />
-			<Button text="%cancel" onAction="#cancel" />
+			<Button focusTraversable="false" text="%ok" onAction="#ok" />
+			<Button focusTraversable="false" text="%cancel" onAction="#cancel" />
 		</buttons>
 	</ButtonBar>
 

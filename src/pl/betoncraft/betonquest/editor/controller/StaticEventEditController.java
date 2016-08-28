@@ -20,6 +20,8 @@ package pl.betoncraft.betonquest.editor.controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
@@ -99,6 +101,18 @@ public class StaticEventEditController {
 			if (controller.events.getItems().contains(event.getEvent().get())) {
 				controller.events.getSelectionModel().select(event.getEvent().get());
 			}
+			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+				if (e.getCode() == KeyCode.ESCAPE) {
+					controller.cancel();
+					e.consume();
+					return;
+				}
+				if (e.getCode() == KeyCode.ENTER) {
+					controller.add();
+					e.consume();
+					return;
+				}
+			});
 			controller.stage.showAndWait();
 			return controller.result;
 		} catch (Exception e) {

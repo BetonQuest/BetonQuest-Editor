@@ -28,14 +28,14 @@
 
 	<Label id="option-label" GridPane.rowIndex="0"
 		GridPane.columnIndex="0" text="%id" />
-	<TextField GridPane.rowIndex="0" GridPane.columnIndex="1"
+	<TextField focusTraversable="true" GridPane.rowIndex="0" GridPane.columnIndex="1"
 		fx:id="field" />
 
 	<ButtonBar GridPane.rowIndex="1" GridPane.columnIndex="0"
 		GridPane.columnSpan="2">
 		<buttons>
-			<Button text="%ok" onAction="#ok" />
-			<Button text="%cancel" onAction="#cancel" />
+			<Button focusTraversable="false" text="%ok" onAction="#ok" />
+			<Button focusTraversable="false" text="%cancel" onAction="#cancel" />
 		</buttons>
 	</ButtonBar>
 

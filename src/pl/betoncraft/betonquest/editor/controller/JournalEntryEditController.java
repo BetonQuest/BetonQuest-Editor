@@ -22,6 +22,8 @@ import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
@@ -92,6 +94,18 @@ public class JournalEntryEditController {
 			controller.id.setText(data.getId().get());
 			controller.entry = data.getText().get(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang());
 			controller.text.setText(controller.entry.get());
+			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+				if (event.getCode() == KeyCode.ESCAPE) {
+					controller.cancel();
+					event.consume();
+					return;
+				}
+				if (event.getCode() == KeyCode.ENTER) {
+					controller.ok();
+					event.consume();
+					return;
+				}
+			});
 			controller.stage.showAndWait();
 			return controller.result;
 		} catch (Exception e) {

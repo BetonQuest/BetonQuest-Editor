@@ -18,17 +18,17 @@
 	</padding>
 
 	<Label text="%main-page-line" id="option-label" />
-	<TextField fx:id="id" />
-	<TextArea fx:id="text" wrapText="true" VBox.vgrow="ALWAYS" />
-	<Button fx:id="conditions" maxWidth="9000" onAction="#conditions" />
+	<TextField focusTraversable="true" fx:id="id" />
+	<TextArea focusTraversable="true" fx:id="text" wrapText="true" VBox.vgrow="ALWAYS" />
+	<Button id="selectable" focusTraversable="true" fx:id="conditions" maxWidth="9000" onAction="#conditions" />
 	<HBox spacing="5">
 		<Label text="%priority" id="option-label" />
-		<TextField fx:id="priority" maxWidth="30" />
+		<TextField focusTraversable="true" fx:id="priority" maxWidth="30" />
 	</HBox>
 	<ButtonBar>
 		<buttons>
-			<Button text="%ok" onAction="#ok" />
-			<Button text="%cancel" onAction="#cancel" />
+			<Button focusTraversable="false" text="%ok" onAction="#ok" />
+			<Button focusTraversable="false" text="%cancel" onAction="#cancel" />
 		</buttons>
 	</ButtonBar>
 

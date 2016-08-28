@@ -24,6 +24,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
@@ -47,6 +49,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 	private Creator<O> creator;
 	private CellFactory<F> cellFactory;
 	private Wrapper<O, W> wrapper;
+	private Refresher refresher;
 
 	@FXML private Label label;
 	@FXML private ListView<W> list;
@@ -136,6 +139,18 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 		}
 	}
 	
+	@FXML private void key(KeyEvent event) {
+		if (event.getCode() == KeyCode.ESCAPE) {
+			stage.close();
+			refresher.refresh();
+			return;
+		}
+		if (event.getCode() == KeyCode.DELETE && list.isFocused()) {
+			delete();
+			return;
+		}
+	}
+	
 	public static <O extends ID, W extends IdWrapper<O>, F extends ListCell<W>> void display(String labelText,
 			ObservableList<W> chosen, ObservableList<O> available, Creator<O> creator, CellFactory<F> cellFactory,
 			Wrapper<O, W> wrapper) {
@@ -161,9 +176,12 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			controller.creator = creator;
 			controller.cellFactory = cellFactory;
 			controller.wrapper = wrapper;
+			controller.refresher = refresher;
 			controller.stage.setOnCloseRequest(event -> {
 				refresher.refresh();
 			});
+			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> controller.key(event));
+//			controller.list.addEventFilter(KeyEvent.KEY_PRESSED, cellFactory.getListCell().getOnKeyPressed());
 			controller.refresh(); // fill the view
 			controller.stage.showAndWait();
 		} catch (Exception e) {

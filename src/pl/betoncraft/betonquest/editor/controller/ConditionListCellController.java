@@ -34,7 +34,7 @@ public class ConditionListCellController {
 	@FXML private Text text;
 	@FXML private CheckBox box;
 	
-	@FXML private void tick() {
+	@FXML public void tick() {
 		try {
 			condition.setNegated(box.isSelected());
 		} catch (Exception e) {

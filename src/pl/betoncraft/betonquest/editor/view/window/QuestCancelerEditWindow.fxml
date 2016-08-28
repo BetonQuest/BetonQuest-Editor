@@ -25,42 +25,42 @@
 
 	<Label id="option-label" text="%id" GridPane.rowIndex="1"
 		GridPane.columnIndex="0" />
-	<TextField fx:id="name" GridPane.rowIndex="1"
+	<TextField focusTraversable="true" fx:id="name" GridPane.rowIndex="1"
 		GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
 
 	<Label id="option-label" text="text" GridPane.rowIndex="2"
 		GridPane.columnIndex="0" />
-	<TextField fx:id="text" GridPane.rowIndex="2"
+	<TextField focusTraversable="true" fx:id="text" GridPane.rowIndex="2"
 		GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
 
-	<Button fx:id="conditions" GridPane.rowIndex="3"
+	<Button id="selectable" focusTraversable="true" fx:id="conditions" GridPane.rowIndex="3"
 		GridPane.columnIndex="0" GridPane.columnSpan="2" maxWidth="9000"
 		onAction="#condition" />
-	<Button fx:id="events" GridPane.rowIndex="4"
+	<Button id="selectable" focusTraversable="true" fx:id="events" GridPane.rowIndex="4"
 		GridPane.columnIndex="0" GridPane.columnSpan="2" maxWidth="9000"
 		onAction="#event" />
-	<Button fx:id="tags" GridPane.rowIndex="5" GridPane.columnIndex="0"
+	<Button id="selectable" focusTraversable="true" fx:id="tags" GridPane.rowIndex="5" GridPane.columnIndex="0"
 		GridPane.columnSpan="2" maxWidth="9000" onAction="#tag" />
-	<Button fx:id="points" GridPane.rowIndex="6"
+	<Button id="selectable" focusTraversable="true" fx:id="points" GridPane.rowIndex="6"
 		GridPane.columnIndex="0" GridPane.columnSpan="2" maxWidth="9000"
 		onAction="#point" />
-	<Button fx:id="objectives" GridPane.rowIndex="7"
+	<Button id="selectable" focusTraversable="true" fx:id="objectives" GridPane.rowIndex="7"
 		GridPane.columnIndex="0" GridPane.columnSpan="2" maxWidth="9000"
 		onAction="#objective" />
-	<Button fx:id="entries" GridPane.rowIndex="8"
+	<Button id="selectable" focusTraversable="true" fx:id="entries" GridPane.rowIndex="8"
 		GridPane.columnIndex="0" GridPane.columnSpan="2" maxWidth="9000"
 		onAction="#entry" />
 
 	<Label text="%location" id="option-label" GridPane.rowIndex="9"
 		GridPane.columnIndex="0" />
-	<TextField fx:id="teleport" GridPane.rowIndex="9"
+	<TextField focusTraversable="true" fx:id="teleport" GridPane.rowIndex="9"
 		GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
 
 	<ButtonBar GridPane.rowIndex="10" GridPane.columnIndex="0"
 		GridPane.columnSpan="2">
 		<buttons>
-			<Button text="%ok" onAction="#ok" />
-			<Button text="%cancel" onAction="#cancel" />
+			<Button focusTraversable="false" text="%ok" onAction="#ok" />
+			<Button focusTraversable="false" text="%cancel" onAction="#cancel" />
 		</buttons>
 	</ButtonBar>
 

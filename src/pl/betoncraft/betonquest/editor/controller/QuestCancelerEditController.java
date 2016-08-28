@@ -25,6 +25,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
@@ -197,6 +199,18 @@ public class QuestCancelerEditController {
 			controller.text.setText(canceler.getName().getLang(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).get());
 			controller.teleport.setText(canceler.getLocation());
 			controller.refresh();
+			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+				if (event.getCode() == KeyCode.ESCAPE) {
+					controller.cancel();
+					event.consume();
+					return;
+				}
+				if (event.getCode() == KeyCode.ENTER) {
+					controller.ok();
+					event.consume();
+					return;
+				}
+			});
 			controller.stage.showAndWait();
 			return controller.result;
 		} catch (Exception e) {

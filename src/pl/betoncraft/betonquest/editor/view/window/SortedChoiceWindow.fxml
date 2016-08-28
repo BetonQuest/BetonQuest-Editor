@@ -16,16 +16,17 @@
 
 	<Label alignment="CENTER" fx:id="label" id="option-label" />
 
-	<ListView fx:id="list" />
+	<ListView focusTraversable="true" fx:id="list" />
 
-	<AutoCompleteTextField fx:id="field" />
+	<AutoCompleteTextField focusTraversable="true"
+		fx:id="field" onAction="#add" />
 
 	<ButtonBar>
 		<buttons>
 
-			<Button text="%add" onAction="#add" />
-			<Button text="%edit" onAction="#edit" />
-			<Button text="%del" onAction="#delete" />
+			<Button focusTraversable="false" text="%add" onAction="#add" />
+			<Button focusTraversable="false" text="%edit" onAction="#edit" />
+			<Button focusTraversable="false" text="%del" onAction="#delete" />
 
 		</buttons>
 	</ButtonBar>
