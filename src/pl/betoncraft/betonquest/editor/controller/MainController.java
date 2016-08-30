@@ -23,6 +23,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.Conversation;
 import pl.betoncraft.betonquest.editor.model.Event;
@@ -294,6 +298,59 @@ public class MainController {
 		} catch (Exception e) {
 			ExceptionController.display(e);
 		}
+	}
+
+	@FXML public void npcKey(KeyEvent event) {
+		keyAction(event, () -> addNpcBinding(), () -> editNpcBinding(), () -> delNpcBinding());
+	}
+
+	@FXML public void varKey(KeyEvent event) {
+		keyAction(event, () -> addVariable(), () -> editVariable(), () -> delVariable());
+	}
+
+	@FXML public void statKey(KeyEvent event) {
+		keyAction(event, () -> addStaticEvent(), () -> editStaticEvent(), () -> delStaticEvent());
+	}
+
+	@FXML public void locKey(KeyEvent event) {
+		keyAction(event, () -> addGlobalLocation(), () -> editGlobalLocation(), () -> delGlobalLocation());
+	}
+
+	@FXML public void cancKey(KeyEvent event) {
+		keyAction(event, () -> addQuestCanceler(), () -> editQuestCanceler(), () -> delQuestCanceler());
+	}
+
+	@FXML public void mplKey(KeyEvent event) {
+		keyAction(event, () -> addMainPageLine(), () -> editMainPageLine(), () -> delMainPageLine());
+	}
+	
+	private void keyAction(KeyEvent event, Action add, Action edit, Action delete) {
+		if (event.getCode() == KeyCode.DELETE) {
+			if (delete != null) {
+				delete.act();
+			}
+			event.consume();
+			return;
+		}
+		if (event.getCode() == KeyCode.ENTER) {
+			if (edit != null) {
+				edit.act();
+			}
+			event.consume();
+			return;
+		}
+		KeyCombination combintation = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
+		if (combintation.match(event)) {
+			if (add != null) {
+				add.act();
+			}
+			event.consume();
+			return;
+		}
+	}
+	
+	private interface Action {
+		void act();
 	}
 	
 }

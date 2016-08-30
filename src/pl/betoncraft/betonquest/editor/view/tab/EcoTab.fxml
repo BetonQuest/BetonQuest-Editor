@@ -33,12 +33,12 @@
 			<!-- events -->
 			<VBox spacing="5" GridPane.columnIndex="0">
 				<Label text="%events" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="eventsList" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="eventsList" onKeyPressed="#eventKey" focusTraversable="true" />
 				<ButtonBar>
 					<buttons>
-						<Button text="%add" onAction="#addEvent" />
-						<Button text="%edit" onAction="#editEvent" />
-						<Button text="%del" onAction="#delEvent" />
+						<Button focusTraversable="false" text="%add" onAction="#addEvent" />
+						<Button focusTraversable="false" text="%edit" onAction="#editEvent" />
+						<Button focusTraversable="false" text="%del" onAction="#delEvent" />
 					</buttons>
 				</ButtonBar>
 			</VBox>
@@ -46,12 +46,12 @@
 			<!-- conditions -->
 			<VBox spacing="5" GridPane.columnIndex="1">
 				<Label text="%conditions" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="conditionsList" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="conditionsList" onKeyPressed="#conditionKey" focusTraversable="true" />
 				<ButtonBar>
 					<buttons>
-						<Button text="%add" onAction="#addCondition" />
-						<Button text="%edit" onAction="#editCondition" />
-						<Button text="%del" onAction="#delCondition" />
+						<Button focusTraversable="false" text="%add" onAction="#addCondition" />
+						<Button focusTraversable="false" text="%edit" onAction="#editCondition" />
+						<Button focusTraversable="false" text="%del" onAction="#delCondition" />
 					</buttons>
 				</ButtonBar>
 			</VBox>
@@ -59,12 +59,12 @@
 			<!-- objectives -->
 			<VBox spacing="5" GridPane.columnIndex="2">
 				<Label text="%objectives" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="objectivesList" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="objectivesList" onKeyPressed="#objectiveKey" focusTraversable="true" />
 				<ButtonBar>
 					<buttons>
-						<Button text="%add" onAction="#addObjective" />
-						<Button text="%edit" onAction="#editObjective" />
-						<Button text="%del" onAction="#delObjective" />
+						<Button focusTraversable="false" text="%add" onAction="#addObjective" />
+						<Button focusTraversable="false" text="%edit" onAction="#editObjective" />
+						<Button focusTraversable="false" text="%del" onAction="#delObjective" />
 					</buttons>
 				</ButtonBar>
 			</VBox>

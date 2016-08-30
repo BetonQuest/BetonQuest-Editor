@@ -5,7 +5,7 @@
 
 <TabPane xmlns:fx="http://javafx.com/fxml/1" side="RIGHT" fx:id="root"
 	fx:controller="pl.betoncraft.betonquest.editor.controller.TabsController"
-	tabClosingPolicy="UNAVAILABLE">
+	tabClosingPolicy="UNAVAILABLE" focusTraversable="false">
 	<fx:include source="tab/MainTab.fxml" />
 	<fx:include source="tab/ConversationTab.fxml" />
 	<fx:include source="tab/EcoTab.fxml" />

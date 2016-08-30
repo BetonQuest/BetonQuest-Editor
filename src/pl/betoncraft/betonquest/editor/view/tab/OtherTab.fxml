@@ -35,12 +35,12 @@
 			<VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0"
 				GridPane.rowSpan="2" GridPane.fillHeight="true">
 				<Label text="%items" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="itemsList" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="itemsList" onKeyPressed="#itemKey" focusTraversable="true" />
 				<ButtonBar>
 					<buttons>
-						<Button text="%add" onAction="#addItem" />
-						<Button text="%edit" onAction="#renameItem" />
-						<Button text="%del" onAction="#delItem" />
+						<Button focusTraversable="false" text="%add" onAction="#addItem" />
+						<Button focusTraversable="false" text="%edit" onAction="#renameItem" />
+						<Button focusTraversable="false" text="%del" onAction="#delItem" />
 					</buttons>
 				</ButtonBar>
 			</VBox>
@@ -49,13 +49,13 @@
 			<VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0"
 				GridPane.rowSpan="2" GridPane.fillHeight="true">
 				<Label text="%journal-entries" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="journalList"
-					onMouseClicked="#selectEntry" onKeyReleased="#selectEntry" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="journalList" onKeyPressed="#journalKey"
+					onMouseClicked="#selectEntry" onKeyReleased="#selectEntry" focusTraversable="true" />
 				<ButtonBar>
 					<buttons>
-						<Button text="%add" onAction="#addEntry" />
-						<Button text="%edit" onAction="#editEntry" />
-						<Button text="%del" onAction="#delEntry" />
+						<Button focusTraversable="false" text="%add" onAction="#addEntry" />
+						<Button focusTraversable="false" text="%edit" onAction="#editEntry" />
+						<Button focusTraversable="false" text="%del" onAction="#delEntry" />
 					</buttons>
 				</ButtonBar>
 			</VBox>

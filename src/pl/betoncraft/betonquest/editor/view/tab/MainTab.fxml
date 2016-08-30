@@ -36,7 +36,7 @@
 
 			<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="0">
 				<Label text="%npc-bindings" id="option-label" />
-				<TableView fx:id="npcTable">
+				<TableView focusTraversable="true" fx:id="npcTable" onKeyPressed="#npcKey">
 					<columns>
 						<TableColumn text="%npc" fx:id="npcName" />
 						<TableColumn text="%conversation" fx:id="conversation" />
@@ -47,16 +47,16 @@
 						<Insets top="5" />
 					</padding>
 					<buttons>
-						<Button text="%add" onAction="#addNpcBinding" />
-						<Button text="%edit" onAction="#editNpcBinding" />
-						<Button text="%del" onAction="#delNpcBinding" />
+						<Button focusTraversable="false" text="%add" onAction="#addNpcBinding" />
+						<Button focusTraversable="false" text="%edit" onAction="#editNpcBinding" />
+						<Button focusTraversable="false" text="%del" onAction="#delNpcBinding" />
 					</buttons>
 				</ButtonBar>
 			</VBox>
 
 			<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="1">
 				<Label text="%global-variables" id="option-label" />
-				<TableView fx:id="globVarTable">
+				<TableView focusTraversable="true" fx:id="globVarTable" onKeyPressed="#varKey">
 					<columns>
 						<TableColumn text="%variable" fx:id="varName" />
 						<TableColumn text="%value" fx:id="varValue" />
@@ -67,16 +67,16 @@
 						<Insets top="5" />
 					</padding>
 					<buttons>
-						<Button text="%add" onAction="#addVariable" />
-						<Button text="%edit" onAction="#editVariable" />
-						<Button text="%del" onAction="#delVariable" />
+						<Button focusTraversable="false" text="%add" onAction="#addVariable" />
+						<Button focusTraversable="false" text="%edit" onAction="#editVariable" />
+						<Button focusTraversable="false" text="%del" onAction="#delVariable" />
 					</buttons>
 				</ButtonBar>
 			</VBox>
 
 			<VBox spacing="5" GridPane.rowIndex="0" GridPane.columnIndex="2">
 				<Label text="%static-events" id="option-label" />
-				<TableView fx:id="staticEventsTable">
+				<TableView focusTraversable="true" fx:id="staticEventsTable" onKeyPressed="#statKey">
 					<columns>
 						<TableColumn text="%time" fx:id="time" />
 						<TableColumn text="%event" fx:id="event" />
@@ -87,54 +87,54 @@
 						<Insets top="5" />
 					</padding>
 					<buttons>
-						<Button text="%add" onAction="#addStaticEvent" />
-						<Button text="%edit" onAction="#editStaticEvent" />
-						<Button text="%del" onAction="#delStaticEvent" />
+						<Button focusTraversable="false" text="%add" onAction="#addStaticEvent" />
+						<Button focusTraversable="false" text="%edit" onAction="#editStaticEvent" />
+						<Button focusTraversable="false" text="%del" onAction="#delStaticEvent" />
 					</buttons>
 				</ButtonBar>
 			</VBox>
 
 			<VBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="0">
 				<Label text="%global-locations" id="option-label" />
-				<ListView fx:id="globLocList" />
+				<ListView focusTraversable="true" fx:id="globLocList" onKeyPressed="#locKey" />
 				<ButtonBar>
 					<padding>
 						<Insets top="5" />
 					</padding>
 					<buttons>
-						<Button text="%add" onAction="#addGlobalLocation" />
-						<Button text="%edit" onAction="#editGlobalLocation" />
-						<Button text="%del" onAction="#delGlobalLocation" />
+						<Button focusTraversable="false" text="%add" onAction="#addGlobalLocation" />
+						<Button focusTraversable="false" text="%edit" onAction="#editGlobalLocation" />
+						<Button focusTraversable="false" text="%del" onAction="#delGlobalLocation" />
 					</buttons>
 				</ButtonBar>
 			</VBox>
 
 			<VBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
 				<Label text="%quest-cancelers" id="option-label" />
-				<ListView fx:id="cancelList" />
+				<ListView focusTraversable="true" fx:id="cancelList" onKeyPressed="#cancKey" />
 				<ButtonBar>
 					<padding>
 						<Insets top="5" />
 					</padding>
 					<buttons>
-						<Button text="%add" onAction="#addQuestCanceler" />
-						<Button text="%edit" onAction="#editQuestCanceler" />
-						<Button text="%del" onAction="#delQuestCanceler" />
+						<Button focusTraversable="false" text="%add" onAction="#addQuestCanceler" />
+						<Button focusTraversable="false" text="%edit" onAction="#editQuestCanceler" />
+						<Button focusTraversable="false" text="%del" onAction="#delQuestCanceler" />
 					</buttons>
 				</ButtonBar>
 			</VBox>
 
 			<VBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="2">
 				<Label text="%main-page-lines" id="option-label" />
-				<ListView fx:id="mainPageList" />
+				<ListView focusTraversable="true" fx:id="mainPageList" onKeyPressed="#mplKey" />
 				<ButtonBar>
 					<padding>
 						<Insets top="5" />
 					</padding>
 					<buttons>
-						<Button text="%add" onAction="#addMainPageLine" />
-						<Button text="%edit" onAction="#editMainPageLine" />
-						<Button text="%del" onAction="#delMainPageLine" />
+						<Button focusTraversable="false" text="%add" onAction="#addMainPageLine" />
+						<Button focusTraversable="false" text="%edit" onAction="#editMainPageLine" />
+						<Button focusTraversable="false" text="%del" onAction="#delMainPageLine" />
 					</buttons>
 				</ButtonBar>
 			</VBox>

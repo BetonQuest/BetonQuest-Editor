@@ -22,6 +22,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
 import pl.betoncraft.betonquest.editor.model.Item;
@@ -132,6 +136,43 @@ public class OtherController {
 		} catch (Exception e) {
 			ExceptionController.display(e);
 		}
+	}
+	
+	private void keyAction(KeyEvent event, Action add, Action edit, Action delete) {
+		if (event.getCode() == KeyCode.DELETE) {
+			if (delete != null) {
+				delete.act();
+			}
+			event.consume();
+			return;
+		}
+		if (event.getCode() == KeyCode.ENTER) {
+			if (edit != null) {
+				edit.act();
+			}
+			event.consume();
+			return;
+		}
+		KeyCombination combintation = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
+		if (combintation.match(event)) {
+			if (add != null) {
+				add.act();
+			}
+			event.consume();
+			return;
+		}
+	}
+	
+	private interface Action {
+		void act();
+	}
+
+	@FXML public void itemKey(KeyEvent event) {
+		keyAction(event, () -> addItem(), () -> renameItem(), () -> delItem());
+	}
+
+	@FXML public void journalKey(KeyEvent event) {
+		keyAction(event, () -> addEntry(), () -> editEntry(), () -> delEntry());
 	}
 	
 }

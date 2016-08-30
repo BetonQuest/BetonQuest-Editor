@@ -88,9 +88,8 @@
 					<!-- npc options -->
 					<Label text="%npc-options" id="option-label"
 						GridPane.rowIndex="2" GridPane.columnIndex="0" />
-					<ListView GridPane.vgrow="ALWAYS" fx:id="npcList"
-						GridPane.rowIndex="3" GridPane.columnIndex="0" onMouseClicked="#clickNpcOption"
-						onKeyReleased="#clickNpcOption" />
+					<ListView GridPane.vgrow="ALWAYS" fx:id="npcList" onKeyPressed="#npcKey"
+						GridPane.rowIndex="3" GridPane.columnIndex="0" onMouseClicked="#clickNpcOption" />
 					<ButtonBar GridPane.rowIndex="4" GridPane.columnIndex="0">
 						<buttons>
 							<Button text="%add" onAction="#addNpcOption" />
@@ -102,7 +101,7 @@
 					<!-- player options -->
 					<Label text="%player-options" id="option-label"
 						GridPane.rowIndex="2" GridPane.columnIndex="1" />
-					<ListView GridPane.vgrow="ALWAYS" fx:id="playerList"
+					<ListView GridPane.vgrow="ALWAYS" fx:id="playerList" onKeyPressed="#playerKey"
 						GridPane.rowIndex="3" GridPane.columnIndex="1" onMouseClicked="#clickPlayerOption"
 						onKeyReleased="#clickPlayerOption" />
 					<ButtonBar GridPane.rowIndex="4" GridPane.columnIndex="1">
@@ -146,9 +145,8 @@
 					<!-- points to -->
 					<Label id="option-label" fx:id="pointsToLabel"
 						GridPane.rowIndex="3" GridPane.columnIndex="0" />
-					<ListView GridPane.vgrow="ALWAYS" fx:id="pointsToList"
-						GridPane.rowIndex="4" GridPane.columnIndex="0" onMouseClicked="#clickPointsTo"
-						onKeyReleased="#clickPointsTo" />
+					<ListView GridPane.vgrow="ALWAYS" fx:id="pointsToList" onKeyPressed="#pointerKey"
+						GridPane.rowIndex="4" GridPane.columnIndex="0" onMouseClicked="#clickPointsTo" />
 					<AutoCompleteTextField maxWidth="9000"
 						GridPane.rowIndex="5" GridPane.columnIndex="0" fx:id="pointsToField" />
 					<Button text="%add" maxWidth="9000" onAction="#addPointer"

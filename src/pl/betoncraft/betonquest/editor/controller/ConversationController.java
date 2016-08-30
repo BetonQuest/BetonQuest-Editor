@@ -35,6 +35,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -298,11 +302,7 @@ public class ConversationController {
 	@FXML private void clickPointsTo(MouseEvent event) {
 		try {
 			if (event.getClickCount() == 2) {
-				IdWrapper<ConversationOption> option = pointsToList.getSelectionModel().getSelectedItem();
-				if (option == null) {
-					return;
-				}
-				displayOption(option.get());
+				selectOption(pointsToList.getSelectionModel().getSelectedItem());
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -312,15 +312,18 @@ public class ConversationController {
 	@FXML private void clickPointedBy(MouseEvent event) {
 		try {
 			if (event.getClickCount() == 2) {
-				IdWrapper<ConversationOption> option = pointedByList.getSelectionModel().getSelectedItem();
-				if (option == null) {
-					return;
-				}
-				displayOption(option.get());
+				selectOption(pointedByList.getSelectionModel().getSelectedItem());
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
 		}
+	}
+	
+	private void selectOption(IdWrapper<ConversationOption> option) {
+		if (option == null) {
+			return;
+		}
+		displayOption(option.get());
 	}
 	
 	@FXML private void editStartingOptions() {
@@ -495,7 +498,7 @@ public class ConversationController {
 					clearOption();
 				}
 				for (NpcOption o : currentConversation.getNpcOptions()) {
-					o.getPointers().remove(option);
+					o.getPointers().remove(option); // TODO fix removing wrapped value
 				}
 				BetonQuestEditor.getInstance().refresh();
 			}
@@ -560,6 +563,47 @@ public class ConversationController {
 	
 	public static Conversation getDisplayedConversation() {
 		return instance.currentConversation;
+	}
+	
+	private void keyAction(KeyEvent event, Action add, Action edit, Action delete) {
+		if (event.getCode() == KeyCode.DELETE) {
+			if (delete != null) {
+				delete.act();
+			}
+			event.consume();
+			return;
+		}
+		if (event.getCode() == KeyCode.ENTER) {
+			if (edit != null) {
+				edit.act();
+			}
+			event.consume();
+			return;
+		}
+		KeyCombination combintation = new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
+		if (combintation.match(event)) {
+			if (add != null) {
+				add.act();
+			}
+			event.consume();
+			return;
+		}
+	}
+	
+	private interface Action {
+		void act();
+	}
+
+	@FXML public void pointerKey(KeyEvent event) {
+		keyAction(event, () -> addPointer(), () -> selectOption(pointsToList.getSelectionModel().getSelectedItem()), () -> delPointer());
+	}
+
+	@FXML public void playerKey(KeyEvent event) {
+		keyAction(event, () -> addPlayerOption(), () -> renamePlayerOption(), () -> delPlayerOption());
+	}
+
+	@FXML public void npcKey(KeyEvent event) {
+		keyAction(event, () -> addNpcOption(), () -> renameNpcOption(), () -> delNpcOption());
 	}
 
 }
