@@ -26,6 +26,7 @@ import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.model.PackageSet;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
 /**
@@ -51,8 +52,8 @@ public class MainMenuController {
 		File selectedFile = fc.showOpenDialog(instance.getPrimaryStage());
 		if (selectedFile != null) {
 			try {
-				QuestPackage pack = QuestPackage.loadFromZip(new ZipFile(selectedFile));
-				instance.display(pack);
+				PackageSet set = PackageSet.loadFromZip(new ZipFile(selectedFile));
+				instance.display(set);
 			} catch (Exception e) {
 				ExceptionController.display(e);
 			}
@@ -76,7 +77,7 @@ public class MainMenuController {
 					if (pack == null) {
 						return; // TODO show error, no package loaded
 					}
-					pack.saveToZip(selectedFile);
+					pack.getSet().saveToZip(selectedFile);
 				} catch (Exception e) {
 					ExceptionController.display(e);
 				}

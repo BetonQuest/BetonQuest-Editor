@@ -20,7 +20,6 @@ package pl.betoncraft.betonquest.editor.data;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
 /**
@@ -73,7 +72,7 @@ public interface ID extends Editable {
 	public static QuestPackage parsePackage(QuestPackage def, String id) {
 		if (id.contains(".")) {
 			String packName = id.split("\\.")[0];
-			for (QuestPackage pack : BetonQuestEditor.getInstance().getPackages().values()) {
+			for (QuestPackage pack : def.getSet().getPackages()) {
 				if (pack.getName().get().equals(packName)) {
 					return pack;
 				}

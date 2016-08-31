@@ -17,41 +17,29 @@
  */
 package pl.betoncraft.betonquest.editor.model;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
-import java.util.NoSuchElementException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipOutputStream;
 
-import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.ConversationController;
 import pl.betoncraft.betonquest.editor.controller.ExceptionController;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
-import pl.betoncraft.betonquest.editor.controller.RootController;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.Editable;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.TranslatableText;
-import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Keeps all data about the quest package.
@@ -61,6 +49,7 @@ import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 public class QuestPackage implements Editable {
 
 	private final StringProperty packName;
+	private final PackageSet set;
 	private String defLang;
 	private final HashMap<String, Integer> languages = new HashMap<>();
 	private final ObservableList<Conversation> conversations = FXCollections.observableArrayList();
@@ -85,62 +74,78 @@ public class QuestPackage implements Editable {
 	 * 
 	 * @param map
 	 */
-	private QuestPackage(String id, HashMap<String, LinkedHashMap<String, String>> data) {
+	public QuestPackage(PackageSet set, String id, HashMap<String, LinkedHashMap<String, String>> data) {
+		this.set = set;
 		packName = new SimpleStringProperty(id);
 		try {
 			// handling journal.yml
 			HashMap<String, String> journalMap = data.get("journal");
-			int journalIndex = 0;
-			for (Entry<String, String> entry : journalMap.entrySet()) {
-				String value = entry.getValue();
-				String[] parts = entry.getKey().split("\\.");
-				// getting the right entry
-				JournalEntry journalEntry = newByID(parts[0], name -> new JournalEntry(this, name));
-				if (journalEntry.getIndex() < 0) journalEntry.setIndex(journalIndex++);
-				// handling entry data
-				if (parts.length > 1) {
-					String lang = parts[1];
-					if (!languages.containsKey(lang)) {
-						languages.put(lang, 1);
+			if (journalMap != null) {
+				int journalIndex = 0;
+				for (Entry<String, String> entry : journalMap.entrySet()) {
+					String value = entry.getValue();
+					String[] parts = entry.getKey().split("\\.");
+					// getting the right entry
+					JournalEntry journalEntry = newByID(parts[0], name -> new JournalEntry(this, name));
+					if (journalEntry.getIndex() < 0)
+						journalEntry.setIndex(journalIndex++);
+					// handling entry data
+					if (parts.length > 1) {
+						String lang = parts[1];
+						if (!languages.containsKey(lang)) {
+							languages.put(lang, 1);
+						} else {
+							languages.put(lang, languages.get(lang) + 1);
+						}
+						journalEntry.getText().addLang(lang, value);
 					} else {
-						languages.put(lang, languages.get(lang) + 1);
+						journalEntry.getText().setDef(value);
 					}
-					journalEntry.getText().addLang(lang, value);
-				} else {
-					journalEntry.getText().setDef(value);
 				}
 			}
 			// handling items.yml
 			HashMap<String, String> itemsMap = data.get("items");
-			int itemIndex = 0;
-			for (String key : itemsMap.keySet()) {
-				Item item = newByID(key, name -> new Item(this, name));
-				item.getInstruction().set(itemsMap.get(key));
-				if (item.getIndex() < 0) item.setIndex(itemIndex++);
+			if (itemsMap != null) {
+				int itemIndex = 0;
+				for (String key : itemsMap.keySet()) {
+					Item item = newByID(key, name -> new Item(this, name));
+					item.getInstruction().set(itemsMap.get(key));
+					if (item.getIndex() < 0)
+						item.setIndex(itemIndex++);
+				}
 			}
 			// handling conditions.yml
 			HashMap<String, String> conditionsMap = data.get("conditions");
-			int conditionIndex = 0;
-			for (String key : conditionsMap.keySet()) {
-				Condition condition = newByID(key, name -> new Condition(this, name));
-				condition.getInstruction().set(conditionsMap.get(key));
-				if (condition.getIndex() < 0) condition.setIndex(conditionIndex++);
+			if (conditionsMap != null) {
+				int conditionIndex = 0;
+				for (String key : conditionsMap.keySet()) {
+					Condition condition = newByID(key, name -> new Condition(this, name));
+					condition.getInstruction().set(conditionsMap.get(key));
+					if (condition.getIndex() < 0)
+						condition.setIndex(conditionIndex++);
+				}
 			}
 			// handling event.yml
 			HashMap<String, String> eventsMap = data.get("events");
-			int eventIndex = 0;
-			for (String key : eventsMap.keySet()) {
-				Event event = newByID(key, name -> new Event(this, name));
-				event.getInstruction().set(eventsMap.get(key));
-				if (event.getIndex() < 0) event.setIndex(eventIndex++);
+			if (eventsMap != null) {
+				int eventIndex = 0;
+				for (String key : eventsMap.keySet()) {
+					Event event = newByID(key, name -> new Event(this, name));
+					event.getInstruction().set(eventsMap.get(key));
+					if (event.getIndex() < 0)
+						event.setIndex(eventIndex++);
+				}
 			}
 			// handling objectives.yml
 			HashMap<String, String> objectivesMap = data.get("objectives");
-			int objectiveIndex = 0;
-			for (String key : objectivesMap.keySet()) {
-				Objective objective = newByID(key, name -> new Objective(this, name));
-				objective.getInstruction().set(objectivesMap.get(key));
-				if (objective.getIndex() < 0) objective.setIndex(objectiveIndex++);
+			if (objectivesMap != null) {
+				int objectiveIndex = 0;
+				for (String key : objectivesMap.keySet()) {
+					Objective objective = newByID(key, name -> new Objective(this, name));
+					objective.getInstruction().set(objectivesMap.get(key));
+					if (objective.getIndex() < 0)
+						objective.setIndex(objectiveIndex++);
+				} 
 			}
 			// handling conversations/
 			int convIndex = 0;
@@ -523,9 +528,6 @@ public class QuestPackage implements Editable {
 				}
 				defLang = maxLang;
 			}
-			// add package to a list of loaded packages
-			BetonQuestEditor.getInstance().getPackages().put(packName.get(), this);
-			RootController.setPackages(BetonQuestEditor.getInstance().getPackages().values());
 		} catch (Exception e) {
 			ExceptionController.display(e);
 		}
@@ -534,6 +536,10 @@ public class QuestPackage implements Editable {
 	@Override
 	public boolean edit() {
 		return NameEditController.display(packName);
+	}
+	
+	public PackageSet getSet() {
+		return set;
 	}
 
 	public StringProperty getName() {
@@ -692,94 +698,7 @@ public class QuestPackage implements Editable {
 	public interface Generator<T> {
 		public T generate(String id);
 	}
-
-	public static QuestPackage loadFromZip(ZipFile file) throws IOException, PackageNotFoundException {
-		HashMap<String, ZipEntry> zipEntries = new HashMap<>();
-		Enumeration<? extends ZipEntry> entries = file.entries();
-		String packName = null;
-		// extract correct entries from the zip file
-		while (true) {
-			try {
-				ZipEntry entry = entries.nextElement();
-				String entryName = entry.getName();
-				// get the correct path separator (both can be used)
-				int index = entryName.indexOf('/');
-				char separator = '/';
-				if (index < 0) {
-					index = entryName.indexOf('\\');
-					separator = '\\';
-				}
-				if (index < 0) {
-					continue;
-				}
-				packName = entryName.substring(0, entryName.indexOf(separator));
-				if (!entryName.endsWith(".yml"))
-					continue;
-				if (entryName.contains("conversations" + separator)) {
-					String convName = entryName.substring(entryName.lastIndexOf(separator) + 1, entryName.length() - 4);
-					zipEntries.put("conversations." + convName, entry);
-				} else {
-					if (entryName.endsWith("main.yml")) {
-						zipEntries.put("main", entry);
-					} else if (entryName.endsWith("events.yml")) {
-						zipEntries.put("events", entry);
-					} else if (entryName.endsWith("conditions.yml")) {
-						zipEntries.put("conditions", entry);
-					} else if (entryName.endsWith("objectives.yml")) {
-						zipEntries.put("objectives", entry);
-					} else if (entryName.endsWith("journal.yml")) {
-						zipEntries.put("journal", entry);
-					} else if (entryName.endsWith("items.yml")) {
-						zipEntries.put("items", entry);
-					}
-				}
-			} catch (NoSuchElementException e) {
-				break;
-			}
-		}
-		// check if everything is loaded
-		if (!zipEntries.containsKey("main") || !zipEntries.containsKey("events")
-				|| !zipEntries.containsKey("conditions") || !zipEntries.containsKey("objectives")
-				|| !zipEntries.containsKey("journal") || !zipEntries.containsKey("items")) {
-			file.close();
-			throw new PackageNotFoundException("Package does not contain required files");
-		}
-		// parse the yaml into hashmaps
-		HashMap<String, LinkedHashMap<String, String>> values = new LinkedHashMap<>();
-		for (String name : zipEntries.keySet()) {
-			values.put(name, new LinkedHashMap<>());
-			YAMLParser parser = new YAMLFactory().createParser(file.getInputStream(zipEntries.get(name)));
-			String currentPath = "";
-			String fieldName = "";
-			while (true) {
-				JsonToken token = parser.nextToken();
-				if (token == null)
-					break;
-				switch (token) {
-				case START_OBJECT:
-					currentPath = currentPath + fieldName + ".";
-					break;
-				case FIELD_NAME:
-					fieldName = parser.getText();
-					break;
-				case END_OBJECT:
-					currentPath = currentPath.substring(0, currentPath.substring(0, currentPath.length() - 1).lastIndexOf(".") + 1);
-					break;
-				case VALUE_STRING:
-				case VALUE_NUMBER_INT:
-				case VALUE_NUMBER_FLOAT:
-				case VALUE_FALSE:
-				case VALUE_TRUE:
-					String key = (currentPath + fieldName).substring(1, currentPath.length() + fieldName.length());
-					values.get(name).put(key, parser.getText());
-				default:
-					// do nothing
-				}
-			}
-		}
-		return new QuestPackage(packName, values);
-	}
-
+	
 	public void printMainYAML(OutputStream out) throws IOException {
 		YAMLFactory yf = new YAMLFactory();
 		YAMLMapper mapper = new YAMLMapper();
@@ -1033,60 +952,6 @@ public class QuestPackage implements Editable {
 				node.put(lang, text.get(lang).get());
 			}
 			root.set(name, node);
-		}
-	}
-
-	/**
-	 * Saves the package to a .zip file.
-	 * 
-	 * @param zipFile
-	 */
-	public void saveToZip(File zip) {
-		try {
-			ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zip));
-			String prefix = packName.get() + File.separator;
-			// save main.yml file
-			ZipEntry main = new ZipEntry(prefix + "main.yml");
-			out.putNextEntry(main);
-			printMainYAML(out);
-			out.closeEntry();
-			// save conversation files
-			for (Conversation conv : conversations) {
-				ZipEntry conversation = new ZipEntry(
-						prefix + "conversations" + File.separator + conv.getId().get() + ".yml");
-				out.putNextEntry(conversation);
-				printConversationYaml(out, conv);
-				out.closeEntry();
-			}
-			// save events.yml file
-			ZipEntry events = new ZipEntry(prefix + "events.yml");
-			out.putNextEntry(events);
-			printEventsYaml(out);
-			out.closeEntry();
-			// save conditions.yml file
-			ZipEntry conditions = new ZipEntry(prefix + "conditions.yml");
-			out.putNextEntry(conditions);
-			printConditionsYaml(out);
-			out.closeEntry();
-			// save objectives.yml file
-			ZipEntry objectives = new ZipEntry(prefix + "objectives.yml");
-			out.putNextEntry(objectives);
-			printObjectivesYaml(out);
-			out.closeEntry();
-			// save items.yml file
-			ZipEntry items = new ZipEntry(prefix + "items.yml");
-			out.putNextEntry(items);
-			printItemsYaml(out);
-			out.closeEntry();
-			// save journal.yml file
-			ZipEntry journal = new ZipEntry(prefix + "journal.yml");
-			out.putNextEntry(journal);
-			printJournalYaml(out);
-			out.closeEntry();
-			// done
-			out.close();
-		} catch (Exception e) {
-			ExceptionController.display(e);
 		}
 	}
 

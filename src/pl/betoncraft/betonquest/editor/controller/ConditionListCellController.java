@@ -49,7 +49,7 @@ public class ConditionListCellController {
 	 */
 	public void setCondition(ConditionWrapper item) {
 		condition = item;
-		text.setText(condition.getId().get());
+		text.setText(condition.toString());
 		box.setSelected(condition.getNegated());
 	}
 }

@@ -20,7 +20,8 @@ package pl.betoncraft.betonquest.editor;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.zip.ZipFile;
@@ -50,6 +51,7 @@ import pl.betoncraft.betonquest.editor.model.Event;
 import pl.betoncraft.betonquest.editor.model.Item;
 import pl.betoncraft.betonquest.editor.model.JournalEntry;
 import pl.betoncraft.betonquest.editor.model.Objective;
+import pl.betoncraft.betonquest.editor.model.PackageSet;
 import pl.betoncraft.betonquest.editor.model.PointCategory;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
 import pl.betoncraft.betonquest.editor.model.Tag;
@@ -65,8 +67,9 @@ public class BetonQuestEditor extends Application {
 	private Stage stage;
 	private ResourceBundle language;
 	
-	private HashMap<String, QuestPackage> loadedPackages = new HashMap<>();
+	private List<PackageSet> loadedSets = new LinkedList<>();
 	private QuestPackage currentPackage;
+	
 	private static File autoLoadPackage;
 	private static File autoSavePackage;
 	private static int autoSelect = -1;
@@ -110,8 +113,8 @@ public class BetonQuestEditor extends Application {
 			stage.show();
 			// load package for debugging
 			if (autoLoadPackage != null) {
-				QuestPackage pack = QuestPackage.loadFromZip(new ZipFile(autoLoadPackage));
-				display(pack);
+				PackageSet set = PackageSet.loadFromZip(new ZipFile(autoLoadPackage));
+				display(set);
 			}
 			if (autoSelect > 0) {
 				TabsController.selectTab(autoSelect);
@@ -145,8 +148,17 @@ public class BetonQuestEditor extends Application {
 	/**
 	 * @return the list of loaded packages
 	 */
-	public HashMap<String, QuestPackage> getPackages() {
-		return loadedPackages;
+	public List<PackageSet> getSets() {
+		return loadedSets;
+	}
+	
+	public PackageSet getSet(String setName) {
+		for (PackageSet set : loadedSets) {
+			if (set.getName().get().equals(setName)) {
+				return set;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -154,6 +166,14 @@ public class BetonQuestEditor extends Application {
 	 */
 	public QuestPackage getDisplayedPackage() {
 		return currentPackage;
+	}
+	
+	/**
+	 * Displays the first package in this set in the view.
+	 */
+	public void display(PackageSet set) {
+		QuestPackage pack = set.getPackages().get(0);
+		display(pack);
 	}
 	
 	/**
@@ -201,7 +221,7 @@ public class BetonQuestEditor extends Application {
 	public ObservableList<Condition> getAllConditions() {
 		ObservableList<Condition> list = FXCollections.observableArrayList();
 		list.addAll(currentPackage.getConditions());
-		loadedPackages.values().forEach(pack -> {
+		currentPackage.getSet().getPackages().forEach(pack -> {
 			if (!pack.equals(currentPackage)) {
 				list.addAll(pack.getConditions());
 			}
@@ -215,7 +235,7 @@ public class BetonQuestEditor extends Application {
 	public ObservableList<Event> getAllEvents() {
 		ObservableList<Event> list = FXCollections.observableArrayList();
 		list.addAll(currentPackage.getEvents());
-		loadedPackages.values().forEach(pack -> {
+		currentPackage.getSet().getPackages().forEach(pack -> {
 			if (!pack.equals(currentPackage)) {
 				list.addAll(pack.getEvents());
 			}
@@ -229,7 +249,7 @@ public class BetonQuestEditor extends Application {
 	public ObservableList<Objective> getAllObjectives() {
 		ObservableList<Objective> list = FXCollections.observableArrayList();
 		list.addAll(currentPackage.getObjectives());
-		loadedPackages.values().forEach(pack -> {
+		currentPackage.getSet().getPackages().forEach(pack -> {
 			if (!pack.equals(currentPackage)) {
 				list.addAll(pack.getObjectives());
 			}
@@ -243,7 +263,7 @@ public class BetonQuestEditor extends Application {
 	public ObservableList<Conversation> getAllConversations() {
 		ObservableList<Conversation> list = FXCollections.observableArrayList();
 		list.addAll(currentPackage.getConversations());
-		loadedPackages.values().forEach(pack -> {
+		currentPackage.getSet().getPackages().forEach(pack -> {
 			if (!pack.equals(currentPackage)) {
 				list.addAll(pack.getConversations());
 			}
@@ -257,7 +277,7 @@ public class BetonQuestEditor extends Application {
 	public ObservableList<Item> getAllItems() {
 		ObservableList<Item> list = FXCollections.observableArrayList();
 		list.addAll(currentPackage.getItems());
-		loadedPackages.values().forEach(pack -> {
+		currentPackage.getSet().getPackages().forEach(pack -> {
 			if (!pack.equals(currentPackage)) {
 				list.addAll(pack.getItems());
 			}
@@ -268,7 +288,7 @@ public class BetonQuestEditor extends Application {
 	public ObservableList<JournalEntry> getAllEntries() {
 		ObservableList<JournalEntry> list = FXCollections.observableArrayList();
 		list.addAll(currentPackage.getJournal());
-		loadedPackages.values().forEach(pack -> {
+		currentPackage.getSet().getPackages().forEach(pack -> {
 			if (!pack.equals(currentPackage)) {
 				list.addAll(pack.getJournal());
 			}
@@ -341,7 +361,7 @@ public class BetonQuestEditor extends Application {
 	public void stop() throws Exception {
 		if (autoSavePackage != null) try {
 			autoSavePackage.createNewFile();
-			currentPackage.saveToZip(autoSavePackage);
+			currentPackage.getSet().saveToZip(autoSavePackage);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

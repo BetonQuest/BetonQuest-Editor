@@ -18,15 +18,16 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
-import java.util.Collection;
+import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.model.PackageSet;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
-import javafx.scene.input.MouseEvent;
 
 /**
  * Controls root pane, specifically package choosing.
@@ -44,17 +45,22 @@ public class RootController {
 		instace = this;
 	}
 	
-	public static void setPackages(Collection<QuestPackage> packages) {
+	public static void setPackages(List<PackageSet> packages) {
 		TreeItem<String> root = new TreeItem<>();
 		instace.tree.setRoot(root);
 		instace.tree.setShowRoot(false);
 		// fill local packages
 		TreeItem<String> local = new TreeItem<>("Local");
-		for (QuestPackage pack : packages) {
-			TreeItem<String> item = new TreeItem<>(pack.toString());
-			local.getChildren().add(item);
-		}
 		local.setExpanded(true);
+		for (PackageSet set : packages) {
+			TreeItem<String> setItem = new TreeItem<>(set.toString());
+			setItem.setExpanded(true);
+			for (QuestPackage pack : set.getPackages()) {
+				TreeItem<String> packItem = new TreeItem<>(pack.toString());
+				setItem.getChildren().add(packItem);
+			}
+			local.getChildren().add(setItem);
+		}
 		root.getChildren().add(local);
 	}
 
@@ -64,9 +70,12 @@ public class RootController {
 			return;
 		}
 		BetonQuestEditor instance = BetonQuestEditor.getInstance();
-		QuestPackage pack = instance.getPackages().get(selected.getValue());
+		PackageSet set = instance.getSet(selected.getParent().getValue());
+		if (set == null) {
+			return;
+		}
+		QuestPackage pack = set.getPackage(selected.getValue());
 		if (pack == null) {
-			System.out.println(selected);
 			return;
 		}
 		instance.display(pack);
