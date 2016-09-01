@@ -35,6 +35,19 @@ public interface ID extends Editable {
 	public StringProperty getId();
 	
 	/**
+	 * Gets the name of this object, relative to the package.
+	 * 
+	 * @param pack package against which the name is resolved
+	 * @return id alone if the package is the same, id with pack name if packages don't match
+	 */
+	public String getRelativeName(QuestPackage pack);
+	
+	/**
+	 * @return the id of the object prefixed with package name
+	 */
+	public String getAbsoluteName();
+	
+	/**
 	 * @return the QuestPackage in which this object is defined
 	 */
 	public QuestPackage getPack();

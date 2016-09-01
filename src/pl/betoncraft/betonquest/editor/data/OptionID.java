@@ -29,6 +29,10 @@ public interface OptionID extends ID {
 	
 	public Conversation getConversation();
 	
+	public String getRelativeOptionName(Conversation conv);
+	
+	public String getAbsoluteOptionName();
+	
 	/**
 	 * Parses the ID string to get name of the conversation. If no conversation
 	 * is defined in the ID, it will return the conversation passed to the

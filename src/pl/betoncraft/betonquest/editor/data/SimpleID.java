@@ -37,6 +37,16 @@ public abstract class SimpleID implements ID {
 	public StringProperty getId() {
 		return id;
 	}
+	
+	@Override
+	public String getRelativeName(QuestPackage pack) {
+		return (pack.equals(this.pack)) ? id.get() : getAbsoluteName();
+	}
+	
+	@Override
+	public String getAbsoluteName() {
+		return pack.getName().get() + "." + id.get();
+	}
 
 	@Override
 	public QuestPackage getPack() {
@@ -55,7 +65,7 @@ public abstract class SimpleID implements ID {
 	
 	@Override
 	public String toString() {
-		return BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack) ? id.get() : pack.getName().get() + "." + id.get();
+		return getRelativeName(BetonQuestEditor.getInstance().getDisplayedPackage());
 	}
 
 }

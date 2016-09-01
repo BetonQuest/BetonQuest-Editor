@@ -3,6 +3,7 @@
  */
 package pl.betoncraft.betonquest.editor.controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -192,6 +193,12 @@ public class EcoController {
 
 	@FXML public void objectiveKey(KeyEvent event) {
 		keyAction(event, () -> addObjective(), () -> editObjective(), () -> delObjective());
+	}
+
+	public static void clear() {
+		instance.eventsList.setItems(FXCollections.observableArrayList());
+		instance.conditionsList.setItems(FXCollections.observableArrayList());
+		instance.objectivesList.setItems(FXCollections.observableArrayList());
 	}
 	
 }

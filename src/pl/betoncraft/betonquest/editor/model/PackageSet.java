@@ -18,9 +18,11 @@
 package pl.betoncraft.betonquest.editor.model;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -43,7 +45,6 @@ import javafx.beans.property.StringProperty;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.ExceptionController;
 import pl.betoncraft.betonquest.editor.controller.RootController;
-import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Represents a set of packages on a single server.
@@ -54,8 +55,16 @@ public class PackageSet {
 	
 	private StringProperty name;
 	private List<QuestPackage> packages = new LinkedList<>();
+	private SaveType saveType;
+	private File file;
 	
-	private PackageSet(String setName) {
+	public enum SaveType {
+		DIR, ZIP, NONE
+	}
+	
+	public PackageSet(File file, SaveType saveType, String setName) {
+		this.file = file;
+		this.saveType = saveType;
 		name = new SimpleStringProperty(setName);
 	}
 	
@@ -76,15 +85,32 @@ public class PackageSet {
 		return null;
 	}
 	
+	public SaveType getSaveType() {
+		return saveType;
+	}
+
+	public void setSaveType(SaveType saveType) {
+		this.saveType = saveType;
+	}
+	
+	public File getFile() {
+		return file;
+	}
+	
+	public void setFile(File file) {
+		this.file = file;
+	}
+
 	@Override
 	public String toString() {
 		return name.get();
 	}
 	
-	public static PackageSet loadFromZip(ZipFile file) throws IOException, PackageNotFoundException {
+	public static PackageSet loadFromZip(File file) throws IOException {
+		ZipFile zip = new ZipFile(file);
 		HashMap<String, HashMap<String, InputStream>> setMap = new HashMap<>();
-		Enumeration<? extends ZipEntry> entries = file.entries();
-		String setName = file.getName().substring(file.getName().lastIndexOf(File.separatorChar) + 1).replace(".zip", "");
+		Enumeration<? extends ZipEntry> entries = zip.entries();
+		String setName = zip.getName().substring(zip.getName().lastIndexOf(File.separatorChar) + 1).replace(".zip", "");
 		// extract correct entries from the zip file
 		while (true) {
 			try {
@@ -121,27 +147,72 @@ public class PackageSet {
 				}
 				List<String> allowedNames = Arrays.asList(new String[]{"main", "events", "conditions", "objectives", "journal", "items"});
 				if (conversation) {
-					packMap.put("conversations." + ymlName, file.getInputStream(entry));
+					packMap.put("conversations." + ymlName, zip.getInputStream(entry));
 				} else {
 					if (allowedNames.contains(ymlName)) {
-						packMap.put(ymlName, file.getInputStream(entry));
+						packMap.put(ymlName, zip.getInputStream(entry));
 					}
 				}
 			} catch (NoSuchElementException e) {
 				break;
 			}
 		}
-		PackageSet set = parseStreams(setName, setMap);
+		PackageSet set = new PackageSet(file, SaveType.ZIP, setName);
+		parseStreams(set, setMap);
+		zip.close();
 		BetonQuestEditor.getInstance().getSets().add(set);
-		RootController.setPackages(BetonQuestEditor.getInstance().getSets());
+		RootController.setPackageSets(BetonQuestEditor.getInstance().getSets());
+		return set;
+	}
+
+	public static PackageSet loadFromDirectory(File file) throws IOException {
+		HashMap<String, HashMap<String, InputStream>> setMap = new HashMap<>();
+		String setName = file.getName().substring(file.getName().lastIndexOf(File.separatorChar) + 1);
+		searchFiles("", file.listFiles(), setMap);
+		PackageSet set = new PackageSet(file, SaveType.DIR, setName);
+		parseStreams(set, setMap);
+		BetonQuestEditor.getInstance().getSets().add(set);
+		RootController.setPackageSets(BetonQuestEditor.getInstance().getSets());
 		return set;
 	}
 	
-	private static PackageSet parseStreams(String setName, HashMap<String, HashMap<String, InputStream>> streamMap) throws IOException {
-		PackageSet set = new PackageSet(setName);
+	private static void searchFiles(String prefix, File[] files, HashMap<String, HashMap<String, InputStream>> setMap) throws IOException {
+		for (File file : files) {
+			if (file.isDirectory()) {
+				searchFiles(prefix + file.getName() + '-', file.listFiles(), setMap);
+			} else {
+				if (!file.getName().endsWith(".yml")) {
+					return;
+				}
+				String fileName = file.getName().substring(0, file.getName().length() - 4);
+				String packName = null;
+				if (file.getParentFile().getName().equals("conversations")) {
+					packName = prefix.replace("-conversations-", "");
+					fileName = "conversations." + fileName;
+				} else {
+					packName = prefix.substring(0, prefix.length() - 1);
+					List<String> allowedNames = Arrays.asList(new String[]{"main", "events", "conditions", "objectives", "journal", "items"});
+					if (!allowedNames.contains(fileName)) {
+						return;
+					}
+				}
+				HashMap<String, InputStream> packMap = setMap.get(packName);
+				if (packMap == null) {
+					packMap = new HashMap<>();
+					setMap.put(packName, packMap);
+				}
+				packMap.put(fileName, new FileInputStream(file));
+			}
+		}
+	}
+	
+	private static PackageSet parseStreams(PackageSet set, HashMap<String, HashMap<String, InputStream>> streamMap) throws IOException {
+		HashMap<QuestPackage, HashMap<String, LinkedHashMap<String, String>>> data = new HashMap<>();
+		// parse the data of all packages
 		for (Entry<String, HashMap<String, InputStream>> entry : streamMap.entrySet()) {
-			String packName = entry.getKey();
+			QuestPackage pack = new QuestPackage(set, entry.getKey());
 			HashMap<String, LinkedHashMap<String, String>> values = new LinkedHashMap<>();
+			data.put(pack, values);
 			for (Entry<String, InputStream> subEntry : entry.getValue().entrySet()) {
 				String name = subEntry.getKey();
 				InputStream stream = subEntry.getValue();
@@ -178,11 +249,12 @@ public class PackageSet {
 						// do nothing
 					}
 				}
-				parser.close();
-				stream.close();
 			}
-			QuestPackage pack = new QuestPackage(set, packName, values);
 			set.packages.add(pack);
+		}
+		// set the data once all packages are created
+		for (Entry<QuestPackage, HashMap<String, LinkedHashMap<String, String>>> entry : data.entrySet()) {
+			entry.getKey().setData(entry.getValue());
 		}
 		return set;
 	}
@@ -238,6 +310,67 @@ public class PackageSet {
 			}
 			// done
 			out.close();
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
+
+	public void saveToDirectory(File file) {
+		try {
+			// save to directory
+			for (QuestPackage pack : packages) {
+				String path = pack.getName().get().replace('-', File.separatorChar);
+				File dir = new File(file, path);
+				if (!dir.mkdirs()) {
+					throw new Exception("Could not create directories");
+				}
+				// save main file
+				File main = new File(dir, "main.yml");
+				main.createNewFile();
+				OutputStream mainOut = new FileOutputStream(main);
+				pack.printMainYAML(mainOut);
+				mainOut.close();
+				// save events file
+				File events = new File(dir, "events.yml");
+				events.createNewFile();
+				OutputStream eventsOut = new FileOutputStream(events);
+				pack.printEventsYaml(eventsOut);
+				eventsOut.close();
+				// save conditions file
+				File conditions = new File(dir, "conditions.yml");
+				conditions.createNewFile();
+				OutputStream conditionsOut = new FileOutputStream(conditions);
+				pack.printConditionsYaml(conditionsOut);
+				conditionsOut.close();
+				// save objectives file
+				File objectives = new File(dir, "objectives.yml");
+				objectives.createNewFile();
+				OutputStream objectivesOut = new FileOutputStream(objectives);
+				pack.printObjectivesYaml(objectivesOut);
+				objectivesOut.close();
+				// save items file
+				File items = new File(dir, "items.yml");
+				items.createNewFile();
+				OutputStream itemsOut = new FileOutputStream(items);
+				pack.printItemsYaml(itemsOut);
+				itemsOut.close();
+				// save journal file
+				File journal = new File(dir, "journal.yml");
+				journal.createNewFile();
+				OutputStream journalOut = new FileOutputStream(journal);
+				pack.printJournalYaml(journalOut);
+				journalOut.close();
+				// save conversations
+				File convDir = new File(dir, "conversations");
+				convDir.mkdir();
+				for (Conversation conv : pack.getConversations()) {
+					File convFile = new File(convDir, conv.getId().get() + ".yml");
+					convFile.createNewFile();
+					OutputStream convOut = new FileOutputStream(convFile);
+					pack.printConversationYaml(convOut, conv);
+					convOut.close();
+				}
+			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
 		}

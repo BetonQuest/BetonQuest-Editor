@@ -21,6 +21,7 @@ package pl.betoncraft.betonquest.editor.controller;
 import java.util.List;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
@@ -28,6 +29,7 @@ import javafx.scene.layout.HBox;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.PackageSet;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
+import javafx.stage.WindowEvent;
 
 /**
  * Controls root pane, specifically package choosing.
@@ -40,18 +42,21 @@ public class RootController {
 
 	@FXML private HBox packages;
 	@FXML private TreeView<String> tree;
+	@FXML private ContextMenu menu;
+	
+	private TreeItem<String> local;
 
 	public RootController() {
 		instace = this;
 	}
 	
-	public static void setPackages(List<PackageSet> packages) {
+	public static void setPackageSets(List<PackageSet> packages) {
 		TreeItem<String> root = new TreeItem<>();
 		instace.tree.setRoot(root);
 		instace.tree.setShowRoot(false);
 		// fill local packages
-		TreeItem<String> local = new TreeItem<>("Local");
-		local.setExpanded(true);
+		instace.local = new TreeItem<>("Local");
+		instace.local.setExpanded(true);
 		for (PackageSet set : packages) {
 			TreeItem<String> setItem = new TreeItem<>(set.toString());
 			setItem.setExpanded(true);
@@ -59,9 +64,9 @@ public class RootController {
 				TreeItem<String> packItem = new TreeItem<>(pack.toString());
 				setItem.getChildren().add(packItem);
 			}
-			local.getChildren().add(setItem);
+			instace.local.getChildren().add(setItem);
 		}
-		root.getChildren().add(local);
+		root.getChildren().add(instace.local);
 	}
 
 	@FXML public void select(MouseEvent event) {
@@ -88,6 +93,59 @@ public class RootController {
 	
 	@FXML public void hide() {
 		packages.setVisible(false);
+	}
+
+	@FXML public void delete() {
+		TreeItem<String> item = tree.getSelectionModel().getSelectedItem();
+		if (item != null && !item.equals(local)) {
+			if (BetonQuestEditor.confirm("confirm-action")) {
+				if (item.isLeaf()) {
+					PackageSet set = BetonQuestEditor.getInstance().getSet(item.getParent().getValue());
+					if (set.getPackages().size() == 1) {
+						BetonQuestEditor.showError("cannot-delete-last-package");
+						return;
+					}
+					QuestPackage pack = set.getPackage(item.getValue());
+					set.getPackages().remove(pack);
+					if (BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack)) {
+						BetonQuestEditor.getInstance().display(set);
+					}
+				} else {
+					PackageSet set = BetonQuestEditor.getInstance().getSet(item.getValue());
+					BetonQuestEditor.getInstance().getSets().remove(set);
+					if (BetonQuestEditor.getInstance().getDisplayedPackage().getSet().equals(set)) {
+						BetonQuestEditor.getInstance().clearView();
+					}
+				}
+				BetonQuestEditor.getInstance().refresh();
+			}
+		}
+	}
+
+	@FXML public void edit() {
+		TreeItem<String> item = tree.getSelectionModel().getSelectedItem();
+		if (item != null && !item.equals(local)) {
+			if (item.isLeaf()) {
+				PackageSet set = BetonQuestEditor.getInstance().getSet(item.getParent().getValue());
+				QuestPackage pack = set.getPackage(item.getValue());
+				NameEditController.display(pack.getName());
+			} else {
+				PackageSet set = BetonQuestEditor.getInstance().getSet(item.getValue());
+				NameEditController.display(set.getName());
+			}
+			BetonQuestEditor.getInstance().refresh();
+		}
+	}
+
+	@FXML public void check(WindowEvent event) {
+		TreeItem<String> item = tree.getSelectionModel().getSelectedItem();
+		if (item.equals(local)) {
+			try {
+				menu.hide();
+			} catch (NullPointerException e) {
+				// TODO create custom cell factory in package tree
+			}
+		}
 	}
 
 }

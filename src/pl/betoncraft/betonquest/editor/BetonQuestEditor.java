@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.zip.ZipFile;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -43,7 +42,9 @@ import pl.betoncraft.betonquest.editor.controller.ConversationController;
 import pl.betoncraft.betonquest.editor.controller.EcoController;
 import pl.betoncraft.betonquest.editor.controller.ExceptionController;
 import pl.betoncraft.betonquest.editor.controller.MainController;
+import pl.betoncraft.betonquest.editor.controller.MainMenuController;
 import pl.betoncraft.betonquest.editor.controller.OtherController;
+import pl.betoncraft.betonquest.editor.controller.RootController;
 import pl.betoncraft.betonquest.editor.controller.TabsController;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Conversation;
@@ -52,6 +53,7 @@ import pl.betoncraft.betonquest.editor.model.Item;
 import pl.betoncraft.betonquest.editor.model.JournalEntry;
 import pl.betoncraft.betonquest.editor.model.Objective;
 import pl.betoncraft.betonquest.editor.model.PackageSet;
+import pl.betoncraft.betonquest.editor.model.PackageSet.SaveType;
 import pl.betoncraft.betonquest.editor.model.PointCategory;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
 import pl.betoncraft.betonquest.editor.model.Tag;
@@ -113,7 +115,7 @@ public class BetonQuestEditor extends Application {
 			stage.show();
 			// load package for debugging
 			if (autoLoadPackage != null) {
-				PackageSet set = PackageSet.loadFromZip(new ZipFile(autoLoadPackage));
+				PackageSet set = PackageSet.loadFromZip(autoLoadPackage);
 				display(set);
 			}
 			if (autoSelect > 0) {
@@ -180,6 +182,7 @@ public class BetonQuestEditor extends Application {
 	 * Displays a package in the view.
 	 */
 	public void display(QuestPackage pack) {
+		clearView();
 		currentPackage = pack;
 		currentPackage.sort();
 		MainController.setNpcBindings(pack.getNpcBindings());
@@ -188,6 +191,10 @@ public class BetonQuestEditor extends Application {
 		MainController.setGlobalLocations(pack.getLocations());
 		MainController.setQuestCancelers(pack.getCancelers());
 		MainController.setMainPageLines(pack.getMainPage());
+		MainMenuController.setSaveAsEnabled(true);
+		MainMenuController.setExportEnabled(true);
+		MainMenuController.setSaveEnabled(pack.getSet().getFile() != null && pack.getSet().getSaveType() != SaveType.NONE);
+		MainMenuController.setPackEnabled(true);
 		ConversationController.setConversations(pack.getConversations());
 		EcoController.setConditions(pack.getConditions());
 		EcoController.setEvents(pack.getEvents());
@@ -204,7 +211,14 @@ public class BetonQuestEditor extends Application {
 	 */
 	public void clearView() {
 		currentPackage = null;
-		// TODO clear view
+		MainController.clear();
+		MainMenuController.setSaveAsEnabled(false);
+		MainMenuController.setSaveEnabled(false);
+		MainMenuController.setExportEnabled(false);
+		MainMenuController.setPackEnabled(false);
+		ConversationController.clearConversation();
+		EcoController.clear();
+		OtherController.clear();
 		TabsController.setDisabled(true);
 	}
 	
@@ -212,7 +226,10 @@ public class BetonQuestEditor extends Application {
 	 * Refreshes the currently displayed package
 	 */
 	public void refresh() {
-		display(currentPackage);
+		if (currentPackage != null) {
+			display(currentPackage);
+		}
+		RootController.setPackageSets(loadedSets);
 	}
 	
 	/**

@@ -164,21 +164,21 @@ public class ConversationController {
 	/**
 	 * Removes the current conversation from the view.
 	 */
-	public void clearConversation() {
-		if (currentConversation == null) {
+	public static void clearConversation() {
+		if (instance.currentConversation == null) {
 			return;
 		}
-		npc.textProperty().unbindBidirectional(currentConversation.getNPC().get(currentConversation.getPack().getDefLang()));
-		npc.clear();
-		stop.selectedProperty().unbindBidirectional(currentConversation.getStop());
-		stop.setSelected(false);
-		startingOptionsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("starting-options"));
-		finalEventsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("final-events"));
-		npcList.setItems(FXCollections.observableArrayList());
-		playerList.setItems(FXCollections.observableArrayList());
-		clearOption();
-		conversationPane.setDisable(true);
-		stopPane.setDisable(true);
+		instance.npc.textProperty().unbindBidirectional(instance.currentConversation.getNPC().get(instance.currentConversation.getPack().getDefLang()));
+		instance.npc.clear();
+		instance.stop.selectedProperty().unbindBidirectional(instance.currentConversation.getStop());
+		instance.stop.setSelected(false);
+		instance.startingOptionsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("starting-options"));
+		instance.finalEventsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("final-events"));
+		instance.npcList.setItems(FXCollections.observableArrayList());
+		instance.playerList.setItems(FXCollections.observableArrayList());
+		instance.clearOption();
+		instance.conversationPane.setDisable(true);
+		instance.stopPane.setDisable(true);
 	}
 	
 	/**

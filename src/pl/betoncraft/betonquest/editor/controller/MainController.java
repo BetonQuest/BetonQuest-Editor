@@ -18,6 +18,7 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -351,6 +352,15 @@ public class MainController {
 	
 	private interface Action {
 		void act();
+	}
+
+	public static void clear() {
+		instance.npcTable.setItems(FXCollections.observableArrayList());
+		instance.globVarTable.setItems(FXCollections.observableArrayList());
+		instance.staticEventsTable.setItems(FXCollections.observableArrayList());
+		instance.cancelList.setItems(FXCollections.observableArrayList());
+		instance.globLocList.setItems(FXCollections.observableArrayList());
+		instance.mainPageList.setItems(FXCollections.observableArrayList());
 	}
 	
 }

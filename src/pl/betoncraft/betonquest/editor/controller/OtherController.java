@@ -18,6 +18,7 @@
 
 package pl.betoncraft.betonquest.editor.controller;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
@@ -173,6 +174,11 @@ public class OtherController {
 
 	@FXML public void journalKey(KeyEvent event) {
 		keyAction(event, () -> addEntry(), () -> editEntry(), () -> delEntry());
+	}
+
+	public static void clear() {
+		instance.itemsList.setItems(FXCollections.observableArrayList());
+		instance.journalList.setItems(FXCollections.observableArrayList());
 	}
 	
 }

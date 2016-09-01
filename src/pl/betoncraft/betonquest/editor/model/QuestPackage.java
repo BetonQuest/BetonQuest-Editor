@@ -68,15 +68,24 @@ public class QuestPackage implements Editable {
 	private final ObservableList<PointCategory> points = FXCollections.observableArrayList();
 
 	/**
-	 * Loads a package using a hashmap containing all data. The key is a file
+	 * Creates new, empty package.
+	 * 
+	 * @param set
+	 * @param id
+	 */
+	public QuestPackage(PackageSet set, String id) {
+		this.set = set;
+		packName = new SimpleStringProperty(id);
+	}
+	
+	/**
+	 * Loads the package using a hashmap containing all data. The key is a file
 	 * name, the value is a hashmap containing keys and values of that YAML
 	 * file.
 	 * 
 	 * @param map
 	 */
-	public QuestPackage(PackageSet set, String id, HashMap<String, LinkedHashMap<String, String>> data) {
-		this.set = set;
-		packName = new SimpleStringProperty(id);
+	public void setData(HashMap<String, LinkedHashMap<String, String>> data) {
 		try {
 			// handling journal.yml
 			HashMap<String, String> journalMap = data.get("journal");
@@ -344,177 +353,187 @@ public class QuestPackage implements Editable {
 			}
 			// handling main.yml
 			LinkedHashMap<String, String> config = data.get("main");
-			for (Entry<String, String> entry : config.entrySet()) {
-				String key = entry.getKey();
-				String value = entry.getValue();
-				// handling variables
-				if (key.startsWith("variables.")) {
-					variables.add(new GlobalVariable(this, key.substring(10), value));
-				}
-				// handling global locations
-				else if (key.startsWith("global_locations")) {
-					for (String globLoc : value.split(",")) {
-						locations.add(new GlobalLocation(newByID(globLoc, name -> new Objective(this, name))));
+			if (config != null) {
+				for (Entry<String, String> entry : config.entrySet()) {
+					String key = entry.getKey();
+					String value = entry.getValue();
+					// handling variables
+					if (key.startsWith("variables.")) {
+						variables.add(new GlobalVariable(this, key.substring(10), value));
 					}
-				}
-				// handling static events
-				else if (key.startsWith("static_events.")) {
-					StaticEvent staticEvent = new StaticEvent(this, key.substring(14));
-					staticEvent.getEvent().set(newByID(value, name -> new Event(this, name)));
-					staticEvents.add(staticEvent);
-				}
-				// handling NPC-conversation bindings
-				else if (key.startsWith("npcs.")) {
-					npcBindings.add(new NpcBinding(this, key.substring(5), newByID(value, name -> new Conversation(this, name))));
-				}
-				// handling quest cancelers
-				else if (key.startsWith("cancel.")) {
-					String[] parts = key.split("\\.");
-					if (parts.length > 1) {
-						// getting the right canceler or creating new one
-						QuestCanceler canceler = newByID(parts[1], name -> new QuestCanceler(this, name));
-						// handling canceler properties
-						if (parts.length > 2) {
-							switch (parts[2]) {
-							case "name":
-								if (parts.length > 3) {
-									String lang = parts[3];
-									if (!languages.containsKey(lang)) {
-										languages.put(lang, 1);
+					// handling global locations
+					else if (key.startsWith("global_locations")) {
+						for (String globLoc : value.split(",")) {
+							locations.add(new GlobalLocation(newByID(globLoc, name -> new Objective(this, name))));
+						}
+					}
+					// handling static events
+					else if (key.startsWith("static_events.")) {
+						StaticEvent staticEvent = new StaticEvent(this, key.substring(14));
+						staticEvent.getEvent().set(newByID(value, name -> new Event(this, name)));
+						staticEvents.add(staticEvent);
+					}
+					// handling NPC-conversation bindings
+					else if (key.startsWith("npcs.")) {
+						npcBindings.add(new NpcBinding(this, key.substring(5),
+								newByID(value, name -> new Conversation(this, name))));
+					}
+					// handling quest cancelers
+					else if (key.startsWith("cancel.")) {
+						String[] parts = key.split("\\.");
+						if (parts.length > 1) {
+							// getting the right canceler or creating new one
+							QuestCanceler canceler = newByID(parts[1], name -> new QuestCanceler(this, name));
+							// handling canceler properties
+							if (parts.length > 2) {
+								switch (parts[2]) {
+								case "name":
+									if (parts.length > 3) {
+										String lang = parts[3];
+										if (!languages.containsKey(lang)) {
+											languages.put(lang, 1);
+										} else {
+											languages.put(lang, languages.get(lang) + 1);
+										}
+										canceler.getName().addLang(lang, value);
 									} else {
-										languages.put(lang, languages.get(lang) + 1);
+										canceler.getName().setDef(value);
 									}
-									canceler.getName().addLang(lang, value);
-								} else {
-									canceler.getName().setDef(value);
-								}
-								break;
-							case "events":
-								String[] eventNames = value.split(",");
-								ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
-								for (int i = 0; i < eventNames.length; i++) {
-									IdWrapper<Event> event = new IdWrapper<>(this, newByID(eventNames[i].trim(), name -> new Event(this, name)));
-									events.add(i, event);
-									event.setIndex(i);
-								}
-								canceler.getEvents().addAll(events);
-								break;
-							case "conditions":
-								String[] conditionNames = value.split(",");
-								ArrayList<ConditionWrapper> conditions = new ArrayList<>(conditionNames.length);
-								for (int i = 0; i < conditionNames.length; i++) {
-									String name = conditionNames[i].trim();
-									boolean negated = false;
-									while (name.startsWith("!")) {
-										name = name.substring(1, name.length());
-										negated = true;
+									break;
+								case "events":
+									String[] eventNames = value.split(",");
+									ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
+									for (int i = 0; i < eventNames.length; i++) {
+										IdWrapper<Event> event = new IdWrapper<>(this,
+												newByID(eventNames[i].trim(), name -> new Event(this, name)));
+										events.add(i, event);
+										event.setIndex(i);
 									}
-									ConditionWrapper condition = new ConditionWrapper(this, newByID(name, idString -> new Condition(this, idString)));
-									condition.setNegated(negated);
-									conditions.add(i, condition);
-									condition.setIndex(i);
+									canceler.getEvents().addAll(events);
+									break;
+								case "conditions":
+									String[] conditionNames = value.split(",");
+									ArrayList<ConditionWrapper> conditions = new ArrayList<>(conditionNames.length);
+									for (int i = 0; i < conditionNames.length; i++) {
+										String name = conditionNames[i].trim();
+										boolean negated = false;
+										while (name.startsWith("!")) {
+											name = name.substring(1, name.length());
+											negated = true;
+										}
+										ConditionWrapper condition = new ConditionWrapper(this,
+												newByID(name, idString -> new Condition(this, idString)));
+										condition.setNegated(negated);
+										conditions.add(i, condition);
+										condition.setIndex(i);
+									}
+									canceler.getConditions().addAll(conditions);
+									break;
+								case "objectives":
+									String[] objectiveNames = value.split(",");
+									ArrayList<IdWrapper<Objective>> objectives = new ArrayList<>(objectiveNames.length);
+									for (int i = 0; i < objectiveNames.length; i++) {
+										IdWrapper<Objective> wrapper = new IdWrapper<>(this,
+												newByID(objectiveNames[i].trim(), name -> new Objective(this, name)));
+										objectives.add(i, wrapper);
+										wrapper.setIndex(i);
+									}
+									canceler.getObjectives().addAll(objectives);
+									break;
+								case "tags":
+									String[] tagNames = value.split(",");
+									ArrayList<IdWrapper<Tag>> tags = new ArrayList<>(tagNames.length);
+									for (int i = 0; i < tagNames.length; i++) {
+										IdWrapper<Tag> wrapper = new IdWrapper<>(this,
+												newByID(tagNames[i].trim(), name -> new Tag(this, name)));
+										tags.add(i, wrapper);
+										wrapper.setIndex(i);
+									}
+									canceler.getTags().addAll(tags);
+									break;
+								case "points":
+									String[] pointNames = value.split(",");
+									ArrayList<IdWrapper<PointCategory>> points = new ArrayList<>(pointNames.length);
+									for (int i = 0; i < pointNames.length; i++) {
+										IdWrapper<PointCategory> wrapper = new IdWrapper<>(this,
+												newByID(pointNames[i].trim(), name -> new PointCategory(this, name)));
+										points.add(i, wrapper);
+										wrapper.setIndex(i);
+									}
+									canceler.getPoints().addAll(points);
+									break;
+								case "journal":
+									String[] journalNames = value.split(",");
+									ArrayList<IdWrapper<JournalEntry>> journal = new ArrayList<>(journalNames.length);
+									for (int i = 0; i < journalNames.length; i++) {
+										IdWrapper<JournalEntry> wrapper = new IdWrapper<>(this,
+												newByID(journalNames[i].trim(), name -> new JournalEntry(this, name)));
+										journal.add(i, wrapper);
+										wrapper.setIndex(i);
+									}
+									canceler.getJournal().addAll(journal);
+									break;
+								case "loc":
+									canceler.setLocation(value);
+									break;
 								}
-								canceler.getConditions().addAll(conditions);
-								break;
-							case "objectives":
-								String[] objectiveNames = value.split(",");
-								ArrayList<IdWrapper<Objective>> objectives = new ArrayList<>(objectiveNames.length);
-								for (int i = 0; i < objectiveNames.length; i++) {
-									IdWrapper<Objective> wrapper = new IdWrapper<>(this, newByID(objectiveNames[i].trim(), name -> new Objective(this, name)));
-									objectives.add(i, wrapper);
-									wrapper.setIndex(i);
-								}
-								canceler.getObjectives().addAll(objectives);
-								break;
-							case "tags":
-								String[] tagNames = value.split(",");
-								ArrayList<IdWrapper<Tag>> tags = new ArrayList<>(tagNames.length);
-								for (int i = 0; i < tagNames.length; i++) {
-									IdWrapper<Tag> wrapper = new IdWrapper<>(this, newByID(tagNames[i].trim(), name -> new Tag(this, name)));
-									tags.add(i, wrapper);
-									wrapper.setIndex(i);
-								}
-								canceler.getTags().addAll(tags);
-								break;
-							case "points":
-								String[] pointNames = value.split(",");
-								ArrayList<IdWrapper<PointCategory>> points = new ArrayList<>(pointNames.length);
-								for (int i = 0; i < pointNames.length; i++) {
-									IdWrapper<PointCategory> wrapper = new IdWrapper<>(this, newByID(pointNames[i].trim(), name -> new PointCategory(this, name)));
-									points.add(i, wrapper);
-									wrapper.setIndex(i);
-								}
-								canceler.getPoints().addAll(points);
-								break;
-							case "journal":
-								String[] journalNames = value.split(",");
-								ArrayList<IdWrapper<JournalEntry>> journal = new ArrayList<>(journalNames.length);
-								for (int i = 0; i < journalNames.length; i++) {
-									IdWrapper<JournalEntry> wrapper = new IdWrapper<>(this, newByID(journalNames[i].trim(), name -> new JournalEntry(this, name)));
-									journal.add(i, wrapper);
-									wrapper.setIndex(i);
-								}
-								canceler.getJournal().addAll(journal);
-								break;
-							case "loc":
-								canceler.setLocation(value);
-								break;
 							}
 						}
 					}
-				}
-				// handling journal main page
-				else if (key.startsWith("journal_main_page")) {
-					String[] parts = key.split("\\.");
-					if (parts.length > 1) {
-						MainPageLine line = newByID(parts[1], name -> new MainPageLine(this, name));
-						if (parts.length > 2) {
-							switch (parts[2]) {
-							case "text":
-								if (parts.length > 3) {
-									String lang = parts[3];
-									if (!languages.containsKey(lang)) {
-										languages.put(lang, 1);
+					// handling journal main page
+					else if (key.startsWith("journal_main_page")) {
+						String[] parts = key.split("\\.");
+						if (parts.length > 1) {
+							MainPageLine line = newByID(parts[1], name -> new MainPageLine(this, name));
+							if (parts.length > 2) {
+								switch (parts[2]) {
+								case "text":
+									if (parts.length > 3) {
+										String lang = parts[3];
+										if (!languages.containsKey(lang)) {
+											languages.put(lang, 1);
+										} else {
+											languages.put(lang, languages.get(lang) + 1);
+										}
+										line.getText().addLang(lang, value);
 									} else {
-										languages.put(lang, languages.get(lang) + 1);
+										line.getText().setDef(value);
 									}
-									line.getText().addLang(lang, value);
-								} else {
-									line.getText().setDef(value);
-								}
-								break;
-							case "priority":
-								try {
-									line.getPriority().set(Integer.parseInt(value));
-								} catch (NumberFormatException e) {
-									// TODO error, need a number
-								}
-								break;
-							case "conditions":
-								String[] conditionNames = value.split(",");
-								ArrayList<ConditionWrapper> conditions = new ArrayList<>(conditionNames.length);
-								for (int i = 0; i < conditionNames.length; i++) {
-									String name = conditionNames[i].trim();
-									boolean negated = false;
-									while (name.startsWith("!")) {
-										name = name.substring(1, name.length());
-										negated = true;
+									break;
+								case "priority":
+									try {
+										line.getPriority().set(Integer.parseInt(value));
+									} catch (NumberFormatException e) {
+										// TODO error, need a number
 									}
-									ConditionWrapper condition = new ConditionWrapper(this, newByID(name, idString -> new Condition(this, idString)));
-									condition.setNegated(negated);
-									conditions.add(i, condition);
-									condition.setIndex(i);
+									break;
+								case "conditions":
+									String[] conditionNames = value.split(",");
+									ArrayList<ConditionWrapper> conditions = new ArrayList<>(conditionNames.length);
+									for (int i = 0; i < conditionNames.length; i++) {
+										String name = conditionNames[i].trim();
+										boolean negated = false;
+										while (name.startsWith("!")) {
+											name = name.substring(1, name.length());
+											negated = true;
+										}
+										ConditionWrapper condition = new ConditionWrapper(this,
+												newByID(name, idString -> new Condition(this, idString)));
+										condition.setNegated(negated);
+										conditions.add(i, condition);
+										condition.setIndex(i);
+									}
+									line.getConditions().addAll(conditions);
+									break;
 								}
-								line.getConditions().addAll(conditions);
-								break;
 							}
 						}
 					}
-				}
-				// handling default language
-				else if (key.equalsIgnoreCase("default_language")) {
-					defLang = value;
-				}
+					// handling default language
+					else if (key.equalsIgnoreCase("default_language")) {
+						defLang = value;
+					}
+				} 
 			}
 			// check which language is used most widely and set it as default
 			if (defLang == null) {
@@ -707,7 +726,7 @@ public class QuestPackage implements Editable {
 		if (!npcBindings.isEmpty()) {
 			ObjectNode npcs = mapper.createObjectNode();
 			for (NpcBinding binding : npcBindings) {
-				npcs.put(binding.getId().get(), binding.getConversation().get().getId().get());
+				npcs.put(binding.getId().get(), binding.getConversation().get().getRelativeName(this));
 			}
 			root.set("npcs", npcs);
 		}
@@ -723,7 +742,7 @@ public class QuestPackage implements Editable {
 		if (!staticEvents.isEmpty()) {
 			ObjectNode staticEvents = mapper.createObjectNode();
 			for (StaticEvent event : this.staticEvents) {
-				staticEvents.put(event.getId().get(), event.getEvent().get().getId().get());
+				staticEvents.put(event.getId().get(), event.getEvent().get().getRelativeName(this));
 			}
 			root.set("static", staticEvents);
 		}
@@ -731,7 +750,7 @@ public class QuestPackage implements Editable {
 		if (!locations.isEmpty()) {
 			StringBuilder builder = new StringBuilder();
 			for (GlobalLocation loc : locations) {
-				builder.append(loc.toString() + ",");
+				builder.append(loc.getObjective().get().getRelativeName(this) + ",");
 			}
 			root.put("global_locations", builder.toString().substring(0, builder.length() - 1));
 		}
@@ -744,42 +763,42 @@ public class QuestPackage implements Editable {
 				if (!canceler.getEvents().isEmpty()) {
 					StringBuilder events = new StringBuilder();
 					for (IdWrapper<Event> event : canceler.getEvents()) {
-						events.append(event.toString() + ',');
+						events.append(event.getRelativeName(this) + ',');
 					}
 					cancelerNode.put("events", events.toString().substring(0, events.length() - 1));
 				}
 				if (!canceler.getConditions().isEmpty()) {
 					StringBuilder conditions = new StringBuilder();
 					for (ConditionWrapper condition : canceler.getConditions()) {
-						conditions.append(condition.toString() + ',');
+						conditions.append(condition.getRelativeName(this) + ',');
 					}
 					cancelerNode.put("conditions", conditions.toString().substring(0, conditions.length() - 1));
 				}
 				if (!canceler.getObjectives().isEmpty()) {
 					StringBuilder objectives = new StringBuilder();
 					for (IdWrapper<Objective> objective : canceler.getObjectives()) {
-						objectives.append(objective.toString() + ',');
+						objectives.append(objective.getRelativeName(this) + ',');
 					}
 					cancelerNode.put("objectives", objectives.toString().substring(0, objectives.length() - 1));
 				}
 				if (!canceler.getTags().isEmpty()) {
 					StringBuilder tags = new StringBuilder();
 					for (IdWrapper<Tag> tag : canceler.getTags()) {
-						tags.append(tag.toString() + ',');
+						tags.append(tag.getRelativeName(this) + ',');
 					}
 					cancelerNode.put("tags", tags.toString().substring(0, tags.length() - 1));
 				}
 				if (!canceler.getPoints().isEmpty()) {
 					StringBuilder points = new StringBuilder();
 					for (IdWrapper<PointCategory> point : canceler.getPoints()) {
-						points.append(point.toString() + ',');
+						points.append(point.getRelativeName(this) + ',');
 					}
 					cancelerNode.put("points", points.toString().substring(0, points.length() - 1));
 				}
 				if (!canceler.getJournal().isEmpty()) {
 					StringBuilder journals = new StringBuilder();
 					for (IdWrapper<JournalEntry> journal : canceler.getJournal()) {
-						journals.append(journal.toString() + ',');
+						journals.append(journal.getRelativeName(this) + ',');
 					}
 					cancelerNode.put("journal", journals.toString().substring(0, journals.length() - 1));
 				}
@@ -799,7 +818,7 @@ public class QuestPackage implements Editable {
 				node.put("priority", line.getPriority().get());
 				StringBuilder conditions = new StringBuilder();
 				for (ConditionWrapper condition : line.getConditions()) {
-					conditions.append(condition.toString() + ',');
+					conditions.append(condition.getRelativeName(this) + ',');
 				}
 				node.put("conditions", conditions.substring(0, conditions.length() - 1));
 				lines.set(line.getId().get(), node);
@@ -867,13 +886,13 @@ public class QuestPackage implements Editable {
 		root.put("stop", String.valueOf(conv.getStop().get()));
 		StringBuilder first = new StringBuilder();
 		for (IdWrapper<NpcOption> option : conv.getStartingOptions()) {
-			first.append(option.toString() + ',');
+			first.append(option.get().getRelativeOptionName(conv) + ',');
 		}
 		root.put("first", first.substring(0, first.length() - 1));
 		if (!conv.getFinalEvents().isEmpty()) {
 			StringBuilder finalEvents = new StringBuilder();
 			for (IdWrapper<Event> event : conv.getFinalEvents()) {
-				finalEvents.append(event.toString() + ',');
+				finalEvents.append(event.getRelativeName(this) + ',');
 			}
 			root.put("final", finalEvents.substring(0, finalEvents.length() - 1));
 		}
@@ -885,21 +904,21 @@ public class QuestPackage implements Editable {
 				if (!option.getEvents().isEmpty()) {
 					StringBuilder events = new StringBuilder();
 					for (IdWrapper<Event> event : option.getEvents()) {
-						events.append(event.toString() + ',');
+						events.append(event.getRelativeName(this) + ',');
 					}
 					npcOption.put("events", events.substring(0, events.length() - 1));
 				}
 				if (!option.getConditions().isEmpty()) {
 					StringBuilder conditions = new StringBuilder();
-					for (IdWrapper<Condition> condition : option.getConditions()) {
-						conditions.append(condition.toString() + ',');
+					for (ConditionWrapper condition : option.getConditions()) {
+						conditions.append(condition.getRelativeNegatedName(this) + ',');
 					}
 					npcOption.put("conditions", conditions.substring(0, conditions.length() - 1));
 				}
 				if (!option.getPointers().isEmpty()) {
 					StringBuilder pointers = new StringBuilder();
 					for (IdWrapper<ConversationOption> pointer : option.getPointers()) {
-						pointers.append(pointer.toString() + ',');
+						pointers.append(pointer.get().getRelativeOptionName(conv) + ',');
 					}
 					npcOption.put("pointers", pointers.substring(0, pointers.length() - 1));
 				}
@@ -915,21 +934,21 @@ public class QuestPackage implements Editable {
 				if (!option.getEvents().isEmpty()) {
 					StringBuilder events = new StringBuilder();
 					for (IdWrapper<Event> event : option.getEvents()) {
-						events.append(event.toString() + ',');
+						events.append(event.getRelativeName(this) + ',');
 					}
 					playerOption.put("events", events.substring(0, events.length() - 1));
 				}
 				if (!option.getConditions().isEmpty()) {
 					StringBuilder conditions = new StringBuilder();
-					for (IdWrapper<Condition> condition : option.getConditions()) {
-						conditions.append(condition.toString() + ',');
+					for (ConditionWrapper condition : option.getConditions()) {
+						conditions.append(condition.getRelativeNegatedName(this) + ',');
 					}
 					playerOption.put("conditions", conditions.substring(0, conditions.length() - 1));
 				}
 				if (!option.getPointers().isEmpty()) {
 					StringBuilder pointers = new StringBuilder();
 					for (IdWrapper<ConversationOption> pointer : option.getPointers()) {
-						pointers.append(pointer.toString() + ',');
+						pointers.append(pointer.get().getRelativeOptionName(conv) + ',');
 					}
 					playerOption.put("pointers", pointers.substring(0, pointers.length() - 1));
 				}

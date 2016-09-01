@@ -64,6 +64,16 @@ public abstract class ConversationOption extends SimpleID implements OptionID {
 	public TranslatableText getText() {
 		return text;
 	}
+	
+	@Override
+	public String getRelativeOptionName(Conversation conv) {
+		return (conv.equals(conversation)) ? id.get() : getAbsoluteOptionName();
+	}
+	
+	@Override
+	public String getAbsoluteOptionName() {
+		return conversation.getId().get() + "." + id.get();
+	}
 
 	public ObservableList<IdWrapper<Event>> getEvents() {
 		return events;

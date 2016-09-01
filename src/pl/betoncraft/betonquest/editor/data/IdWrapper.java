@@ -49,6 +49,16 @@ public class IdWrapper<T extends ID> implements ID {
 	}
 
 	@Override
+	public String getRelativeName(QuestPackage pack) {
+		return object.getRelativeName(pack);
+	}
+
+	@Override
+	public String getAbsoluteName() {
+		return object.getAbsoluteName();
+	}
+
+	@Override
 	public QuestPackage getPack() {
 		return pack;
 	}

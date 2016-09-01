@@ -9,11 +9,21 @@
 	xmlns:fx="http://javafx.com/fxml/1">
 
 	<Menu text="%file">
-		<MenuItem text="%new" onAction="#newPackage" />
-		<MenuItem text="%load" onAction="#load" />
+		<Menu text="%new">
+			<MenuItem text="%set" onAction="#newSet" />
+			<MenuItem fx:id="pack" text="%package" disable="true" onAction="#newPackage" />
+		</Menu>
+		<Menu text="%load">
+			<MenuItem text="%zip" onAction="#loadZip" />
+			<MenuItem text="%directory" onAction="#loadDirectory" />
+		</Menu>
 		<SeparatorMenuItem />
-		<MenuItem text="%save" onAction="#save" />
-		<MenuItem text="%export" onAction="#export" />
+		<MenuItem fx:id="save" text="%save" disable="true" onAction="#save" />
+		<Menu fx:id="saveAs" text="%save-as" disable="true">
+			<MenuItem text="%zip" onAction="#saveZip" />
+			<MenuItem text="%directory" onAction="#saveDirectory" />
+		</Menu>
+		<MenuItem fx:id="export" text="%export" disable="true" onAction="#export" />
 		<SeparatorMenuItem />
 		<MenuItem text="%quit" onAction="#quit" />
 	</Menu>

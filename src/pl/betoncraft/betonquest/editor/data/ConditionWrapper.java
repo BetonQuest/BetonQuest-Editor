@@ -42,9 +42,8 @@ public class ConditionWrapper extends IdWrapper<Condition> {
 		this.negated = negated;
 	}
 	
-	@Override
-	public String toString() {
-		return (negated ? "!" : "") + super.get().toString();
+	public String getRelativeNegatedName(QuestPackage pack) {
+		return (negated ? "!" : "") + getRelativeName(pack);
 	}
 
 }
