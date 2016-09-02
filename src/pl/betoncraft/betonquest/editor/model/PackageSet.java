@@ -187,15 +187,18 @@ public class PackageSet {
 				String fileName = file.getName().substring(0, file.getName().length() - 4);
 				String packName = null;
 				if (file.getParentFile().getName().equals("conversations")) {
-					packName = prefix.replace("-conversations-", "");
+					prefix = prefix.replace("conversations-", "");
 					fileName = "conversations." + fileName;
 				} else {
-					packName = prefix.substring(0, prefix.length() - 1);
 					List<String> allowedNames = Arrays.asList(new String[]{"main", "events", "conditions", "objectives", "journal", "items"});
 					if (!allowedNames.contains(fileName)) {
 						return;
 					}
 				}
+				if (prefix.isEmpty()) {
+					prefix = file.getParentFile().getName() + "-";
+				}
+				packName = prefix.substring(0, prefix.length() - 1);
 				HashMap<String, InputStream> packMap = setMap.get(packName);
 				if (packMap == null) {
 					packMap = new HashMap<>();
@@ -244,7 +247,10 @@ public class PackageSet {
 							map = new LinkedHashMap<>();
 							values.put(name, map);
 						}
-						map.put(key, parser.getText());
+						String value = parser.getText();
+						if (!value.isEmpty()) {
+							map.put(key, value);
+						}
 					default:
 						// do nothing
 					}
