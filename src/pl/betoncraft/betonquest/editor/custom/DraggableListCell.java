@@ -28,6 +28,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import pl.betoncraft.betonquest.editor.data.ID;
+import pl.betoncraft.betonquest.editor.data.Validatable;
 
 /**
  * A ListCell containing ID object, which can be dragged and dropped to reorder the list.
@@ -144,6 +145,14 @@ public class DraggableListCell<T extends ID> extends ListCell<T> {
 			setGraphic(null);
 		} else {
 			setText(item.toString());
+			if (item instanceof Validatable) {
+				Validatable valid = (Validatable) item;
+				if (!valid.isValid()) {
+					setStyle("-fx-background-color: red");
+				} else {
+					setStyle(null);
+				}
+			}
 		}
 	}
 }

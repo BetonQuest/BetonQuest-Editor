@@ -17,18 +17,8 @@
  */
 package pl.betoncraft.betonquest.editor.data;
 
-import javafx.beans.property.StringProperty;
-import pl.betoncraft.betonquest.editor.model.TranslatableText;
-
-public interface Translatable extends Validatable {
+public interface Validatable extends ID {
 	
-	public TranslatableText getText();
-	
-	public String getType();
-	
-	public default boolean isValid() {
-		StringProperty text = getText().get();
-		return text != null && text.get() != null && !text.get().isEmpty();
-	}
+	public boolean isValid();
 
 }

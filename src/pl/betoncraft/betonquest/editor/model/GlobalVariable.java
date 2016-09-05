@@ -20,17 +20,15 @@ package pl.betoncraft.betonquest.editor.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import pl.betoncraft.betonquest.editor.controller.InstructionEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
-import pl.betoncraft.betonquest.editor.data.Instruction;
-import pl.betoncraft.betonquest.editor.data.SimpleID;
+import pl.betoncraft.betonquest.editor.data.SimpleInstruction;
 
 /**
  * Represents a variable defined in main.yml file.
  *
  * @author Jakub Sapalski
  */
-public class GlobalVariable extends SimpleID implements Instruction {
+public class GlobalVariable extends SimpleInstruction {
 
 	private StringProperty value = new SimpleStringProperty();
 	
@@ -45,19 +43,9 @@ public class GlobalVariable extends SimpleID implements Instruction {
 	}
 
 	@Override
-	public boolean edit() {
-		return InstructionEditController.display(this);
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public ObservableList<GlobalVariable> getList() {
 		return pack.getVariables();
-	}
-
-	@Override
-	public StringProperty getInstruction() {
-		return value;
 	}
 	
 }

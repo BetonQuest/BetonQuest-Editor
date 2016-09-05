@@ -25,7 +25,7 @@ import javafx.beans.property.StringProperty;
  *
  * @author Jakub Sapalski
  */
-public interface Instruction extends ID {
+public interface Instruction extends Validatable {
 	
 	public StringProperty getInstruction();
 

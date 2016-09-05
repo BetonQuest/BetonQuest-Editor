@@ -24,13 +24,14 @@ import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.controller.NpcBindingEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
+import pl.betoncraft.betonquest.editor.data.Validatable;
 
 /**
  * Represents an NPC binding with a conversation.
  *
  * @author Jakub Sapalski
  */
-public class NpcBinding extends SimpleID {
+public class NpcBinding extends SimpleID implements Validatable {
 
 	private ObjectProperty<Conversation> conversation = new SimpleObjectProperty<>();
 	
@@ -57,6 +58,11 @@ public class NpcBinding extends SimpleID {
 
 	public ObjectProperty<Conversation> getConversation() {
 		return conversation;
+	}
+
+	@Override
+	public boolean isValid() {
+		return conversation.get() != null;
 	}
 
 }

@@ -24,13 +24,14 @@ import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.controller.StaticEventEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
+import pl.betoncraft.betonquest.editor.data.Validatable;
 
 /**
  * Represents a static event, which is fired at exact hour each day.
  *
  * @author Jakub Sapalski
  */
-public class StaticEvent extends SimpleID {
+public class StaticEvent extends SimpleID implements Validatable {
 
 	private ObjectProperty<Event> event = new SimpleObjectProperty<>();
 	
@@ -52,6 +53,11 @@ public class StaticEvent extends SimpleID {
 
 	public ObjectProperty<Event> getEvent() {
 		return event;
+	}
+
+	@Override
+	public boolean isValid() {
+		return event.get() != null;
 	}
 
 }

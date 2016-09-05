@@ -20,17 +20,15 @@ package pl.betoncraft.betonquest.editor.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import pl.betoncraft.betonquest.editor.controller.InstructionEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
-import pl.betoncraft.betonquest.editor.data.Instruction;
-import pl.betoncraft.betonquest.editor.data.SimpleID;
+import pl.betoncraft.betonquest.editor.data.SimpleInstruction;
 
 /**
  * Represents a BetonQuest condition. 
  *
  * @author Jakub Sapalski
  */
-public class Condition extends SimpleID implements Instruction {
+public class Condition extends SimpleInstruction {
 
 	private StringProperty instruction = new SimpleStringProperty();
 	
@@ -43,21 +41,11 @@ public class Condition extends SimpleID implements Instruction {
 		this(pack, id);
 		this.instruction.set(instruction);
 	}
-	
-	@Override
-	public boolean edit() {
-		return InstructionEditController.display(this);
-	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public ObservableList<Condition> getList() {
 		return pack.getConditions();
-	}
-
-	@Override
-	public StringProperty getInstruction() {
-		return instruction;
 	}
 	
 }

@@ -6,17 +6,15 @@ package pl.betoncraft.betonquest.editor.model;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import pl.betoncraft.betonquest.editor.controller.InstructionEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
-import pl.betoncraft.betonquest.editor.data.Instruction;
-import pl.betoncraft.betonquest.editor.data.SimpleID;
+import pl.betoncraft.betonquest.editor.data.SimpleInstruction;
 
 /**
  * Represents an item.
  *
  * @author Jakub Sapalski
  */
-public class Item extends SimpleID implements Instruction {
+public class Item extends SimpleInstruction {
 
 	private StringProperty instruction = new SimpleStringProperty();
 	
@@ -29,21 +27,11 @@ public class Item extends SimpleID implements Instruction {
 		this(pack, id);
 		this.instruction.set(instruction);
 	}
-	
-	@Override
-	public boolean edit() {
-		return InstructionEditController.display(this);
-	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	public ObservableList<Item> getList() {
 		return pack.getItems();
-	}
-
-	@Override
-	public StringProperty getInstruction() {
-		return instruction;
 	}
 
 }

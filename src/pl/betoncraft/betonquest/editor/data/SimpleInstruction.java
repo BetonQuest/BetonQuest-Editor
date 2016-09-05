@@ -17,18 +17,27 @@
  */
 package pl.betoncraft.betonquest.editor.data;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import pl.betoncraft.betonquest.editor.model.TranslatableText;
+import pl.betoncraft.betonquest.editor.controller.InstructionEditController;
 
-public interface Translatable extends Validatable {
+public abstract class SimpleInstruction extends SimpleID implements Instruction {
+
+	protected StringProperty instruction = new SimpleStringProperty();
+
+	@Override
+	public boolean isValid() {
+		return instruction.get() != null && !instruction.get().isEmpty();
+	}
 	
-	public TranslatableText getText();
-	
-	public String getType();
-	
-	public default boolean isValid() {
-		StringProperty text = getText().get();
-		return text != null && text.get() != null && !text.get().isEmpty();
+	@Override
+	public boolean edit() {
+		return InstructionEditController.display(this);
+	}
+
+	@Override
+	public StringProperty getInstruction() {
+		return instruction;
 	}
 
 }

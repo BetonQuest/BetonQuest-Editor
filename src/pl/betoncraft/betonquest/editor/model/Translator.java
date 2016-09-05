@@ -44,15 +44,19 @@ public class Translator {
 	}
 	
 	public void next() {
-		if (hasNext()) current++;
+		if (hasNext()) {
+			current++;
+		}
 	}
 	
 	public boolean hasNext() {
-		return current < manager.getTranslations().size();
+		return current < manager.getTranslations().size() - 1;
 	}
 	
 	public void previous() {
-		if (hasPrevious()) current--;
+		if (hasPrevious()) {
+			current--;
+		}
 	}
 	
 	public boolean hasPrevious() {

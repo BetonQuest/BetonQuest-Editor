@@ -115,6 +115,13 @@ public class ConversationController {
 				instance.displayConversation(conversations.get(0));
 			}
 		}
+		instance.npc.textProperty().addListener((observable, oldValue, newValue) -> {
+		    if (newValue.isEmpty()) {
+		    	instance.npc.setStyle("-fx-background-color: red");
+		    } else {
+		    	instance.npc.setStyle(null);
+		    }
+		});
 	}
 	
 	/**
@@ -199,6 +206,10 @@ public class ConversationController {
 	 * @param option ConversationOption to display
 	 */
 	public void displayOption(ConversationOption option) {
+		npcList.setItems(null);
+		npcList.setItems(currentConversation.getNpcOptions());
+		playerList.setItems(null);
+		playerList.setItems(currentConversation.getPlayerOptions());
 		clearOption();
 		currentOption = option;
 		// if the option belongs to another conversation, display that conversation

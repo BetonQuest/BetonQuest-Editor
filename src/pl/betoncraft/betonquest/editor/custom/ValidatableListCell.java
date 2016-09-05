@@ -15,20 +15,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package pl.betoncraft.betonquest.editor.data;
+package pl.betoncraft.betonquest.editor.custom;
 
-import javafx.beans.property.StringProperty;
-import pl.betoncraft.betonquest.editor.model.TranslatableText;
+import javafx.scene.control.ListCell;
+import pl.betoncraft.betonquest.editor.data.Validatable;
 
-public interface Translatable extends Validatable {
-	
-	public TranslatableText getText();
-	
-	public String getType();
-	
-	public default boolean isValid() {
-		StringProperty text = getText().get();
-		return text != null && text.get() != null && !text.get().isEmpty();
+public class ValidatableListCell extends ListCell<Validatable> {
+
+	@Override
+	protected void updateItem(Validatable item, boolean empty) {
+		super.updateItem(item, empty);
+
+		if (empty || item == null) {
+			setText(null);
+			setGraphic(null);
+		} else {
+			setText(item.toString());
+			if (!item.isValid()) {
+				setStyle("-fx-background-color: red");
+			} else {
+				setStyle(null);
+			}
+		}
 	}
 
 }
