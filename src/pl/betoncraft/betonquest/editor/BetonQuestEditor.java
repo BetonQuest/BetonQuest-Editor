@@ -46,6 +46,7 @@ import pl.betoncraft.betonquest.editor.controller.MainMenuController;
 import pl.betoncraft.betonquest.editor.controller.OtherController;
 import pl.betoncraft.betonquest.editor.controller.RootController;
 import pl.betoncraft.betonquest.editor.controller.TabsController;
+import pl.betoncraft.betonquest.editor.controller.TranslationController;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Conversation;
 import pl.betoncraft.betonquest.editor.model.Event;
@@ -201,6 +202,7 @@ public class BetonQuestEditor extends Application {
 		EcoController.setObjectives(pack.getObjectives());
 		OtherController.setItems(pack.getItems());
 		OtherController.setJournal(pack.getJournal());
+		TranslationController.setLanguages(pack.getTranslationManager());
 		TabsController.setDisabled(false);
 	}
 	

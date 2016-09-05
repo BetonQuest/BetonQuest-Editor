@@ -129,10 +129,11 @@ public class OtherController {
 	}
 	
 	@FXML private void selectEntry() {
+		// TODO update displayed text when it's changed, not only when new entry is selected
 		try {
 			JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
 			if (entry != null) {
-				entryText.setText(entry.getText().getLang(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).get());
+				entryText.setText(entry.getText().get().get());
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);

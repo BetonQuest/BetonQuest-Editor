@@ -26,7 +26,6 @@ import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.OptionID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
-import pl.betoncraft.betonquest.editor.data.TranslatableText;
 
 /**
  * Abstract class representing an option in the conversation.
@@ -36,7 +35,7 @@ import pl.betoncraft.betonquest.editor.data.TranslatableText;
 public abstract class ConversationOption extends SimpleID implements OptionID {
 
 	private Conversation conversation;
-	private TranslatableText text = new TranslatableText();
+	private TranslatableText text;
 	private ObservableList<IdWrapper<Event>> events = FXCollections.observableArrayList();
 	private ObservableList<ConditionWrapper> conditions = FXCollections.observableArrayList();
 	private ObservableList<IdWrapper<ConversationOption>> pointers = FXCollections.observableArrayList();
@@ -44,6 +43,7 @@ public abstract class ConversationOption extends SimpleID implements OptionID {
 	public ConversationOption(Conversation conv, String id) {
 		this.conversation = OptionID.parseConversation(conv, id);
 		this.id = new SimpleStringProperty(OptionID.parseId(id));
+		text = new TranslatableText(this);
 	}
 
 	@Override
@@ -61,6 +61,7 @@ public abstract class ConversationOption extends SimpleID implements OptionID {
 		return conversation.getPack();
 	}
 
+	@Override
 	public TranslatableText getText() {
 		return text;
 	}

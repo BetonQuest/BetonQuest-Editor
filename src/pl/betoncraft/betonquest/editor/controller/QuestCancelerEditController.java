@@ -154,7 +154,7 @@ public class QuestCancelerEditController {
 				return;
 			}
 			canceler.getId().set(idString.trim());
-			canceler.getName().get(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).set(text);
+			canceler.getText().get().set(text);
 			canceler.getConditions().setAll(conditionList);
 			canceler.getEvents().setAll(eventList);
 			canceler.getTags().setAll(tagList);
@@ -196,7 +196,7 @@ public class QuestCancelerEditController {
 			controller.objectiveList = FXCollections.observableArrayList(canceler.getObjectives());
 			controller.entryList = FXCollections.observableArrayList(canceler.getJournal());
 			controller.name.setText(canceler.toString());
-			controller.text.setText(canceler.getName().getLang(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).get());
+			controller.text.setText(canceler.getText().get().get());
 			controller.teleport.setText(canceler.getLocation());
 			controller.refresh();
 			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {

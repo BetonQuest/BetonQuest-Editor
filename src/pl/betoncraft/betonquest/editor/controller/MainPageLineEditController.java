@@ -80,7 +80,7 @@ public class MainPageLineEditController {
 			}
 			int priorityInt = Integer.parseInt(priority.getText());
 			line.getId().set(id.trim());
-			line.getText().get(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).set(text.getText());
+			line.getText().get().set(text.getText());
 			line.getConditions().setAll(conditionList);
 			line.getPriority().set(priorityInt);
 			BetonQuestEditor.getInstance().refresh();
@@ -109,8 +109,7 @@ public class MainPageLineEditController {
 			controller.stage = (Stage) controller.root.getScene().getWindow();
 			controller.line = line;
 			controller.id.setText(line.getId().get());
-			controller.text.setText(line.getText().get(
-					BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang()).get());
+			controller.text.setText(line.getText().get().get());
 			controller.conditionList = FXCollections.observableArrayList(line.getConditions());
 			controller.priority.setText(String.valueOf(line.getPriority().get()));
 			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {

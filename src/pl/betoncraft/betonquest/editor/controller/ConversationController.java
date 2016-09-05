@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -92,6 +93,10 @@ public class ConversationController {
 	private Conversation currentConversation;
 	private ConversationOption currentOption;
 	
+	private StringProperty boundNPC;
+	private BooleanProperty boundStop;
+	private StringProperty boundText;
+	
 	public ConversationController() {
 		instance = this;
 	}
@@ -126,9 +131,10 @@ public class ConversationController {
 		}
 		clearConversation();
 		currentConversation = conversation;
-		String lang = conversation.getPack().getDefLang();
-		npc.textProperty().bindBidirectional(conversation.getNPC().get(lang));
-		stop.selectedProperty().bindBidirectional(conversation.getStop());
+		boundNPC = conversation.getText().get();
+		npc.textProperty().bindBidirectional(boundNPC);
+		boundStop = conversation.getStop();
+		stop.selectedProperty().bindBidirectional(boundStop);
 		startingOptionsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("starting-options") + " (" + conversation.getStartingOptions().size() + ")");
 		finalEventsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("final-events") + " (" + conversation.getFinalEvents().size() + ")");
 		npcList.setCellFactory(param -> new DraggableListCell<>());
@@ -168,9 +174,15 @@ public class ConversationController {
 		if (instance.currentConversation == null) {
 			return;
 		}
-		instance.npc.textProperty().unbindBidirectional(instance.currentConversation.getNPC().get(instance.currentConversation.getPack().getDefLang()));
+		if (instance.boundNPC != null) {
+			instance.npc.textProperty().unbindBidirectional(instance.boundNPC);
+		}
+		instance.boundNPC = null;
 		instance.npc.clear();
-		instance.stop.selectedProperty().unbindBidirectional(instance.currentConversation.getStop());
+		if (instance.boundStop != null) {
+			instance.stop.selectedProperty().unbindBidirectional(instance.boundStop);
+		}
+		instance.boundStop = null;
 		instance.stop.setSelected(false);
 		instance.startingOptionsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("starting-options"));
 		instance.finalEventsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("final-events"));
@@ -208,7 +220,8 @@ public class ConversationController {
 			pointsToLabel.setText(BetonQuestEditor.getInstance().getLanguage().getString("points-to-npc"));
 			pointedByLabel.setText(BetonQuestEditor.getInstance().getLanguage().getString("pointed-by-npc"));
 		}
-		this.option.textProperty().bindBidirectional(option.getText().get(currentConversation.getPack().getDefLang()));
+		boundText = option.getText().get();
+		this.option.textProperty().bindBidirectional(boundText);
 		conditionsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("conditions") + " (" + option.getConditions().size() + ")");
 		eventsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("events") + " (" + option.getEvents().size() + ")");
 		pointsToList.setCellFactory(param -> new DraggableListCell<>());
@@ -249,7 +262,10 @@ public class ConversationController {
 			return;
 		}
 		optionType.setText(BetonQuestEditor.getInstance().getLanguage().getString("option"));
-		option.textProperty().unbindBidirectional(currentOption.getText().get(currentConversation.getPack().getDefLang()));
+		if (boundText != null) {
+			option.textProperty().unbindBidirectional(boundText);
+		}
+		boundText = null;
 		option.clear();
 		pointsToField.getEntries().clear();
 		conditionsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("conditions"));

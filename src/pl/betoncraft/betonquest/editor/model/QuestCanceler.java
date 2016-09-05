@@ -12,16 +12,16 @@ import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
-import pl.betoncraft.betonquest.editor.data.TranslatableText;
+import pl.betoncraft.betonquest.editor.data.Translatable;
 
 /**
  * Represents a quest canceler.
  *
  * @author Jakub Sapalski
  */
-public class QuestCanceler extends SimpleID {
+public class QuestCanceler extends SimpleID implements Translatable {
 
-	private TranslatableText name = new TranslatableText();
+	private TranslatableText name;
 	private ObservableList<ConditionWrapper> conditions = FXCollections.observableArrayList();
 	private ObservableList<IdWrapper<Event>> events = FXCollections.observableArrayList();
 	private ObservableList<IdWrapper<Objective>> objectives = FXCollections.observableArrayList();
@@ -33,6 +33,7 @@ public class QuestCanceler extends SimpleID {
 	public QuestCanceler(QuestPackage pack, String id) {
 		this.pack = ID.parsePackage(pack, id);
 		this.id = new SimpleStringProperty(ID.parseId(id));
+		name = new TranslatableText(this);
 	}
 
 	@Override
@@ -54,7 +55,8 @@ public class QuestCanceler extends SimpleID {
 		this.location.set(location);
 	}
 
-	public TranslatableText getName() {
+	@Override
+	public TranslatableText getText() {
 		return name;
 	}
 

@@ -12,16 +12,16 @@ import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
-import pl.betoncraft.betonquest.editor.data.TranslatableText;
+import pl.betoncraft.betonquest.editor.data.Translatable;
 
 /**
  * Represents a conversation.
  *
  * @author Jakub Sapalski
  */
-public class Conversation extends SimpleID {
+public class Conversation extends SimpleID implements Translatable {
 
-	private TranslatableText npc = new TranslatableText();
+	private TranslatableText npc;
 	private BooleanProperty stop = new SimpleBooleanProperty();
 	private ObservableList<NpcOption> npcOptions = FXCollections.observableArrayList();
 	private ObservableList<PlayerOption> playerOptions = FXCollections.observableArrayList();
@@ -31,6 +31,7 @@ public class Conversation extends SimpleID {
 	public Conversation(QuestPackage pack, String id) {
 		this.pack = ID.parsePackage(pack, id);
 		this.id = new SimpleStringProperty(ID.parseId(id));
+		npc = new TranslatableText(this);
 	}
 
 	@Override
@@ -48,7 +49,8 @@ public class Conversation extends SimpleID {
 		return stop;
 	}
 
-	public TranslatableText getNPC() {
+	@Override
+	public TranslatableText getText() {
 		return npc;
 	}
 

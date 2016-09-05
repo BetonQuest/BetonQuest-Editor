@@ -39,7 +39,7 @@ import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.Editable;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
-import pl.betoncraft.betonquest.editor.data.TranslatableText;
+import pl.betoncraft.betonquest.editor.data.Translatable;
 
 /**
  * Keeps all data about the quest package.
@@ -50,8 +50,7 @@ public class QuestPackage implements Editable {
 
 	private final StringProperty packName;
 	private final PackageSet set;
-	private String defLang;
-	private final HashMap<String, Integer> languages = new HashMap<>();
+	private final TranslationManager translationManager = new TranslationManager(this);
 	private final ObservableList<Conversation> conversations = FXCollections.observableArrayList();
 	private final ObservableList<Event> events = FXCollections.observableArrayList();
 	private final ObservableList<Condition> conditions = FXCollections.observableArrayList();
@@ -100,13 +99,7 @@ public class QuestPackage implements Editable {
 						journalEntry.setIndex(journalIndex++);
 					// handling entry data
 					if (parts.length > 1) {
-						String lang = parts[1];
-						if (!languages.containsKey(lang)) {
-							languages.put(lang, 1);
-						} else {
-							languages.put(lang, languages.get(lang) + 1);
-						}
-						journalEntry.getText().addLang(lang, value);
+						journalEntry.getText().setLang(parts[1], value);
 					} else {
 						journalEntry.getText().setDef(value);
 					}
@@ -174,15 +167,9 @@ public class QuestPackage implements Editable {
 						String subValue = subEntry.getValue();
 						// reading NPC name, optionally in multiple languages
 						if (subKey.equals("quester")) {
-							conv.getNPC().setDef(subValue);
+							conv.getText().setDef(subValue);
 						} else if (subKey.startsWith("quester.")) {
-							String lang = subKey.substring(8);
-							if (!languages.containsKey(lang)) {
-								languages.put(lang, 1);
-							} else {
-								languages.put(lang, languages.get(lang) + 1);
-							}
-							conv.getNPC().addLang(lang, subValue);
+							conv.getText().setLang(subKey.substring(8), subValue);
 						}
 						// reading the stop option
 						else if (subKey.equals("stop")) {
@@ -223,13 +210,7 @@ public class QuestPackage implements Editable {
 									switch (parts[2]) {
 									case "text":
 										if (parts.length > 3) {
-											String lang = parts[3];
-											if (!languages.containsKey(lang)) {
-												languages.put(lang, 1);
-											} else {
-												languages.put(lang, languages.get(lang) + 1);
-											}
-											option.getText().addLang(lang, subValue);
+											option.getText().setLang(parts[3], subValue);
 										} else {
 											option.getText().setDef(subValue);
 										}
@@ -293,13 +274,7 @@ public class QuestPackage implements Editable {
 									switch (parts[2]) {
 									case "text":
 										if (parts.length > 3) {
-											String lang = parts[3];
-											if (!languages.containsKey(lang)) {
-												languages.put(lang, 1);
-											} else {
-												languages.put(lang, languages.get(lang) + 1);
-											}
-											option.getText().addLang(lang, subValue);
+											option.getText().setLang(parts[3], subValue);
 										} else {
 											option.getText().setDef(subValue);
 										}
@@ -389,15 +364,9 @@ public class QuestPackage implements Editable {
 								switch (parts[2]) {
 								case "name":
 									if (parts.length > 3) {
-										String lang = parts[3];
-										if (!languages.containsKey(lang)) {
-											languages.put(lang, 1);
-										} else {
-											languages.put(lang, languages.get(lang) + 1);
-										}
-										canceler.getName().addLang(lang, value);
+										canceler.getText().setLang(parts[3], value);
 									} else {
-										canceler.getName().setDef(value);
+										canceler.getText().setDef(value);
 									}
 									break;
 								case "events":
@@ -489,13 +458,7 @@ public class QuestPackage implements Editable {
 								switch (parts[2]) {
 								case "text":
 									if (parts.length > 3) {
-										String lang = parts[3];
-										if (!languages.containsKey(lang)) {
-											languages.put(lang, 1);
-										} else {
-											languages.put(lang, languages.get(lang) + 1);
-										}
-										line.getText().addLang(lang, value);
+										line.getText().setLang(parts[3], value);
 									} else {
 										line.getText().setDef(value);
 									}
@@ -531,22 +494,11 @@ public class QuestPackage implements Editable {
 					}
 					// handling default language
 					else if (key.equalsIgnoreCase("default_language")) {
-						defLang = value;
+						translationManager.setDefault(value);
 					}
 				} 
 			}
-			// check which language is used most widely and set it as default
-			if (defLang == null) {
-				int max = 0;
-				String maxLang = null;
-				for (Entry<String, Integer> entry : languages.entrySet()) {
-					if (entry.getValue() > max) {
-						max = entry.getValue();
-						maxLang = entry.getKey();
-					}
-				}
-				defLang = maxLang;
-			}
+			translationManager.inferDefaultLanguage();
 		} catch (Exception e) {
 			ExceptionController.display(e);
 		}
@@ -564,13 +516,9 @@ public class QuestPackage implements Editable {
 	public StringProperty getName() {
 		return packName;
 	}
-
-	public String getDefLang() {
-		return defLang;
-	}
-
-	public void setDefLang(String defLang) {
-		this.defLang = defLang;
+	
+	public TranslationManager getTranslationManager() {
+		return translationManager;
 	}
 
 	public ObservableList<Conversation> getConversations() {
@@ -710,6 +658,10 @@ public class QuestPackage implements Editable {
 		if (existing == null) {
 			existing = object;
 			list.add(existing);
+		} else {
+			if (object instanceof Translatable) {
+				translationManager.getTranslations().remove(((Translatable) object).getText());
+			}
 		}
 		return existing;
 	}
@@ -759,7 +711,7 @@ public class QuestPackage implements Editable {
 			ObjectNode cancelers = mapper.createObjectNode();
 			for (QuestCanceler canceler : this.cancelers) {
 				ObjectNode cancelerNode = mapper.createObjectNode();
-				addTranslatedNode(mapper, cancelerNode, "name", canceler.getName());
+				addTranslatedNode(mapper, cancelerNode, "name", canceler.getText());
 				if (!canceler.getEvents().isEmpty()) {
 					StringBuilder events = new StringBuilder();
 					for (IdWrapper<Event> event : canceler.getEvents()) {
@@ -825,6 +777,10 @@ public class QuestPackage implements Editable {
 			}
 			root.set("journal_main_page", lines);
 		}
+		// save default language
+		if (translationManager.getDefault() != null) {
+			root.put("default_language", translationManager.getDefault());
+		}
 		yf.createGenerator(out).setCodec(mapper).writeObject(root);
 	}
 
@@ -882,7 +838,7 @@ public class QuestPackage implements Editable {
 		YAMLFactory yf = new YAMLFactory();
 		YAMLMapper mapper = new YAMLMapper();
 		ObjectNode root = mapper.createObjectNode();
-		addTranslatedNode(mapper, root, "quester", conv.getNPC());
+		addTranslatedNode(mapper, root, "quester", conv.getText());
 		root.put("stop", String.valueOf(conv.getStop().get()));
 		StringBuilder first = new StringBuilder();
 		for (IdWrapper<NpcOption> option : conv.getStartingOptions()) {
@@ -960,15 +916,15 @@ public class QuestPackage implements Editable {
 	}
 
 	private void addTranslatedNode(YAMLMapper mapper, ObjectNode root, String name, TranslatableText text) {
-		if (text.getDef() != null) {
+		if (!text.hasMultipleLanguages()) {
 			root.put(name, text.getDef().get());
 		} else {
 			ObjectNode node = mapper.createObjectNode();
 			for (String lang : text.getLanguages()) {
-				if (lang == null) { // TODO find out why there's a null language
+				if (lang == null) {
 					continue;
 				}
-				node.put(lang, text.get(lang).get());
+				node.put(lang, text.getLang(lang).get());
 			}
 			root.set(name, node);
 		}

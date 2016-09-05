@@ -27,22 +27,23 @@ import pl.betoncraft.betonquest.editor.controller.MainPageLineEditController;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
-import pl.betoncraft.betonquest.editor.data.TranslatableText;
+import pl.betoncraft.betonquest.editor.data.Translatable;
 
 /**
  * Represents a single line on main page in a journal.
  *
  * @author Jakub Sapalski
  */
-public class MainPageLine extends SimpleID {
+public class MainPageLine extends SimpleID implements Translatable {
 
-	private TranslatableText text = new TranslatableText();
+	private TranslatableText text;
 	private ObservableList<ConditionWrapper> conditions = FXCollections.observableArrayList();
 	private IntegerProperty priority = new SimpleIntegerProperty();
 	
 	public MainPageLine(QuestPackage pack, String id) {
 		this.pack = ID.parsePackage(pack, id);
 		this.id = new SimpleStringProperty(ID.parseId(id));
+		text = new TranslatableText(this);
 	}
 
 	@Override
@@ -56,6 +57,7 @@ public class MainPageLine extends SimpleID {
 		return pack.getMainPage();
 	}
 
+	@Override
 	public TranslatableText getText() {
 		return text;
 	}

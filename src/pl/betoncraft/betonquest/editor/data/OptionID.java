@@ -25,7 +25,7 @@ import pl.betoncraft.betonquest.editor.model.Conversation;
  *
  * @author Jakub Sapalski
  */
-public interface OptionID extends ID {
+public interface OptionID extends Translatable {
 	
 	public Conversation getConversation();
 	

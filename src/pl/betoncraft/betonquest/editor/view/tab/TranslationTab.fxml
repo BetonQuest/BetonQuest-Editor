@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.GridPane?>
 
-<Tab xmlns:fx="http://javafx.com/fxml/1" text="%trans">
-	<!-- TODO Add Nodes -->
+<Tab xmlns:fx="http://javafx.com/fxml/1" text="%trans"
+	fx:controller="pl.betoncraft.betonquest.editor.controller.TranslationController">
+	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true"
+		fitToWidth="true" id="tab-scroll">
+		<VBox>
+			<HBox spacing="5">
+				<padding>
+					<Insets bottom="5" top="5" left="5" right="5" />
+				</padding>
+				<Label text="%language" id="option-label" />
+				<ChoiceBox fx:id="language" onAction="#setDefault" />
+				<Button fx:id="convert" text="%convert" onAction="#convert" />
+				<Button fx:id="add" text="%add" onAction="#add" />
+				<Button fx:id="edit" text="%edit" onAction="#edit" />
+				<Button fx:id="delete" text="%del" onAction="#delete" />
+			</HBox>
+			<Separator />
+			<StackPane>
+				<padding>
+					<Insets bottom="5" top="5" left="5" right="5" />
+				</padding>
+				<GridPane fx:id="translations" hgap="5" vgap="5">
+					
+				</GridPane>
+				<Button fx:id="translate" text="%translate" onAction="#translate" />
+			</StackPane>
+		</VBox>
+	</ScrollPane>
 </Tab>

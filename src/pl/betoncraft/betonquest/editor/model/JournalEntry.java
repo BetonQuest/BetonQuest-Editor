@@ -8,20 +8,21 @@ import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.controller.JournalEntryEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
-import pl.betoncraft.betonquest.editor.data.TranslatableText;
+import pl.betoncraft.betonquest.editor.data.Translatable;
 
 /**
  * Represents an entry in the journal.
  *
  * @author Jakub Sapalski
  */
-public class JournalEntry extends SimpleID {
+public class JournalEntry extends SimpleID implements Translatable {
 	
-	private TranslatableText text = new TranslatableText();
+	private TranslatableText text;
 	
 	public JournalEntry(QuestPackage pack, String id) {
 		this.pack = ID.parsePackage(pack, id);
 		this.id = new SimpleStringProperty(ID.parseId(id));
+		text = new TranslatableText(this);
 	}
 
 	@Override
@@ -35,6 +36,7 @@ public class JournalEntry extends SimpleID {
 		return pack.getJournal();
 	}
 
+	@Override
 	public TranslatableText getText() {
 		return text;
 	}

@@ -92,7 +92,7 @@ public class JournalEntryEditController {
 			controller.stage = (Stage) controller.root.getScene().getWindow();
 			controller.data = data;
 			controller.id.setText(data.getId().get());
-			controller.entry = data.getText().get(BetonQuestEditor.getInstance().getDisplayedPackage().getDefLang());
+			controller.entry = data.getText().get();
 			controller.text.setText(controller.entry.get());
 			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
 				if (event.getCode() == KeyCode.ESCAPE) {
