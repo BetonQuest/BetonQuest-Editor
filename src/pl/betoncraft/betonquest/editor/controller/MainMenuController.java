@@ -34,7 +34,6 @@ import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.PackageSet;
 import pl.betoncraft.betonquest.editor.model.PackageSet.SaveType;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
-import pl.betoncraft.betonquest.editor.model.TranslatableText;
 
 /**
  * Controls main menu.

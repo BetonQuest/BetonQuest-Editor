@@ -19,17 +19,28 @@ package pl.betoncraft.betonquest.editor.controller;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.model.TranslationManager;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.Translatable;
+import pl.betoncraft.betonquest.editor.model.TranslationManager;
+import pl.betoncraft.betonquest.editor.model.Translator;
 
 public class TranslationController {
 	
 	private static TranslationController instance;
 	private TranslationManager manager;
+	private Translator translator;
 	
 	@FXML ChoiceBox<String> language;
 	@FXML Button convert;
@@ -38,6 +49,12 @@ public class TranslationController {
 	@FXML Button delete;
 	@FXML GridPane translations;
 	@FXML Button translate;
+	@FXML Label objectLabel;
+	@FXML TextArea original;
+	@FXML Button previous;
+	@FXML TextArea translation;
+	@FXML Button next;
+	@FXML HBox choose;
 	
 	public TranslationController() {
 		instance = this;
@@ -52,6 +69,7 @@ public class TranslationController {
 			instance.add.setDisable(true);
 			instance.edit.setDisable(true);
 			instance.delete.setDisable(true);
+			instance.translate.setDisable(true);
 		} else {
 			instance.language.setDisable(false);
 			instance.language.getItems().setAll(manager.getLanguages().keySet());
@@ -60,6 +78,7 @@ public class TranslationController {
 			instance.add.setDisable(false);
 			instance.edit.setDisable(false);
 			instance.delete.setDisable(false);
+			instance.translate.setDisable(false);
 		}
 	}
 
@@ -100,7 +119,73 @@ public class TranslationController {
 	}
 
 	@FXML public void translate() {
-		// TODO translate language
+		StringProperty lang = new SimpleStringProperty();
+		if (NameEditController.display(lang)) {
+			if (!manager.getLanguages().containsKey(lang.get())) {
+				manager.createLanguage(lang.get());
+			}
+			translator = new Translator(manager, manager.getDefault(), lang.get());
+			choose.setDisable(true);
+			translate.setVisible(false);
+			translations.setVisible(true);
+			next();
+		}
+	}
+
+	@FXML public void previous() {
+		translator.translate(translation.getText());
+		if (translator.hasPrevious()) {
+			translator.previous();
+			display();
+		}
+	}
+
+	@FXML public void next() {
+		translator.translate(translation.getText());
+		if (translator.hasNext()) {
+			translator.next();
+			display();
+		}
+	}
+	
+	private void display() {
+		next.setDisable(!translator.hasNext());
+		previous.setDisable(!translator.hasPrevious());
+		String label = BetonQuestEditor.getInstance().getLanguage().getString("translate-from-to");
+		Translatable object = translator.getObject();
+		label = label.replace("{type}", object.getType());
+		label = label.replace("{id}", object.toString());
+		label = label.replace("{from}", translator.getFromLanguage());
+		label = label.replace("{to}", translator.getToLanguage());
+		objectLabel.setText(label);
+		original.setText(translator.getText());
+		translation.setText(translator.getTranslation());
+	}
+
+	@FXML public void translationKey(KeyEvent event) {
+		KeyCombination enter = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.CONTROL_DOWN);
+		KeyCombination backspace = new KeyCodeCombination(KeyCode.BACK_SPACE, KeyCombination.CONTROL_DOWN);
+		if (enter.match(event)) {
+			next();
+		} else if (backspace.match(event)) {
+			previous();
+		}
+	}
+
+	@FXML public void close() {
+		translator = null;
+		choose.setDisable(false);
+		translate.setVisible(true);
+		translations.setVisible(false);
+	}
+	
+	public static void clear() {
+		instance.language.setItems(FXCollections.observableArrayList());
+		instance.convert.setDisable(true);
+		instance.add.setDisable(true);
+		instance.edit.setDisable(true);
+		instance.delete.setDisable(true);
+		instance.close();
 	}
 
 }

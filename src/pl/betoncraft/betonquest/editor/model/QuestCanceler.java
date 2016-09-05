@@ -7,6 +7,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.QuestCancelerEditController;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.ID;
@@ -58,6 +59,11 @@ public class QuestCanceler extends SimpleID implements Translatable {
 	@Override
 	public TranslatableText getText() {
 		return name;
+	}
+	
+	@Override
+	public String getType() {
+		return BetonQuestEditor.getInstance().getLanguage().getString("quest-canceler");
 	}
 
 	public ObservableList<ConditionWrapper> getConditions() {

@@ -22,5 +22,7 @@ import pl.betoncraft.betonquest.editor.model.TranslatableText;
 public interface Translatable extends ID {
 	
 	public TranslatableText getText();
+	
+	public String getType();
 
 }

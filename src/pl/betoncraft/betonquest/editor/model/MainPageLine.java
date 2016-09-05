@@ -23,6 +23,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.MainPageLineEditController;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.ID;
@@ -61,9 +62,16 @@ public class MainPageLine extends SimpleID implements Translatable {
 	public TranslatableText getText() {
 		return text;
 	}
+	
+	@Override
+	public String getType() {
+		return BetonQuestEditor.getInstance().getLanguage().getString("main-page-line");
+	}
+	
 	public ObservableList<ConditionWrapper> getConditions() {
 		return conditions;
 	}
+	
 	public IntegerProperty getPriority() {
 		return priority;
 	}

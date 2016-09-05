@@ -11,13 +11,17 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.ButtonBar?>
 
 <Tab xmlns:fx="http://javafx.com/fxml/1" text="%trans"
 	fx:controller="pl.betoncraft.betonquest.editor.controller.TranslationController">
 	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true"
 		fitToWidth="true" id="tab-scroll">
 		<VBox>
-			<HBox spacing="5">
+			<HBox spacing="5" fx:id="choose">
 				<padding>
 					<Insets bottom="5" top="5" left="5" right="5" />
 				</padding>
@@ -29,14 +33,43 @@
 				<Button fx:id="delete" text="%del" onAction="#delete" />
 			</HBox>
 			<Separator />
-			<StackPane>
+			<StackPane VBox.vgrow="ALWAYS">
 				<padding>
 					<Insets bottom="5" top="5" left="5" right="5" />
 				</padding>
-				<GridPane fx:id="translations" hgap="5" vgap="5">
-					
+				<GridPane fx:id="translations" hgap="5" vgap="5" visible="false">
+					<columnConstraints>
+						<ColumnConstraints percentWidth="25" />
+						<ColumnConstraints percentWidth="50" />
+						<ColumnConstraints percentWidth="25" />
+					</columnConstraints>
+					<rowConstraints>
+						<RowConstraints prefHeight="30" />
+						<RowConstraints prefHeight="120" />
+						<RowConstraints prefHeight="240" />
+						<RowConstraints vgrow="ALWAYS" />
+					</rowConstraints>
+
+					<Label GridPane.halignment="CENTER" GridPane.rowIndex="0" text="%translate"
+						GridPane.columnIndex="0" GridPane.columnSpan="3" fx:id="objectLabel" id="option-label" />
+					<TextArea GridPane.rowIndex="1" GridPane.columnIndex="0"
+						prefHeight="120" id="entry-text" GridPane.columnSpan="3" fx:id="original"
+						editable="false" />
+
+					<Button text="%previous" GridPane.rowIndex="2"
+						GridPane.columnIndex="0" fx:id="previous" onAction="#previous"
+						GridPane.halignment="RIGHT" maxHeight="150" />
+					<TextArea promptText="%type-translation" wrapText="true"
+						id="entry-text" GridPane.rowIndex="2" GridPane.columnIndex="1"
+						fx:id="translation" onKeyPressed="#translationKey" prefHeight="240" />
+					<Button text="%next" GridPane.rowIndex="2" maxHeight="150"
+						GridPane.columnIndex="2" fx:id="next" onAction="#next" />
+
+					<Button text="%close" onAction="#close" GridPane.rowIndex="3"
+						GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM" />
+
 				</GridPane>
-				<Button fx:id="translate" text="%translate" onAction="#translate" />
+				<Button fx:id="translate" text="%translate" onAction="#translate" maxHeight="50" maxWidth="200" />
 			</StackPane>
 		</VBox>
 	</ScrollPane>

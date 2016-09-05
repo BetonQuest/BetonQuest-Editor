@@ -5,6 +5,7 @@ package pl.betoncraft.betonquest.editor.model;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.JournalEntryEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
@@ -39,6 +40,11 @@ public class JournalEntry extends SimpleID implements Translatable {
 	@Override
 	public TranslatableText getText() {
 		return text;
+	}
+	
+	@Override
+	public String getType() {
+		return BetonQuestEditor.getInstance().getLanguage().getString("journal-entry");
 	}
 
 }

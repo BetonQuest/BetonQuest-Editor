@@ -18,6 +18,7 @@
 package pl.betoncraft.betonquest.editor.model;
 
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 
 /**
  * Represents a player's option in a conversation.
@@ -28,6 +29,11 @@ public class PlayerOption extends ConversationOption {
 
 	public PlayerOption(Conversation conversation, String id) {
 		super(conversation, id);
+	}
+	
+	@Override
+	public String getType() {
+		return BetonQuestEditor.getInstance().getLanguage().getString("player-option");
 	}
 
 	@Override

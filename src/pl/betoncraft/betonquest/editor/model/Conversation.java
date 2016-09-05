@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
@@ -52,6 +53,11 @@ public class Conversation extends SimpleID implements Translatable {
 	@Override
 	public TranslatableText getText() {
 		return npc;
+	}
+	
+	@Override
+	public String getType() {
+		return BetonQuestEditor.getInstance().getLanguage().getString("conversation");
 	}
 
 	public ObservableList<NpcOption> getNpcOptions() {

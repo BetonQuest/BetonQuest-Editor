@@ -221,6 +221,7 @@ public class BetonQuestEditor extends Application {
 		ConversationController.clearConversation();
 		EcoController.clear();
 		OtherController.clear();
+		TranslationController.clear();
 		TabsController.setDisabled(true);
 	}
 	
