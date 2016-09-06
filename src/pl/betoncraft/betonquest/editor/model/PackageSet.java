@@ -171,6 +171,7 @@ public class PackageSet {
 		searchFiles("", file.listFiles(), setMap);
 		PackageSet set = new PackageSet(file, SaveType.DIR, setName);
 		parseStreams(set, setMap);
+		// TODO stop if there are no packages in loaded set
 		BetonQuestEditor.getInstance().getSets().add(set);
 		RootController.setPackageSets(BetonQuestEditor.getInstance().getSets());
 		return set;

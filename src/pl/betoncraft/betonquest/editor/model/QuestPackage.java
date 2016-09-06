@@ -464,11 +464,7 @@ public class QuestPackage implements Editable {
 									}
 									break;
 								case "priority":
-									try {
-										line.getPriority().set(Integer.parseInt(value));
-									} catch (NumberFormatException e) {
-										// TODO error, need a number
-									}
+									line.getPriority().set(Integer.parseInt(value));
 									break;
 								case "conditions":
 									String[] conditionNames = value.split(",");

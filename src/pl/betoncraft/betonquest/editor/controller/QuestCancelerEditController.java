@@ -188,13 +188,42 @@ public class QuestCancelerEditController {
 			}
 			controller.stage = (Stage) controller.root.getScene().getWindow();
 			controller.canceler = canceler;
-			// TODO copy wrappers directly to prevent indexes from updating automatically
-			controller.conditionList = FXCollections.observableArrayList(canceler.getConditions());
-			controller.eventList = FXCollections.observableArrayList(canceler.getEvents());
-			controller.tagList = FXCollections.observableArrayList(canceler.getTags());
-			controller.pointList = FXCollections.observableArrayList(canceler.getPoints());
-			controller.objectiveList = FXCollections.observableArrayList(canceler.getObjectives());
-			controller.entryList = FXCollections.observableArrayList(canceler.getJournal());
+			controller.conditionList = FXCollections.observableArrayList();
+			canceler.getConditions().forEach(condition -> {
+				ConditionWrapper wrapper = new ConditionWrapper(condition.getPack(), condition.get());
+				wrapper.setIndex(controller.conditionList.size());
+				controller.conditionList.add(wrapper);
+			});
+			controller.eventList = FXCollections.observableArrayList();
+			canceler.getEvents().forEach(object -> {
+				IdWrapper<Event> wrapper = new IdWrapper<>(object.getPack(), object.get());
+				wrapper.setIndex(controller.eventList.size());
+				controller.eventList.add(wrapper);
+			});
+			controller.tagList = FXCollections.observableArrayList();
+			canceler.getTags().forEach(object -> {
+				IdWrapper<Tag> wrapper = new IdWrapper<>(object.getPack(), object.get());
+				wrapper.setIndex(controller.tagList.size());
+				controller.tagList.add(wrapper);
+			});
+			controller.pointList = FXCollections.observableArrayList();
+			canceler.getPoints().forEach(object -> {
+				IdWrapper<PointCategory> wrapper = new IdWrapper<>(object.getPack(), object.get());
+				wrapper.setIndex(controller.pointList.size());
+				controller.pointList.add(wrapper);
+			});
+			controller.objectiveList = FXCollections.observableArrayList();
+			canceler.getObjectives().forEach(object -> {
+				IdWrapper<Objective> wrapper = new IdWrapper<>(object.getPack(), object.get());
+				wrapper.setIndex(controller.objectiveList.size());
+				controller.objectiveList.add(wrapper);
+			});
+			controller.entryList = FXCollections.observableArrayList();
+			canceler.getJournal().forEach(object -> {
+				IdWrapper<JournalEntry> wrapper = new IdWrapper<>(object.getPack(), object.get());
+				wrapper.setIndex(controller.entryList.size());
+				controller.entryList.add(wrapper);
+			});
 			controller.name.setText(canceler.toString());
 			controller.text.setText(canceler.getText().get().get());
 			controller.teleport.setText(canceler.getLocation());
