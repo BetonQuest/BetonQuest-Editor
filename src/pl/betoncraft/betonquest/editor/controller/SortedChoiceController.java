@@ -25,6 +25,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -50,6 +52,9 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 	private CellFactory<F> cellFactory;
 	private Wrapper<O, W> wrapper;
 	private Refresher refresher;
+
+	private final KeyCombination moveUp = new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_DOWN);
+	private final KeyCombination moveDown = new KeyCodeCombination(KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
 
 	@FXML private Label label;
 	@FXML private ListView<W> list;
@@ -149,6 +154,24 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			delete();
 			return;
 		}
+		W item = list.getSelectionModel().getSelectedItem();
+		if (item != null) {
+			event.consume();
+			int index = list.getItems().indexOf(item);
+			if (moveUp.match(event)) {
+				if (index > 0) {
+					list.getItems().set(index, list.getItems().get(index - 1));
+					list.getItems().set(index - 1, item);
+				}
+			} else if (moveDown.match(event)) {
+				if (index + 1 < list.getItems().size()) {
+					list.getItems().set(index, list.getItems().get(index + 1));
+					list.getItems().set(index + 1, item);
+				}
+			}
+			list.getSelectionModel().select(item);
+		}
+		// TODO ctrl+i should negate selected condition
 	}
 	
 	public static <O extends ID, W extends IdWrapper<O>, F extends ListCell<W>> void display(String labelText,

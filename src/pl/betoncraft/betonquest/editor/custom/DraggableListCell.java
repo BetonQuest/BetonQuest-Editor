@@ -39,30 +39,6 @@ import pl.betoncraft.betonquest.editor.data.Validatable;
 public class DraggableListCell<T extends ID> extends ListCell<T> {
 
 	public DraggableListCell() {
-		
-//		KeyCombination moveUp = new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_DOWN);
-//		KeyCombination moveDown = new KeyCodeCombination(KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
-//		setOnKeyPressed(event -> {
-//			if (getItem() == null) {
-//				return;
-//			}
-//			event.consume();
-//			int index = getListView().getItems().indexOf(getItem());
-//			T item = getItem();
-//			if (moveUp.match(event)) {
-//				System.out.println("up");
-//				if (index - 1 > 0) {
-//					 getListView().getItems().set(index, getListView().getItems().get(index - 1));
-//					 getListView().getItems().set(index - 1, item);
-//				}
-//			} else if (moveDown.match(event)) {
-//				System.out.println("down");
-//				if (index + 1 < getListView().getItems().size()) {
-//					 getListView().getItems().set(index, getListView().getItems().get(index + 1));
-//					 getListView().getItems().set(index + 1, item);
-//				}
-//			}
-//		});
 
 		setOnDragDetected(event -> {
 			if (getItem() == null) {

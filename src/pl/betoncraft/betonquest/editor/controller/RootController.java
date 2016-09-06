@@ -72,6 +72,7 @@ public class RootController {
 			instace.local.getChildren().add(setItem);
 		}
 		root.getChildren().add(instace.local);
+		// TODO highlight currently selected package and set
 	}
 
 	@FXML public void select(MouseEvent event) {
