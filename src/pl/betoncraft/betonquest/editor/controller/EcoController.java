@@ -6,6 +6,8 @@ package pl.betoncraft.betonquest.editor.controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -13,6 +15,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
+import pl.betoncraft.betonquest.editor.data.Instruction;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Event;
 import pl.betoncraft.betonquest.editor.model.Objective;
@@ -29,6 +32,8 @@ public class EcoController {
 	@FXML private ListView<Event> eventsList;
 	@FXML private ListView<Condition> conditionsList;
 	@FXML private ListView<Objective> objectivesList;
+
+	@FXML Label instruction;
 	
 	public EcoController() {
 		instance = this;
@@ -37,16 +42,51 @@ public class EcoController {
 	public static void setEvents(ObservableList<Event> events) {
 		instance.eventsList.setCellFactory(param -> new DraggableListCell<>());
 		instance.eventsList.setItems(events);
+		instance.eventsList.getSelectionModel().selectedItemProperty().addListener(event -> {
+			instance.update();
+		});
 	}
 	
 	public static void setConditions(ObservableList<Condition> conditions) {
 		instance.conditionsList.setCellFactory(param -> new DraggableListCell<>());
 		instance.conditionsList.setItems(conditions);
+		instance.conditionsList.getSelectionModel().selectedItemProperty().addListener(event -> {
+			instance.update();
+		});
 	}
 	
 	public static void setObjectives(ObservableList<Objective> objectives) {
 		instance.objectivesList.setCellFactory(param -> new DraggableListCell<>());
 		instance.objectivesList.setItems(objectives);
+		instance.objectivesList.getSelectionModel().selectedItemProperty().addListener(event -> {
+			instance.update();
+		});
+	}
+	
+	@FXML private void update() {
+		Node focused = instruction.getScene().getFocusOwner();
+		if (focused instanceof ListView<?>) {
+			ListView<?> list = (ListView<?>) focused;
+			Object object = list.getSelectionModel().getSelectedItem();
+			if (object != null) {
+				Instruction item = (Instruction) object;
+				String name = null;
+				switch (item.getClass().getSimpleName()) {
+				case "Event":
+					name = BetonQuestEditor.getInstance().getLanguage().getString("event");
+					break;
+				case "Condition":
+					name = BetonQuestEditor.getInstance().getLanguage().getString("condition");
+					break;
+				case "Objective":
+					name = BetonQuestEditor.getInstance().getLanguage().getString("objective");
+					break;
+				}
+				if (name != null) {
+					instruction.setText(name + " '" + item.getId().get() + "': " + item.getInstruction().get());
+				}
+			}
+		}
 	}
 	
 	@FXML private void addEvent() {

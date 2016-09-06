@@ -27,13 +27,19 @@
 				<ColumnConstraints percentWidth="33.3" />
 			</columnConstraints>
 			<rowConstraints>
-				<RowConstraints percentHeight="100" />
+				<RowConstraints maxHeight="50" />
+				<RowConstraints vgrow="ALWAYS" />
 			</rowConstraints>
 
+			<Label GridPane.rowIndex="0" GridPane.columnIndex="0"
+				GridPane.halignment="CENTER" GridPane.valignment="CENTER" text="%instruction"
+				GridPane.columnSpan="3" id="option-label" fx:id="instruction" />
+
 			<!-- events -->
-			<VBox spacing="5" GridPane.columnIndex="0">
+			<VBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="0">
 				<Label text="%events" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="eventsList" onKeyPressed="#eventKey" focusTraversable="true" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="eventsList"
+					onMousePressed="#update" onKeyPressed="#eventKey" focusTraversable="true" />
 				<ButtonBar>
 					<buttons>
 						<Button focusTraversable="false" text="%add" onAction="#addEvent" />
@@ -44,9 +50,11 @@
 			</VBox>
 
 			<!-- conditions -->
-			<VBox spacing="5" GridPane.columnIndex="1">
+			<VBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="1">
 				<Label text="%conditions" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="conditionsList" onKeyPressed="#conditionKey" focusTraversable="true" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="conditionsList"
+					onMousePressed="#update" onKeyPressed="#conditionKey"
+					focusTraversable="true" />
 				<ButtonBar>
 					<buttons>
 						<Button focusTraversable="false" text="%add" onAction="#addCondition" />
@@ -57,9 +65,11 @@
 			</VBox>
 
 			<!-- objectives -->
-			<VBox spacing="5" GridPane.columnIndex="2">
+			<VBox spacing="5" GridPane.rowIndex="1" GridPane.columnIndex="2">
 				<Label text="%objectives" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="objectivesList" onKeyPressed="#objectiveKey" focusTraversable="true" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="objectivesList"
+					onMousePressed="#update" onKeyPressed="#objectiveKey"
+					focusTraversable="true" />
 				<ButtonBar>
 					<buttons>
 						<Button focusTraversable="false" text="%add" onAction="#addObjective" />

@@ -50,7 +50,7 @@
 				GridPane.rowSpan="2" GridPane.fillHeight="true">
 				<Label text="%journal-entries" id="option-label" />
 				<ListView VBox.vgrow="ALWAYS" fx:id="journalList" onKeyPressed="#journalKey"
-					onMouseClicked="#selectEntry" onKeyReleased="#selectEntry" focusTraversable="true" />
+					onMousePressed="#selectEntry" focusTraversable="true" />
 				<ButtonBar>
 					<buttons>
 						<Button focusTraversable="false" text="%add" onAction="#addEntry" />

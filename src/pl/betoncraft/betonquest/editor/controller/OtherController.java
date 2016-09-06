@@ -57,6 +57,9 @@ public class OtherController {
 	public static void setJournal(ObservableList<JournalEntry> journal) {
 		instance.journalList.setCellFactory(param -> new DraggableListCell<>());
 		instance.journalList.setItems(journal);
+		instance.journalList.getSelectionModel().selectedItemProperty().addListener(event -> {
+			instance.selectEntry();
+		});
 	}
 	
 	@FXML private void addItem() {
@@ -129,11 +132,10 @@ public class OtherController {
 	}
 	
 	@FXML private void selectEntry() {
-		// TODO update displayed text when it's changed, not only when new entry is selected
 		try {
 			JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
 			if (entry != null) {
-				entryText.setText(entry.getText().get().get());
+				entryText.textProperty().bind(entry.getText().get());
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -180,6 +182,8 @@ public class OtherController {
 	public static void clear() {
 		instance.itemsList.setItems(FXCollections.observableArrayList());
 		instance.journalList.setItems(FXCollections.observableArrayList());
+		instance.entryText.textProperty().unbind();
+		instance.entryText.clear();
 	}
 	
 }
