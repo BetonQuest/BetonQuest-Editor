@@ -224,7 +224,7 @@ public class MainMenuController {
 	}
 	
 	@FXML private void about() {
-		// TODO open about window
+		AboutController.display();
 	}
 	
 	@FXML private void docs() {

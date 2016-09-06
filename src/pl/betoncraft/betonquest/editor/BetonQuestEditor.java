@@ -65,6 +65,8 @@ import pl.betoncraft.betonquest.editor.model.Tag;
  * @author Jakub Sapalski
  */
 public class BetonQuestEditor extends Application {
+	
+	private static final String VERSION = "0.1";
 
 	private static BetonQuestEditor instance;
 	private Stage stage;
@@ -132,6 +134,13 @@ public class BetonQuestEditor extends Application {
 	 */
 	public static BetonQuestEditor getInstance() {
 		return instance;
+	}
+
+	/**
+	 * @return version of the editor
+	 */
+	public String getVesion() {
+		return VERSION;
 	}
 	
 	/**
