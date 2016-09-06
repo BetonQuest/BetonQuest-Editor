@@ -471,9 +471,15 @@ public class ConversationController {
 				}
 				npcList.getItems().remove(option);
 				for (PlayerOption o : currentConversation.getPlayerOptions()) {
-					o.getPointers().remove(option);
+					for (IdWrapper<ConversationOption> pointer : o.getPointers()) {
+						if (pointer.get().equals(option)) {
+							o.getPointers().remove(pointer);
+							break;
+						}
+					}
 				}
-				for (Iterator<IdWrapper<NpcOption>> iterator = currentConversation.getStartingOptions().iterator(); iterator.hasNext();) {
+				for (Iterator<IdWrapper<NpcOption>> iterator = currentConversation.getStartingOptions().iterator();
+						iterator.hasNext();) {
 					if (iterator.next().get().equals(option)) {
 						iterator.remove();
 					}
@@ -529,7 +535,12 @@ public class ConversationController {
 					clearOption();
 				}
 				for (NpcOption o : currentConversation.getNpcOptions()) {
-					o.getPointers().remove(option); // TODO fix removing wrapped value
+					for (IdWrapper<ConversationOption> pointer : o.getPointers()) {
+						if (pointer.get().equals(option)) {
+							o.getPointers().remove(pointer);
+							break;
+						}
+					}
 				}
 				BetonQuestEditor.getInstance().refresh();
 			}

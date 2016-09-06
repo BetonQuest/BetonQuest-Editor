@@ -844,7 +844,9 @@ public class QuestPackage implements Editable {
 		for (IdWrapper<NpcOption> option : conv.getStartingOptions()) {
 			first.append(option.get().getRelativeOptionName(conv) + ',');
 		}
-		root.put("first", first.substring(0, first.length() - 1));
+		if (first.length() > 0) {
+			root.put("first", first.substring(0, first.length() - 1));
+		}
 		if (!conv.getFinalEvents().isEmpty()) {
 			StringBuilder finalEvents = new StringBuilder();
 			for (IdWrapper<Event> event : conv.getFinalEvents()) {
