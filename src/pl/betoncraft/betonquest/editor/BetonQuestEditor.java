@@ -320,14 +320,28 @@ public class BetonQuestEditor extends Application {
 	 * @return all tags from loaded packages, the ones from current package first
 	 */
 	public ObservableList<Tag> getAllTags() {
-		return FXCollections.observableArrayList(); // TODO extract tags from events, conditions etc.
+		ObservableList<Tag> list = FXCollections.observableArrayList();
+		list.addAll(currentPackage.getTags());
+		currentPackage.getSet().getPackages().forEach(pack -> {
+			if (!pack.equals(currentPackage)) {
+				list.addAll(pack.getTags());
+			}
+		});
+		return list;
 	}
 
 	/**
 	 * @return all point categories from loaded packages, the ones from current package first
 	 */
 	public ObservableList<PointCategory> getAllPoints() {
-		return FXCollections.observableArrayList(); // TODO extract points from events, conditions etc.
+		ObservableList<PointCategory> list = FXCollections.observableArrayList();
+		list.addAll(currentPackage.getPoints());
+		currentPackage.getSet().getPackages().forEach(pack -> {
+			if (!pack.equals(currentPackage)) {
+				list.addAll(pack.getPoints());
+			}
+		});
+		return list;
 	}
 	
 	/**

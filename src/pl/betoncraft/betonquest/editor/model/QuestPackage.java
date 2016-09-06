@@ -494,6 +494,34 @@ public class QuestPackage implements Editable {
 					}
 				} 
 			}
+			// extract tags and points
+			for (Condition condition : conditions) {
+				if (condition.getInstruction().get().startsWith("tag ")) {
+					String[] parts = condition.getInstruction().get().split(" ");
+					if (parts.length > 1) {
+						newByID(parts[1], name -> new Tag(this, name));
+					}
+				} else if (condition.getInstruction().get().startsWith("point ")) {
+					String[] parts = condition.getInstruction().get().split(" ");
+					if (parts.length > 1) {
+						newByID(parts[1], name -> new PointCategory(this, name));
+					}
+				}
+			}
+			for (Event event : events) {
+				if (event.getInstruction().get().startsWith("tag ")) {
+					String[] parts = event.getInstruction().get().split(" ");
+					if (parts.length > 2) {
+						newByID(parts[2], name -> new Tag(this, name));
+					}
+				} else if (event.getInstruction().get().startsWith("point ")) {
+					String[] parts = event.getInstruction().get().split(" ");
+					if (parts.length > 1) {
+						newByID(parts[1], name -> new PointCategory(this, name));
+					}
+				}
+			}
+			// get language
 			translationManager.inferDefaultLanguage();
 		} catch (Exception e) {
 			ExceptionController.display(e);
