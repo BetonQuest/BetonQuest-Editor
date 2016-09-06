@@ -70,6 +70,12 @@ public class OtherController {
 		try {
 			Item item = new Item(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (item.edit()) {
+				for (Item other : itemsList.getItems()) {
+					if (item.getId().get().equals(other.getId().get())) {
+						BetonQuestEditor.showError("item-exists");
+						return;
+					}
+				}
 				item.setIndex(itemsList.getItems().size());
 				itemsList.getItems().add(item);
 			}
@@ -105,6 +111,12 @@ public class OtherController {
 		try {
 			JournalEntry entry = new JournalEntry(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (entry.edit()) {
+				for (JournalEntry other : journalList.getItems()) {
+					if (entry.getId().get().equals(other.getId().get())) {
+						BetonQuestEditor.showError("entry-exists");
+						return;
+					}
+				}
 				entry.setIndex(journalList.getItems().size());
 				journalList.getItems().add(entry);
 			}

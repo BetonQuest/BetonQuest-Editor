@@ -93,6 +93,12 @@ public class EcoController {
 		try {
 			Event event = new Event(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (event.edit()) {
+				for (Event other : eventsList.getItems()) {
+					if (event.getId().get().equals(other.getId().get())) {
+						BetonQuestEditor.showError("event-exists");
+						return;
+					}
+				}
 				event.setIndex(eventsList.getItems().size());
 				eventsList.getItems().add(event);
 			}
@@ -105,6 +111,12 @@ public class EcoController {
 		try {
 			Condition condition = new Condition(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (condition.edit()) {
+				for (Condition other : conditionsList.getItems()) {
+					if (condition.getId().get().equals(other.getId().get())) {
+						BetonQuestEditor.showError("condition-exists");
+						return;
+					}
+				}
 				condition.setIndex(conditionsList.getItems().size());
 				conditionsList.getItems().add(condition);
 			}
@@ -117,6 +129,12 @@ public class EcoController {
 		try {
 			Objective objective = new Objective(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (objective.edit()) {
+				for (Objective other : objectivesList.getItems()) {
+					if (objective.getId().get().equals(other.getId().get())) {
+						BetonQuestEditor.showError("objective-exists");
+						return;
+					}
+				}
 				objective.setIndex(objectivesList.getItems().size());
 				objectivesList.getItems().add(objective);
 			}

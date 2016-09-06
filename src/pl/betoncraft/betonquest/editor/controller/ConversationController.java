@@ -116,7 +116,7 @@ public class ConversationController {
 			}
 		}
 		instance.npc.textProperty().addListener((observable, oldValue, newValue) -> {
-		    if (newValue.isEmpty()) {
+		    if (newValue == null || newValue.isEmpty()) {
 		    	instance.npc.setStyle("-fx-background-color: red");
 		    } else {
 		    	instance.npc.setStyle(null);
@@ -441,6 +441,8 @@ public class ConversationController {
 				option.setIndex(currentConversation.getNpcOptions().size() - 1);
 				BetonQuestEditor.getInstance().refresh();
 				displayOption(option);
+			} else {
+				BetonQuestEditor.showError("option-exists");
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -496,6 +498,8 @@ public class ConversationController {
 				option.setIndex(currentConversation.getPlayerOptions().size() - 1);
 				BetonQuestEditor.getInstance().refresh();
 				displayOption(option);
+			} else {
+				BetonQuestEditor.showError("option-exists");
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -542,13 +546,13 @@ public class ConversationController {
 			if (name == null || name.isEmpty()) {
 				return;
 			}
-//			for (Conversation conv : currentConversation.getPack().getConversations()) {
-//				if (name.equals(conv.getId().getName())) {
-//					// TODO alert about name conflict
-//				}
-//			}
+			for (Conversation conv : currentConversation.getPack().getConversations()) {
+				if (name.equals(conv.getId().get())) {
+					BetonQuestEditor.showError("conversation-exists");
+					return;
+				}
+			}
 			Conversation conv = new Conversation(BetonQuestEditor.getInstance().getDisplayedPackage(), name);
-			
 			BetonQuestEditor.getInstance().getDisplayedPackage().getConversations().add(conv);
 			displayConversation(conv);
 			BetonQuestEditor.getInstance().refresh();
