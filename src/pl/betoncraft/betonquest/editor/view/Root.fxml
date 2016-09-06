@@ -23,16 +23,7 @@
 			</HBox>
 
 			<HBox maxWidth="200" visible="false" fx:id="packages">
-				<TreeView fx:id="tree" HBox.hgrow="ALWAYS" maxHeight="9000" onMouseClicked="#select">
-					<contextMenu>
-						<ContextMenu fx:id="menu" autoHide="true" onShown="#check">
-							<items>
-								<MenuItem text="%del" onAction="#delete" />
-								<MenuItem text="%edit" onAction="#edit" />
-							</items>
-						</ContextMenu>
-					</contextMenu>
-				</TreeView>
+				<TreeView fx:id="tree" HBox.hgrow="ALWAYS" maxHeight="9000" onMouseClicked="#select" />
 				<Button onAction="#hide" maxHeight="9000" maxWidth="5" text="|" />
 			</HBox>
 
