@@ -143,6 +143,7 @@ public class DraggableListCell<T extends ID> extends ListCell<T> {
 		if (empty || item == null) {
 			setText(null);
 			setGraphic(null);
+			setStyle(null);
 		} else {
 			setText(item.toString());
 			if (item instanceof Validatable) {
