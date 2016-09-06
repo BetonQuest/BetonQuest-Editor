@@ -122,7 +122,9 @@ public class MainMenuController {
 		if (selectedFile != null) {
 			try {
 				PackageSet set = PackageSet.loadFromDirectory(selectedFile);
-				instance.display(set);
+				if (set != null) {
+					instance.display(set);
+				}
 			} catch (Exception e) {
 				ExceptionController.display(e);
 			}
