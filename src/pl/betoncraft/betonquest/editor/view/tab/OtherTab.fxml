@@ -17,7 +17,7 @@
 	xmlns:fx="http://javafx.com/fxml/1" text="%other">
 	<ScrollPane hbarPolicy="AS_NEEDED" fitToHeight="true"
 		fitToWidth="true" id="tab-scroll">
-		<GridPane hgap="10">
+		<GridPane hgap="10" vgap="5">
 			<padding>
 				<Insets bottom="5" top="5" left="5" right="5" />
 			</padding>
@@ -35,7 +35,9 @@
 			<VBox spacing="5" GridPane.columnIndex="0" GridPane.rowIndex="0"
 				GridPane.rowSpan="2" GridPane.fillHeight="true">
 				<Label text="%items" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="itemsList" onKeyPressed="#itemKey" focusTraversable="true" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="itemsList"
+					onMousePressed="#selectItem" onKeyPressed="#itemKey"
+					focusTraversable="true" />
 				<ButtonBar>
 					<buttons>
 						<Button focusTraversable="false" text="%add" onAction="#addItem" />
@@ -49,8 +51,9 @@
 			<VBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0"
 				GridPane.rowSpan="2" GridPane.fillHeight="true">
 				<Label text="%journal-entries" id="option-label" />
-				<ListView VBox.vgrow="ALWAYS" fx:id="journalList" onKeyPressed="#journalKey"
-					onMousePressed="#selectEntry" focusTraversable="true" />
+				<ListView VBox.vgrow="ALWAYS" fx:id="journalList"
+					onKeyPressed="#journalKey" onMousePressed="#selectEntry"
+					focusTraversable="true" />
 				<ButtonBar>
 					<buttons>
 						<Button focusTraversable="false" text="%add" onAction="#addEntry" />
@@ -61,10 +64,19 @@
 			</VBox>
 
 			<!-- entry text -->
-			<VBox spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="0">
+			<VBox spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="0"
+				alignment="CENTER_RIGHT">
 				<Label text="%entry-text" id="option-label" />
 				<TextArea editable="false" wrapText="true" fx:id="entryText"
-					GridPane.fillHeight="true" id="entry-text" VBox.vgrow="ALWAYS" />
+					id="entry-text" VBox.vgrow="ALWAYS" />
+			</VBox>
+
+			<!-- item info -->
+			<VBox spacing="5" GridPane.columnIndex="2" GridPane.rowIndex="1"
+				alignment="CENTER_RIGHT">
+				<TextArea editable="false" wrapText="true" fx:id="itemInfo"
+					id="entry-text" VBox.vgrow="ALWAYS" />
+				<Label text="%item-info" id="option-label" />
 			</VBox>
 
 		</GridPane>

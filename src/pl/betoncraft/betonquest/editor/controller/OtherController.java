@@ -44,6 +44,7 @@ public class OtherController {
 	@FXML private ListView<Item> itemsList;
 	@FXML private ListView<JournalEntry> journalList;
 	@FXML private TextArea entryText;
+	@FXML private TextArea itemInfo;
 	
 	public OtherController() {
 		instance = this;
@@ -52,6 +53,9 @@ public class OtherController {
 	public static void setItems(ObservableList<Item> items) {
 		instance.itemsList.setCellFactory(param -> new DraggableListCell<>());
 		instance.itemsList.setItems(items);
+		instance.itemsList.getSelectionModel().selectedItemProperty().addListener(name -> {
+			instance.selectItem();
+		});
 	}
 	
 	public static void setJournal(ObservableList<JournalEntry> journal) {
@@ -136,6 +140,17 @@ public class OtherController {
 			JournalEntry entry = journalList.getSelectionModel().getSelectedItem();
 			if (entry != null) {
 				entryText.textProperty().bind(entry.getText().get());
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
+	
+	@FXML private void selectItem() {
+		try {
+			Item item = itemsList.getSelectionModel().getSelectedItem();
+			if (item != null) {
+				itemInfo.textProperty().bind(item.getInstruction());
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
