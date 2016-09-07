@@ -52,4 +52,16 @@ public class ConditionListCellController {
 		text.setText(condition.toString());
 		box.setSelected(condition.getNegated());
 	}
+
+//	public void key(KeyEvent event) {
+//		KeyCombination invert = new KeyCodeCombination(KeyCode.I, KeyCombination.CONTROL_DOWN);
+//		if (condition == null) {
+//			return;
+//		}
+//		event.consume();
+//		if (invert.match(event)) {
+//			tick();
+//		}
+//	} // TODO make it work somehow
+
 }

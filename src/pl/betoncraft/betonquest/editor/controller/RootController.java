@@ -64,15 +64,14 @@ public class RootController {
 		instace.local.setExpanded(true);
 		for (PackageSet set : packages) {
 			PackageTreeItem setItem = new PackageTreeItem(Type.SET, set.toString());
+			instace.local.getChildren().add(setItem);
 			setItem.setExpanded(true);
 			for (QuestPackage pack : set.getPackages()) {
 				PackageTreeItem packItem = new PackageTreeItem(Type.PACKAGE, pack.toString());
 				setItem.getChildren().add(packItem);
 			}
-			instace.local.getChildren().add(setItem);
 		}
 		root.getChildren().add(instace.local);
-		// TODO highlight currently selected package and set
 	}
 
 	@FXML public void select(MouseEvent event) {
@@ -153,6 +152,10 @@ public class RootController {
 			}
 			BetonQuestEditor.getInstance().refresh();
 		}
+	}
+
+	public static void clear() {
+		instace.tree.setRoot(null);
 	}
 
 }

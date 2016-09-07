@@ -171,7 +171,6 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			}
 			list.getSelectionModel().select(item);
 		}
-		// TODO ctrl+i should negate selected condition
 	}
 	
 	public static <O extends ID, W extends IdWrapper<O>, F extends ListCell<W>> void display(String labelText,
@@ -204,7 +203,6 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 				refresher.refresh();
 			});
 			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> controller.key(event));
-//			controller.list.addEventFilter(KeyEvent.KEY_PRESSED, cellFactory.getListCell().getOnKeyPressed());
 			controller.refresh(); // fill the view
 			controller.stage.showAndWait();
 		} catch (Exception e) {

@@ -195,6 +195,7 @@ public class BetonQuestEditor extends Application {
 		clearView();
 		currentPackage = pack;
 		currentPackage.sort();
+		RootController.setPackageSets(loadedSets);
 		MainController.setNpcBindings(pack.getNpcBindings());
 		MainController.setGlobVariables(pack.getVariables());
 		MainController.setStaticEvents(pack.getStaticEvents());
@@ -222,6 +223,7 @@ public class BetonQuestEditor extends Application {
 	 */
 	public void clearView() {
 		currentPackage = null;
+		RootController.clear();
 		MainController.clear();
 		MainMenuController.setSaveAsEnabled(false);
 		MainMenuController.setSaveEnabled(false);

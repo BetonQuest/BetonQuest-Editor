@@ -22,6 +22,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeCell;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.RootController;
+import pl.betoncraft.betonquest.editor.custom.PackageTreeItem.Type;
 
 public class PackageTreeCell extends TreeCell<String> {
 	
@@ -37,6 +38,20 @@ public class PackageTreeCell extends TreeCell<String> {
 			setText(item);
 			if (getTreeItem() instanceof PackageTreeItem) {
 				PackageTreeItem pti = (PackageTreeItem) getTreeItem();
+				if (pti.getType() == Type.SET) {
+					if (BetonQuestEditor.getInstance().getDisplayedPackage().getSet().getName().get().equals(item)) {
+						setStyle("-fx-background-color: -fx-medium-light;");
+					} else {
+						setStyle(null);
+					}
+				}
+				if (pti.getType() == Type.PACKAGE) {
+					if (BetonQuestEditor.getInstance().getDisplayedPackage().getName().get().equals(item)) {
+						setStyle("-fx-background-color: -fx-medium-light;");
+					} else {
+						setStyle(null);
+					}
+				}
 				switch (pti.getType()) {
 				case ROOT:
 				case TYPE:
