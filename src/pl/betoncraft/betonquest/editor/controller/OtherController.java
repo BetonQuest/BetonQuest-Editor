@@ -199,11 +199,19 @@ public class OtherController {
 	}
 
 	@FXML public void itemKey(KeyEvent event) {
-		keyAction(event, () -> addItem(), () -> renameItem(), () -> delItem());
+		try {
+			keyAction(event, () -> addItem(), () -> renameItem(), () -> delItem());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	@FXML public void journalKey(KeyEvent event) {
-		keyAction(event, () -> addEntry(), () -> editEntry(), () -> delEntry());
+		try {
+			keyAction(event, () -> addEntry(), () -> editEntry(), () -> delEntry());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	public static void clear() {

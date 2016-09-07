@@ -75,29 +75,41 @@ public class RootController {
 	}
 
 	@FXML public void select(MouseEvent event) {
-		TreeItem<String> selected = tree.getSelectionModel().getSelectedItem();
-		if (event.getClickCount() != 2 || selected == null || !selected.isLeaf()) {
-			return;
+		try {
+			TreeItem<String> selected = tree.getSelectionModel().getSelectedItem();
+			if (event.getClickCount() != 2 || selected == null || !selected.isLeaf()) {
+				return;
+			}
+			BetonQuestEditor instance = BetonQuestEditor.getInstance();
+			PackageSet set = instance.getSet(selected.getParent().getValue());
+			if (set == null) {
+				return;
+			}
+			QuestPackage pack = set.getPackage(selected.getValue());
+			if (pack == null) {
+				return;
+			}
+			instance.display(pack);
+			hide();
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
-		BetonQuestEditor instance = BetonQuestEditor.getInstance();
-		PackageSet set = instance.getSet(selected.getParent().getValue());
-		if (set == null) {
-			return;
-		}
-		QuestPackage pack = set.getPackage(selected.getValue());
-		if (pack == null) {
-			return;
-		}
-		instance.display(pack);
-		hide();
 	}
 	
 	@FXML public void show() {
-		packages.setVisible(true);
+		try {
+			packages.setVisible(true);
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	@FXML public void hide() {
-		packages.setVisible(false);
+		try {
+			packages.setVisible(false);
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	public static RootController getInstance() {
@@ -105,52 +117,60 @@ public class RootController {
 	}
 
 	public void delete(PackageTreeItem item) {
-		if (item != null) {
-			if (BetonQuestEditor.confirm("confirm-action")) {
+		try {
+			if (item != null) {
+				if (BetonQuestEditor.confirm("confirm-action")) {
+					switch (item.getType()) {
+					case PACKAGE:
+						PackageSet set1 = BetonQuestEditor.getInstance().getSet(item.getParent().getValue());
+						if (set1.getPackages().size() == 1) {
+							BetonQuestEditor.showError("cannot-delete-last-package");
+							return;
+						}
+						QuestPackage pack = set1.getPackage(item.getValue());
+						set1.getPackages().remove(pack);
+						if (BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack)) {
+							BetonQuestEditor.getInstance().display(set1);
+						}
+						break;
+					case SET:
+						PackageSet set2 = BetonQuestEditor.getInstance().getSet(item.getValue());
+						BetonQuestEditor.getInstance().getSets().remove(set2);
+						if (BetonQuestEditor.getInstance().getDisplayedPackage().getSet().equals(set2)) {
+							BetonQuestEditor.getInstance().clearView();
+						}
+						break;
+					default:
+						break;
+					}
+					BetonQuestEditor.getInstance().refresh();
+				}
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
+
+	public void edit(PackageTreeItem item) {
+		try {
+			if (item != null) {
 				switch (item.getType()) {
 				case PACKAGE:
 					PackageSet set1 = BetonQuestEditor.getInstance().getSet(item.getParent().getValue());
-					if (set1.getPackages().size() == 1) {
-						BetonQuestEditor.showError("cannot-delete-last-package");
-						return;
-					}
 					QuestPackage pack = set1.getPackage(item.getValue());
-					set1.getPackages().remove(pack);
-					if (BetonQuestEditor.getInstance().getDisplayedPackage().equals(pack)) {
-						BetonQuestEditor.getInstance().display(set1);
-					}
+					NameEditController.display(pack.getName());
 					break;
 				case SET:
 					PackageSet set2 = BetonQuestEditor.getInstance().getSet(item.getValue());
-					BetonQuestEditor.getInstance().getSets().remove(set2);
-					if (BetonQuestEditor.getInstance().getDisplayedPackage().getSet().equals(set2)) {
-						BetonQuestEditor.getInstance().clearView();
-					}
+					NameEditController.display(set2.getName());
 					break;
 				default:
 					break;
 				}
 				BetonQuestEditor.getInstance().refresh();
 			}
-		}
-	}
-
-	public void edit(PackageTreeItem item) {
-		if (item != null) {
-			switch (item.getType()) {
-			case PACKAGE:
-				PackageSet set1 = BetonQuestEditor.getInstance().getSet(item.getParent().getValue());
-				QuestPackage pack = set1.getPackage(item.getValue());
-				NameEditController.display(pack.getName());
-				break;
-			case SET:
-				PackageSet set2 = BetonQuestEditor.getInstance().getSet(item.getValue());
-				NameEditController.display(set2.getName());
-				break;
-			default:
-				break;
-			}
-			BetonQuestEditor.getInstance().refresh();
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 

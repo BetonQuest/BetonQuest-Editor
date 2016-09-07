@@ -302,27 +302,51 @@ public class MainController {
 	}
 
 	@FXML public void npcKey(KeyEvent event) {
-		keyAction(event, () -> addNpcBinding(), () -> editNpcBinding(), () -> delNpcBinding());
+		try {
+			keyAction(event, () -> addNpcBinding(), () -> editNpcBinding(), () -> delNpcBinding());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	@FXML public void varKey(KeyEvent event) {
-		keyAction(event, () -> addVariable(), () -> editVariable(), () -> delVariable());
+		try {
+			keyAction(event, () -> addVariable(), () -> editVariable(), () -> delVariable());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	@FXML public void statKey(KeyEvent event) {
-		keyAction(event, () -> addStaticEvent(), () -> editStaticEvent(), () -> delStaticEvent());
+		try {
+			keyAction(event, () -> addStaticEvent(), () -> editStaticEvent(), () -> delStaticEvent());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	@FXML public void locKey(KeyEvent event) {
-		keyAction(event, () -> addGlobalLocation(), () -> editGlobalLocation(), () -> delGlobalLocation());
+		try {
+			keyAction(event, () -> addGlobalLocation(), () -> editGlobalLocation(), () -> delGlobalLocation());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	@FXML public void cancKey(KeyEvent event) {
-		keyAction(event, () -> addQuestCanceler(), () -> editQuestCanceler(), () -> delQuestCanceler());
+		try {
+			keyAction(event, () -> addQuestCanceler(), () -> editQuestCanceler(), () -> delQuestCanceler());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	@FXML public void mplKey(KeyEvent event) {
-		keyAction(event, () -> addMainPageLine(), () -> editMainPageLine(), () -> delMainPageLine());
+		try {
+			keyAction(event, () -> addMainPageLine(), () -> editMainPageLine(), () -> delMainPageLine());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	private void keyAction(KeyEvent event, Action add, Action edit, Action delete) {

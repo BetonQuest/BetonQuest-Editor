@@ -46,28 +46,36 @@ public class InstructionEditController {
 	 * Checks if the name is inserted and changes the StringProperties of the Instruction object.
 	 */
 	@FXML private void ok() {
-		String idString = id.getText();
-		if (idString == null || idString.isEmpty()) {
-			BetonQuestEditor.showError("name-not-null");
-			return;
+		try {
+			String idString = id.getText();
+			if (idString == null || idString.isEmpty()) {
+				BetonQuestEditor.showError("name-not-null");
+				return;
+			}
+			data.getId().set(idString.trim());
+			String instructionString = instruction.getText();
+			if (instructionString != null) {
+				data.getInstruction().set(instructionString.trim());
+			} else {
+				data.getInstruction().set(new String());
+			}
+			BetonQuestEditor.getInstance().refresh();
+			result = true;
+			stage.close();
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
-		data.getId().set(idString.trim());
-		String instructionString = instruction.getText();
-		if (instructionString != null) {
-			data.getInstruction().set(instructionString.trim());
-		} else {
-			data.getInstruction().set(new String());
-		}
-		BetonQuestEditor.getInstance().refresh();
-		result = true;
-		stage.close();
 	}
 	
 	/**
 	 * Closes the window without changing StringProperties in the Instruction object.
 	 */
 	@FXML private void cancel() {
-		stage.close();
+		try {
+			stage.close();
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	/**

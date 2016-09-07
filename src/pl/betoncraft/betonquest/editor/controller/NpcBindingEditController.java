@@ -45,25 +45,33 @@ public class NpcBindingEditController {
 	@FXML private ChoiceBox<Conversation> conversation;
 	
 	@FXML private void ok() {
-		String idString = field.getText();
-		if (idString == null || idString.isEmpty()) {
-			BetonQuestEditor.showError("identifier-not-null");
-			return;
+		try {
+			String idString = field.getText();
+			if (idString == null || idString.isEmpty()) {
+				BetonQuestEditor.showError("identifier-not-null");
+				return;
+			}
+			Conversation conv = conversation.getValue();
+			if (conv == null) {
+				BetonQuestEditor.showError("binding-not-null");
+				return;
+			}
+			data.getId().set(idString.trim());
+			data.getConversation().set(conv);
+			BetonQuestEditor.getInstance().refresh();
+			result = true;
+			stage.close();
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
-		Conversation conv = conversation.getValue();
-		if (conv == null) {
-			BetonQuestEditor.showError("binding-not-null");
-			return;
-		}
-		data.getId().set(idString.trim());
-		data.getConversation().set(conv);
-		BetonQuestEditor.getInstance().refresh();
-		result = true;
-		stage.close();
 	}
 	
 	@FXML private void cancel() {
-		stage.close();
+		try {
+			stage.close();
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	public static boolean display(NpcBinding data) {

@@ -48,7 +48,11 @@ public class AboutController {
 	@FXML TextFlow text;
 	
 	@FXML public void close() {
-		stage.close();
+		try {
+			stage.close();
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	public static void display() {

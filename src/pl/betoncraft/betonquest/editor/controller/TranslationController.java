@@ -83,68 +83,100 @@ public class TranslationController {
 	}
 
 	@FXML public void setDefault() {
-		String lang = language.getSelectionModel().getSelectedItem();
-		if (lang != null && !lang.equals(manager.getDefault())) {
-			BetonQuestEditor.getInstance().getDisplayedPackage().getTranslationManager().setDefault(lang);
-			BetonQuestEditor.getInstance().refresh();
+		try {
+			String lang = language.getSelectionModel().getSelectedItem();
+			if (lang != null && !lang.equals(manager.getDefault())) {
+				BetonQuestEditor.getInstance().getDisplayedPackage().getTranslationManager().setDefault(lang);
+				BetonQuestEditor.getInstance().refresh();
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 
 	@FXML public void add() {
-		StringProperty lang = new SimpleStringProperty();
-		if (NameEditController.display(lang)) {
-			manager.createLanguage(lang.get());
+		try {
+			StringProperty lang = new SimpleStringProperty();
+			if (NameEditController.display(lang)) {
+				manager.createLanguage(lang.get());
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 
 	@FXML public void convert() {
-		StringProperty lang = new SimpleStringProperty();
-		if (NameEditController.display(lang)) {
-			manager.convert(lang.get());
+		try {
+			StringProperty lang = new SimpleStringProperty();
+			if (NameEditController.display(lang)) {
+				manager.convert(lang.get());
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 
 	@FXML public void edit() {
-		StringProperty lang = new SimpleStringProperty(manager.getDefault());
-		if (NameEditController.display(lang)) {
-			manager.renameLanguage(manager.getDefault(), lang.get());
+		try {
+			StringProperty lang = new SimpleStringProperty(manager.getDefault());
+			if (NameEditController.display(lang)) {
+				manager.renameLanguage(manager.getDefault(), lang.get());
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 		
 	}
 
 	@FXML public void delete() {
-		if (BetonQuestEditor.confirm("confirm-action")) {
-			manager.deleteLanguage(manager.getDefault());
+		try {
+			if (BetonQuestEditor.confirm("confirm-action")) {
+				manager.deleteLanguage(manager.getDefault());
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 
 	@FXML public void translate() {
-		StringProperty lang = new SimpleStringProperty();
-		if (NameEditController.display(lang)) {
-			if (!manager.getLanguages().containsKey(lang.get())) {
-				manager.createLanguage(lang.get());
+		try {
+			StringProperty lang = new SimpleStringProperty();
+			if (NameEditController.display(lang)) {
+				if (!manager.getLanguages().containsKey(lang.get())) {
+					manager.createLanguage(lang.get());
+				}
+				translator = new Translator(manager, manager.getDefault(), lang.get());
+				choose.setDisable(true);
+				translate.setVisible(false);
+				translations.setVisible(true);
+				next();
 			}
-			translator = new Translator(manager, manager.getDefault(), lang.get());
-			choose.setDisable(true);
-			translate.setVisible(false);
-			translations.setVisible(true);
-			next();
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 
 	@FXML public void previous() {
-		translator.translate(translation.getText());
-		if (translator.hasPrevious()) {
-			translator.previous();
-			display();
+		try {
+			translator.translate(translation.getText());
+			if (translator.hasPrevious()) {
+				translator.previous();
+				display();
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 
 	@FXML public void next() {
-		translator.translate(translation.getText());
-		if (translator.hasNext()) {
-			translator.next();
-			display();
+		try {
+			translator.translate(translation.getText());
+			if (translator.hasNext()) {
+				translator.next();
+				display();
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -163,20 +195,28 @@ public class TranslationController {
 	}
 
 	@FXML public void translationKey(KeyEvent event) {
-		KeyCombination enter = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.CONTROL_DOWN);
-		KeyCombination backspace = new KeyCodeCombination(KeyCode.BACK_SPACE, KeyCombination.CONTROL_DOWN);
-		if (enter.match(event)) {
-			next();
-		} else if (backspace.match(event)) {
-			previous();
+		try {
+			KeyCombination enter = new KeyCodeCombination(KeyCode.ENTER, KeyCombination.CONTROL_DOWN);
+			KeyCombination backspace = new KeyCodeCombination(KeyCode.BACK_SPACE, KeyCombination.CONTROL_DOWN);
+			if (enter.match(event)) {
+				next();
+			} else if (backspace.match(event)) {
+				previous();
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 
 	@FXML public void close() {
-		translator = null;
-		choose.setDisable(false);
-		translate.setVisible(true);
-		translations.setVisible(false);
+		try {
+			translator = null;
+			choose.setDisable(false);
+			translate.setVisible(true);
+			translations.setVisible(false);
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	public static void clear() {

@@ -74,7 +74,11 @@ public class JournalEntryEditController {
 	 * Closes the window without changing StringProperties in the JournalEntry object.
 	 */
 	@FXML private void cancel() {
-		stage.close();
+		try {
+			stage.close();
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	/**

@@ -45,21 +45,29 @@ public class StaticEventEditController {
 	@FXML private ChoiceBox<Event> events;
 	
 	@FXML private void add() {
-		String time = hours.getValue() + ":" + minutes.getValue();
-		Event chosen = events.getValue();
-		if (time == null || time.isEmpty()) {
-			BetonQuestEditor.showError("name-not-null");
-			return;
+		try {
+			String time = hours.getValue() + ":" + minutes.getValue();
+			Event chosen = events.getValue();
+			if (time == null || time.isEmpty()) {
+				BetonQuestEditor.showError("name-not-null");
+				return;
+			}
+			event.getId().set(time);
+			event.getEvent().set(chosen);
+			BetonQuestEditor.getInstance().refresh();
+			result = true;
+			stage.close();
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
-		event.getId().set(time);
-		event.getEvent().set(chosen);
-		BetonQuestEditor.getInstance().refresh();
-		result = true;
-		stage.close();
 	}
 	
 	@FXML private void cancel() {
-		stage.close();
+		try {
+			stage.close();
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	public static boolean display(StaticEvent event) {

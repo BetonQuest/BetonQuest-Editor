@@ -145,31 +145,35 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 	}
 	
 	@FXML private void key(KeyEvent event) {
-		if (event.getCode() == KeyCode.ESCAPE) {
-			stage.close();
-			refresher.refresh();
-			return;
-		}
-		if (event.getCode() == KeyCode.DELETE && list.isFocused()) {
-			delete();
-			return;
-		}
-		W item = list.getSelectionModel().getSelectedItem();
-		if (item != null) {
-			event.consume();
-			int index = list.getItems().indexOf(item);
-			if (moveUp.match(event)) {
-				if (index > 0) {
-					list.getItems().set(index, list.getItems().get(index - 1));
-					list.getItems().set(index - 1, item);
-				}
-			} else if (moveDown.match(event)) {
-				if (index + 1 < list.getItems().size()) {
-					list.getItems().set(index, list.getItems().get(index + 1));
-					list.getItems().set(index + 1, item);
-				}
+		try {
+			if (event.getCode() == KeyCode.ESCAPE) {
+				stage.close();
+				refresher.refresh();
+				return;
 			}
-			list.getSelectionModel().select(item);
+			if (event.getCode() == KeyCode.DELETE && list.isFocused()) {
+				delete();
+				return;
+			}
+			W item = list.getSelectionModel().getSelectedItem();
+			if (item != null) {
+				event.consume();
+				int index = list.getItems().indexOf(item);
+				if (moveUp.match(event)) {
+					if (index > 0) {
+						list.getItems().set(index, list.getItems().get(index - 1));
+						list.getItems().set(index - 1, item);
+					}
+				} else if (moveDown.match(event)) {
+					if (index + 1 < list.getItems().size()) {
+						list.getItems().set(index, list.getItems().get(index + 1));
+						list.getItems().set(index + 1, item);
+					}
+				}
+				list.getSelectionModel().select(item);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	

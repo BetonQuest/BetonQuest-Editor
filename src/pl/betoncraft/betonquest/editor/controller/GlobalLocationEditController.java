@@ -43,18 +43,26 @@ public class GlobalLocationEditController {
 	@FXML private ChoiceBox<Objective> objective;
 	
 	@FXML private void ok() {
-		Objective chosen = objective.getValue();
-		if (chosen == null) {
-			BetonQuestEditor.showError("select-objective");
+		try {
+			Objective chosen = objective.getValue();
+			if (chosen == null) {
+				BetonQuestEditor.showError("select-objective");
+			}
+			data.getObjective().set(chosen);
+			BetonQuestEditor.getInstance().refresh();
+			result = true;
+			stage.close();
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
-		data.getObjective().set(chosen);
-		BetonQuestEditor.getInstance().refresh();
-		result = true;
-		stage.close();
 	}
 	
 	@FXML private void cancel() {
-		stage.close();
+		try {
+			stage.close();
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	public static boolean display(GlobalLocation data) {

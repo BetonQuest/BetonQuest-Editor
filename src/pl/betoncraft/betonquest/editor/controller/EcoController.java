@@ -64,28 +64,32 @@ public class EcoController {
 	}
 	
 	@FXML private void update() {
-		Node focused = instruction.getScene().getFocusOwner();
-		if (focused instanceof ListView<?>) {
-			ListView<?> list = (ListView<?>) focused;
-			Object object = list.getSelectionModel().getSelectedItem();
-			if (object != null) {
-				Instruction item = (Instruction) object;
-				String name = null;
-				switch (item.getClass().getSimpleName()) {
-				case "Event":
-					name = BetonQuestEditor.getInstance().getLanguage().getString("event");
-					break;
-				case "Condition":
-					name = BetonQuestEditor.getInstance().getLanguage().getString("condition");
-					break;
-				case "Objective":
-					name = BetonQuestEditor.getInstance().getLanguage().getString("objective");
-					break;
-				}
-				if (name != null) {
-					instruction.setText(name + " '" + item.getId().get() + "': " + item.getInstruction().get());
+		try {
+			Node focused = instruction.getScene().getFocusOwner();
+			if (focused instanceof ListView<?>) {
+				ListView<?> list = (ListView<?>) focused;
+				Object object = list.getSelectionModel().getSelectedItem();
+				if (object != null) {
+					Instruction item = (Instruction) object;
+					String name = null;
+					switch (item.getClass().getSimpleName()) {
+					case "Event":
+						name = BetonQuestEditor.getInstance().getLanguage().getString("event");
+						break;
+					case "Condition":
+						name = BetonQuestEditor.getInstance().getLanguage().getString("condition");
+						break;
+					case "Objective":
+						name = BetonQuestEditor.getInstance().getLanguage().getString("objective");
+						break;
+					}
+					if (name != null) {
+						instruction.setText(name + " '" + item.getId().get() + "': " + item.getInstruction().get());
+					}
 				}
 			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -242,15 +246,27 @@ public class EcoController {
 	}
 
 	@FXML public void eventKey(KeyEvent event) {
-		keyAction(event, () -> addEvent(), () -> editEvent(), () -> delEvent());
+		try {
+			keyAction(event, () -> addEvent(), () -> editEvent(), () -> delEvent());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	@FXML public void conditionKey(KeyEvent event) {
-		keyAction(event, () -> addCondition(), () -> editCondition(), () -> delCondition());
+		try {
+			keyAction(event, () -> addCondition(), () -> editCondition(), () -> delCondition());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	@FXML public void objectiveKey(KeyEvent event) {
-		keyAction(event, () -> addObjective(), () -> editObjective(), () -> delObjective());
+		try {
+			keyAction(event, () -> addObjective(), () -> editObjective(), () -> delObjective());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	public static void clear() {

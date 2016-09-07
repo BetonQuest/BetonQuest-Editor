@@ -70,64 +70,80 @@ public class MainMenuController {
 	}
 
 	@FXML private void newSet() {
-		StringProperty name = new SimpleStringProperty();
-		if (NameEditController.display(name)) {
-			PackageSet set = new PackageSet(null, SaveType.NONE, name.get());
-			QuestPackage pack = new QuestPackage(set, name.get());
-			set.getPackages().add(pack);
-			BetonQuestEditor.getInstance().getSets().add(set);
-			RootController.setPackageSets(BetonQuestEditor.getInstance().getSets());
-			BetonQuestEditor.getInstance().display(set);
+		try {
+			StringProperty name = new SimpleStringProperty();
+			if (NameEditController.display(name)) {
+				PackageSet set = new PackageSet(null, SaveType.NONE, name.get());
+				QuestPackage pack = new QuestPackage(set, name.get());
+				set.getPackages().add(pack);
+				BetonQuestEditor.getInstance().getSets().add(set);
+				RootController.setPackageSets(BetonQuestEditor.getInstance().getSets());
+				BetonQuestEditor.getInstance().display(set);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 
 	@FXML private void newPackage() {
-		StringProperty name = new SimpleStringProperty();
-		if (NameEditController.display(name)) {
-			PackageSet set = BetonQuestEditor.getInstance().getDisplayedPackage().getSet();
-			QuestPackage pack = new QuestPackage(set, name.get());
-			set.getPackages().add(pack);
-			RootController.setPackageSets(BetonQuestEditor.getInstance().getSets());
-			BetonQuestEditor.getInstance().display(pack);
+		try {
+			StringProperty name = new SimpleStringProperty();
+			if (NameEditController.display(name)) {
+				PackageSet set = BetonQuestEditor.getInstance().getDisplayedPackage().getSet();
+				QuestPackage pack = new QuestPackage(set, name.get());
+				set.getPackages().add(pack);
+				RootController.setPackageSets(BetonQuestEditor.getInstance().getSets());
+				BetonQuestEditor.getInstance().display(pack);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 
 	@FXML private void loadZip() {
-		BetonQuestEditor instance = BetonQuestEditor.getInstance();
-		FileChooser fc = new FileChooser();
-		fc.setTitle(instance.getLanguage().getString("select-file"));
-		ExtensionFilter filter = new ExtensionFilter("ZIP Files", "*.zip");
-		fc.getExtensionFilters().add(filter);
-		fc.setSelectedExtensionFilter(filter);
-		File desktop = new File(System.getProperty("user.home") + File.separator + "Desktop");
-		if (desktop != null) fc.setInitialDirectory(desktop);
-		File selectedFile = fc.showOpenDialog(instance.getPrimaryStage());
-		if (selectedFile != null) {
-			try {
-				PackageSet set = PackageSet.loadFromZip(selectedFile);
-				instance.display(set);
-			} catch (Exception e) {
-				ExceptionController.display(e);
+		try {
+			BetonQuestEditor instance = BetonQuestEditor.getInstance();
+			FileChooser fc = new FileChooser();
+			fc.setTitle(instance.getLanguage().getString("select-file"));
+			ExtensionFilter filter = new ExtensionFilter("ZIP Files", "*.zip");
+			fc.getExtensionFilters().add(filter);
+			fc.setSelectedExtensionFilter(filter);
+			File desktop = new File(System.getProperty("user.home") + File.separator + "Desktop");
+			if (desktop != null) fc.setInitialDirectory(desktop);
+			File selectedFile = fc.showOpenDialog(instance.getPrimaryStage());
+			if (selectedFile != null) {
+				try {
+					PackageSet set = PackageSet.loadFromZip(selectedFile);
+					instance.display(set);
+				} catch (Exception e) {
+					ExceptionController.display(e);
+				}
 			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 
 	@FXML private void loadDirectory() {
-		BetonQuestEditor instance = BetonQuestEditor.getInstance();
-		DirectoryChooser dc = new DirectoryChooser();
-		dc.setTitle(instance.getLanguage().getString("select-folder"));
-		File desktop = new File(System.getProperty("user.home") + File.separator + "Desktop");
-		if (desktop != null) dc.setInitialDirectory(desktop);
-		File selectedFile = dc.showDialog(instance.getPrimaryStage());
-		if (selectedFile != null) {
-			try {
-				PackageSet set = PackageSet.loadFromDirectory(selectedFile);
-				if (set != null) {
-					instance.display(set);
+		try {
+			BetonQuestEditor instance = BetonQuestEditor.getInstance();
+			DirectoryChooser dc = new DirectoryChooser();
+			dc.setTitle(instance.getLanguage().getString("select-folder"));
+			File desktop = new File(System.getProperty("user.home") + File.separator + "Desktop");
+			if (desktop != null) dc.setInitialDirectory(desktop);
+			File selectedFile = dc.showDialog(instance.getPrimaryStage());
+			if (selectedFile != null) {
+				try {
+					PackageSet set = PackageSet.loadFromDirectory(selectedFile);
+					if (set != null) {
+						instance.display(set);
+					}
+				} catch (Exception e) {
+					ExceptionController.display(e);
 				}
-			} catch (Exception e) {
-				ExceptionController.display(e);
 			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
 		}
 	}
 	
@@ -224,7 +240,11 @@ public class MainMenuController {
 	}
 	
 	@FXML private void about() {
-		AboutController.display();
+		try {
+			AboutController.display();
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	@FXML private void docs() {

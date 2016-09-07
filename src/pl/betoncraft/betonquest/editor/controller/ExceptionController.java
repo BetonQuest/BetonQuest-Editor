@@ -56,12 +56,16 @@ public class ExceptionController {
 	}
 	
 	@FXML private void copy() {
-		Clipboard clipboard = Clipboard.getSystemClipboard();
-        ClipboardContent content = new ClipboardContent();
-        String string = stackTrace.getText();
-		// add 4 spaces before each line so when pasted on GitHub it's formatted as code
-        content.putString("    " + string.replace("\n", "\n    ").trim());
-        clipboard.setContent(content);
+		try {
+			Clipboard clipboard = Clipboard.getSystemClipboard();
+	        ClipboardContent content = new ClipboardContent();
+	        String string = stackTrace.getText();
+			// add 4 spaces before each line so when pasted on GitHub it's formatted as code
+	        content.putString("    " + string.replace("\n", "\n    ").trim());
+	        clipboard.setContent(content);
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 	
 	@FXML private void close() {

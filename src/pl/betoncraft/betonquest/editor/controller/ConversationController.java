@@ -637,15 +637,27 @@ public class ConversationController {
 	}
 
 	@FXML public void pointerKey(KeyEvent event) {
-		keyAction(event, () -> addPointer(), () -> selectOption(pointsToList.getSelectionModel().getSelectedItem()), () -> delPointer());
+		try {
+			keyAction(event, () -> addPointer(), () -> selectOption(pointsToList.getSelectionModel().getSelectedItem()), () -> delPointer());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	@FXML public void playerKey(KeyEvent event) {
-		keyAction(event, () -> addPlayerOption(), () -> renamePlayerOption(), () -> delPlayerOption());
+		try {
+			keyAction(event, () -> addPlayerOption(), () -> renamePlayerOption(), () -> delPlayerOption());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 	@FXML public void npcKey(KeyEvent event) {
-		keyAction(event, () -> addNpcOption(), () -> renameNpcOption(), () -> delNpcOption());
+		try {
+			keyAction(event, () -> addNpcOption(), () -> renameNpcOption(), () -> delNpcOption());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
 	}
 
 }
