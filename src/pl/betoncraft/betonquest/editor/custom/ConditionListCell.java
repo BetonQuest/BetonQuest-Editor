@@ -19,6 +19,8 @@
 package pl.betoncraft.betonquest.editor.custom;
 
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javafx.fxml.FXMLLoader;
@@ -36,11 +38,14 @@ import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
  */
 public class ConditionListCell extends DraggableListCell<ConditionWrapper> {
 	
+	private static List<ConditionListCell> list = new LinkedList<>();
+	
 	private HBox node;
 	private ConditionListCellController controller;
 	
 	public ConditionListCell() {
 		try {
+			list.add(this);
 			setContentDisplay(ContentDisplay.GRAPHIC_ONLY);
 			URL location = BetonQuestEditor.class.getResource("view/other/ConditionListCell.fxml");
 			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
@@ -58,9 +63,20 @@ public class ConditionListCell extends DraggableListCell<ConditionWrapper> {
 		if (empty || item == null) {
 			setText(null);
 			setGraphic(null);
+			controller.clear();
 		} else {
 			controller.setCondition(item);
 			setGraphic(node);
+		}
+	}
+	
+	public static void invert(ConditionWrapper item) {
+		for (ConditionListCell cell : list) {
+			ConditionWrapper wrapper = cell.controller.getCondition();
+			if (wrapper != null && wrapper.equals(item)) {
+				cell.controller.invert();
+				return;
+			}
 		}
 	}
 

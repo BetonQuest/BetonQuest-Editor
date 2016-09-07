@@ -32,6 +32,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.AutoCompleteTextField;
+import pl.betoncraft.betonquest.editor.custom.ConditionListCell;
+import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 
@@ -55,6 +57,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 
 	private final KeyCombination moveUp = new KeyCodeCombination(KeyCode.UP, KeyCombination.CONTROL_DOWN);
 	private final KeyCombination moveDown = new KeyCodeCombination(KeyCode.DOWN, KeyCombination.CONTROL_DOWN);
+	private final KeyCombination invert = new KeyCodeCombination(KeyCode.I, KeyCombination.CONTROL_DOWN);
 
 	@FXML private Label label;
 	@FXML private ListView<W> list;
@@ -157,20 +160,24 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			}
 			W item = list.getSelectionModel().getSelectedItem();
 			if (item != null) {
-				event.consume();
 				int index = list.getItems().indexOf(item);
 				if (moveUp.match(event)) {
 					if (index > 0) {
 						list.getItems().set(index, list.getItems().get(index - 1));
 						list.getItems().set(index - 1, item);
 					}
+					return;
 				} else if (moveDown.match(event)) {
 					if (index + 1 < list.getItems().size()) {
 						list.getItems().set(index, list.getItems().get(index + 1));
 						list.getItems().set(index + 1, item);
 					}
+					return;
 				}
 				list.getSelectionModel().select(item);
+			}
+			if (item instanceof ConditionWrapper && invert.match(event)) {
+				ConditionListCell.invert((ConditionWrapper) item);
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);

@@ -41,6 +41,11 @@ public class ConditionListCellController {
 			ExceptionController.display(e);
 		}
 	}
+	
+	public void invert() {
+		box.setSelected(!box.isSelected());
+		tick();
+	}
 
 	/**
 	 * Displays this condition in the cell.
@@ -52,16 +57,21 @@ public class ConditionListCellController {
 		text.setText(condition.toString());
 		box.setSelected(condition.getNegated());
 	}
+	
+	/**
+	 * Clears the displayed condition.
+	 */
+	public void clear() {
+		condition = null;
+		text.setText("");
+		box.setSelected(false);
+	}
 
-//	public void key(KeyEvent event) {
-//		KeyCombination invert = new KeyCodeCombination(KeyCode.I, KeyCombination.CONTROL_DOWN);
-//		if (condition == null) {
-//			return;
-//		}
-//		event.consume();
-//		if (invert.match(event)) {
-//			tick();
-//		}
-//	} // TODO make it work somehow
+	/**
+	 * @return the condition currently displayed in the cell
+	 */
+	public ConditionWrapper getCondition() {
+		return condition;
+	}
 
 }
