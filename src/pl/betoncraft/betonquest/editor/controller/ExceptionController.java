@@ -72,6 +72,11 @@ public class ExceptionController {
 		stage.close();
 	}
 	
+	/**
+	 * Displays the exception in a window.
+	 * 
+	 * @param exception exception to display
+	 */
 	public static void display(Exception exception) {
 		try {
 			ExceptionController controller = (ExceptionController) BetonQuestEditor

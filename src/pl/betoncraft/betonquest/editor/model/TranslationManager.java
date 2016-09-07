@@ -26,6 +26,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 
+/**
+ * Manages all TranslatableTexts in the package.
+ * 
+ * @author Jakub Sapalski
+ */
 public class TranslationManager {
 	
 	private QuestPackage pack;
@@ -33,31 +38,55 @@ public class TranslationManager {
 	private final HashMap<String, Integer> languages = new HashMap<>();
 	private final ObservableList<TranslatableText> translations = FXCollections.observableArrayList();
 	
+	/**
+	 * Creates new empty manager.
+	 * 
+	 * @param pack
+	 *            the package owning the manager
+	 */
 	public TranslationManager(QuestPackage pack) {
 		this.pack = pack;
 	}
 	
+	/**
+	 * @return the package owning the manager
+	 */
 	public QuestPackage getPack() {
 		return pack;
 	}
 	
+	/**
+	 * @return default language
+	 */
 	public String getDefault() {
 		return defLang;
 	}
 	
+	/**
+	 * @param lang new defalt language
+	 */
 	public void setDefault(String lang) {
 		defLang = lang;
 	}
 	
+	/**
+	 * @return a list of all translatable texts created in this package
+	 */
 	public ObservableList<TranslatableText> getTranslations() {
 		return translations;
 	}
 	
+	/**
+	 * @return a list of all languages used in this package
+	 */
 	public HashMap<String, Integer> getLanguages() {
 		countLanguages();
 		return languages;
 	}
 	
+	/**
+	 * @return true if there are texts in "default" language in the package
+	 */
 	public boolean hasDefaultStrings() {
 		for (TranslatableText text : translations) {
 			if (!text.hasMultipleLanguages()) {
@@ -67,6 +96,11 @@ public class TranslationManager {
 		return false;
 	}
 	
+	/**
+	 * Converts all texts in "default" language to specified one.
+	 * 
+	 * @param lang language to translate to
+	 */
 	public void convert(String lang) {
 		if (!hasDefaultStrings()) {
 			return;
@@ -81,6 +115,11 @@ public class TranslationManager {
 		BetonQuestEditor.getInstance().refresh();
 	}
 
+	/**
+	 * Creates new language and sets all texts in this language to "".
+	 * 
+	 * @param lang
+	 */
 	public void createLanguage(String lang) {
 		if (languages.containsKey(lang)) {
 			return;
@@ -92,6 +131,12 @@ public class TranslationManager {
 		BetonQuestEditor.getInstance().refresh();
 	}
 
+	/**
+	 * Changes the name of the language to a different one.
+	 * 
+	 * @param current language whose name needs to be changed
+	 * @param lang new name for the language
+	 */
 	public void renameLanguage(String current, String lang) {
 		for (TranslatableText text : translations) {
 			StringProperty translation = text.getLang(current);
@@ -103,6 +148,9 @@ public class TranslationManager {
 		BetonQuestEditor.getInstance().refresh();
 	}
 	
+	/**
+	 * @param lang name of the language to delete
+	 */
 	public void deleteLanguage(String lang) {
 		countLanguages();
 		for (TranslatableText text : translations) {
@@ -116,6 +164,12 @@ public class TranslationManager {
 		BetonQuestEditor.getInstance().refresh();
 	}
 	
+	/**
+	 * If there is no default language, it will try to choose the one matching
+	 * system language. If there is no such language, it will choose the one
+	 * with most messages. If there are languages with equal amount of messages,
+	 * it will choose the first one.
+	 */
 	public void inferDefaultLanguage() {
 		// check which language is used most widely and set it as default
 		if (defLang == null) {
@@ -143,7 +197,7 @@ public class TranslationManager {
 	}
 
 	/**
-	 * Counts languages used in the package and returns the one which is most widely used.
+	 * Counts languages used in the package.
 	 * 
 	 * @return most popular language in this package
 	 */

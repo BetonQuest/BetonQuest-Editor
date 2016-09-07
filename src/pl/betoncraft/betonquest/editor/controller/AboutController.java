@@ -55,6 +55,9 @@ public class AboutController {
 		}
 	}
 	
+	/**
+	 * Displays "About" window with information about the editor.
+	 */
 	public static void display() {
 		try {
 			AboutController controller = (AboutController) BetonQuestEditor.createWindow("view/window/AboutWindow.fxml",

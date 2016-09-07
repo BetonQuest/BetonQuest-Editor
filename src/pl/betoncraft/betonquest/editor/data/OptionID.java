@@ -27,10 +27,26 @@ import pl.betoncraft.betonquest.editor.model.Conversation;
  */
 public interface OptionID extends Translatable {
 	
+	/**
+	 * @return the conversation owning this option
+	 */
 	public Conversation getConversation();
 	
+	/**
+	 * Returns the name of the option, relative to the conversation. It will be
+	 * prefixed with the conversation name if the conversation owning this
+	 * option is different than specified.
+	 * 
+	 * @param conv conversation to use to determine relative name
+	 * @return relative name
+	 */
 	public String getRelativeOptionName(Conversation conv);
 	
+	/**
+	 * Returns the name of this option prefixed with the conversation owning it.
+	 * 
+	 * @return absolute name
+	 */
 	public String getAbsoluteOptionName();
 	
 	/**

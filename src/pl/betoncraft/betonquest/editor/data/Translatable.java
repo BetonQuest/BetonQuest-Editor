@@ -22,10 +22,19 @@ import pl.betoncraft.betonquest.editor.model.TranslatableText;
 
 public interface Translatable extends Validatable {
 	
+	/**
+	 * @return the TranslatableText in this object.
+	 */
 	public TranslatableText getText();
 	
+	/**
+	 * @return translated name of this object, ready to display to the user
+	 */
 	public String getType();
 	
+	/** 
+	 * Translatable object is valid if it has text in package's default language.
+	 */
 	public default boolean isValid() {
 		StringProperty text = getText().get();
 		return text != null && text.get() != null && !text.get().isEmpty();

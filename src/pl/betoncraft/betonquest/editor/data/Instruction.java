@@ -27,6 +27,11 @@ import javafx.beans.property.StringProperty;
  */
 public interface Instruction extends Validatable {
 	
+	/**
+	 * Returns the instruction string property of the object.
+	 * 
+	 * @return the instruction string
+	 */
 	public StringProperty getInstruction();
 
 }

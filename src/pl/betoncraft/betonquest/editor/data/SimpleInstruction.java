@@ -21,6 +21,11 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import pl.betoncraft.betonquest.editor.controller.InstructionEditController;
 
+/**
+ * Basic implementation of Instruction.
+ * 
+ * @author Jakub Sapalski
+ */
 public abstract class SimpleInstruction extends SimpleID implements Instruction {
 
 	protected StringProperty instruction = new SimpleStringProperty();

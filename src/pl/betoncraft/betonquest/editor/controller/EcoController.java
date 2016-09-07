@@ -39,6 +39,11 @@ public class EcoController {
 		instance = this;
 	}
 
+	/**
+	 * Sets the events in the ListView
+	 * 
+	 * @param events list of events in the package
+	 */
 	public static void setEvents(ObservableList<Event> events) {
 		instance.eventsList.setCellFactory(param -> new DraggableListCell<>());
 		instance.eventsList.setItems(events);
@@ -47,6 +52,11 @@ public class EcoController {
 		});
 	}
 	
+	/**
+	 * Sets the conditions in the ListView
+	 * 
+	 * @param conditions list of conditions in the package
+	 */
 	public static void setConditions(ObservableList<Condition> conditions) {
 		instance.conditionsList.setCellFactory(param -> new DraggableListCell<>());
 		instance.conditionsList.setItems(conditions);
@@ -55,6 +65,11 @@ public class EcoController {
 		});
 	}
 	
+	/**
+	 * Sets the objectives in the ListView
+	 * 
+	 * @param objectives list of objectives in the package
+	 */
 	public static void setObjectives(ObservableList<Objective> objectives) {
 		instance.objectivesList.setCellFactory(param -> new DraggableListCell<>());
 		instance.objectivesList.setItems(objectives);
@@ -269,6 +284,9 @@ public class EcoController {
 		}
 	}
 
+	/**
+	 * Clears the tab.
+	 */
 	public static void clear() {
 		instance.eventsList.setItems(FXCollections.observableArrayList());
 		instance.conditionsList.setItems(FXCollections.observableArrayList());

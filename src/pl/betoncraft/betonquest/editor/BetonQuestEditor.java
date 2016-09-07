@@ -60,7 +60,7 @@ import pl.betoncraft.betonquest.editor.model.QuestPackage;
 import pl.betoncraft.betonquest.editor.model.Tag;
 
 /**
- * Main class for the application.
+ * Main class of the application.
  * 
  * @author Jakub Sapalski
  */
@@ -164,6 +164,9 @@ public class BetonQuestEditor extends Application {
 		return loadedSets;
 	}
 	
+	/**
+	 * Returns PackageSet with specified name or null, if it does not exist.
+	 */
 	public PackageSet getSet(String setName) {
 		for (PackageSet set : loadedSets) {
 			if (set.getName().get().equals(setName)) {
@@ -316,6 +319,9 @@ public class BetonQuestEditor extends Application {
 		return list;
 	}
 	
+	/**
+	 * @return all journal entries from loaded packages, the ones from current package first
+	 */
 	public ObservableList<JournalEntry> getAllEntries() {
 		ObservableList<JournalEntry> list = FXCollections.observableArrayList();
 		list.addAll(currentPackage.getJournal());
@@ -367,6 +373,14 @@ public class BetonQuestEditor extends Application {
 		alert.showAndWait();
 	}
 	
+	/**
+	 * Shows a confirmation pop-up window with specified translated message.
+	 * Returns result - true if the user confirms the action, false if he wants
+	 * to cancel it.
+	 *
+	 * @param message ID of message
+	 * @return true if confirmed, false otherwise
+	 */
 	public static boolean confirm(String message) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setHeaderText(BetonQuestEditor.getInstance().getLanguage().getString(message));
@@ -378,10 +392,19 @@ public class BetonQuestEditor extends Application {
 		return false;
 	}
 
-	public static Object createWindow(String controller, String title, int width, int height) {
+	/**
+	 * Creates a pop-up window with specified parameters and returns the controller object.
+	 * 
+	 * @param fxml path of the FXML resource file
+	 * @param title ID of translated window title message
+	 * @param width width of the window
+	 * @param height height of the window
+	 * @return the controller oject for this window
+	 */
+	public static Object createWindow(String fxml, String title, int width, int height) {
 		try {
 			Stage window = new Stage();
-			URL location = BetonQuestEditor.class.getResource(controller);
+			URL location = BetonQuestEditor.class.getResource(fxml);
 			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
 			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
 			Parent root = (Parent) fxmlLoader.load();

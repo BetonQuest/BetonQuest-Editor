@@ -20,6 +20,11 @@ package pl.betoncraft.betonquest.editor.model;
 import javafx.beans.property.StringProperty;
 import pl.betoncraft.betonquest.editor.data.Translatable;
 
+/**
+ * Manages the current translating progress.
+ * 
+ * @author Jakub Sapalski
+ */
 public class Translator {
 	
 	private String from;
@@ -29,50 +34,90 @@ public class Translator {
 	
 	private int current = -1;
 	
+	/**
+	 * Creates new translation process, from "from" language to "to".
+	 * 
+	 * @param manager
+	 *            TranslationManager of the package
+	 * @param from
+	 *            original language
+	 * @param to
+	 *            new language
+	 */
 	public Translator(TranslationManager manager, String from, String to) {
 		this.manager = manager;
 		this.from = from;
 		this.to = to;
 	}
 	
+	/**
+	 * @return language from which the translator translates
+	 */
 	public String getFromLanguage() {
 		return from;
 	}
 	
+	/**
+	 * @return language into which the translator translates
+	 */
 	public String getToLanguage() {
 		return to;
 	}
 	
+	/**
+	 * Moves the translator to the next string.
+	 */
 	public void next() {
 		if (hasNext()) {
 			current++;
 		}
 	}
 	
+	/**
+	 * @return true if there is next string, false if it's the end
+	 */
 	public boolean hasNext() {
 		return current < manager.getTranslations().size() - 1;
 	}
 	
+	/**
+	 * Moves the translator to the prevous string.
+	 */
 	public void previous() {
 		if (hasPrevious()) {
 			current--;
 		}
 	}
 	
+	/**
+	 * @return true if there is previous string, false if it's the beginning
+	 */
 	public boolean hasPrevious() {
 		return current > 0;
 	}
 	
+	/**
+	 * Translates the current string.
+	 * 
+	 * @param translation
+	 *            string to use as translation
+	 */
 	public void translate(String translation) {
 		if (current >= 0 && current < manager.getTranslations().size()) {
 			manager.getTranslations().get(current).setLang(to, translation);
 		}
 	}
 	
+	/**
+	 * @return the original text in "from" language
+	 */
 	public String getText() {
 		return manager.getTranslations().get(current).getLang(from).get();
 	}
 	
+	/**
+	 * @return the new text in "to" language
+	 */
 	public String getTranslation() {
 		StringProperty sp = manager.getTranslations().get(current).getLang(to);
 		if (sp == null) {
@@ -82,6 +127,9 @@ public class Translator {
 		}
 	}
 	
+	/**
+	 * @return the owner of the translated text
+	 */
 	public Translatable getObject() {
 		return manager.getTranslations().get(current).getOwner();
 	}

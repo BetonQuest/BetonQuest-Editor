@@ -65,6 +65,12 @@ public class GlobalLocationEditController {
 		}
 	}
 	
+	/**
+	 * Displays global location in a window. Returns true if editing was successful, false if not.
+	 * 
+	 * @param data GlobalLocation to display
+	 * @return true if editing was successful, false otherwise
+	 */
 	public static boolean display(GlobalLocation data) {
 		try {
 			GlobalLocationEditController controller = (GlobalLocationEditController) BetonQuestEditor

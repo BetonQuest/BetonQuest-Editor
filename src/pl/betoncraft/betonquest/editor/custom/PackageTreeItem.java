@@ -19,6 +19,11 @@ package pl.betoncraft.betonquest.editor.custom;
 
 import javafx.scene.control.TreeItem;
 
+/**
+ * A custom TreeItem representing tree root, PackageSet or QuestPackage.
+ * 
+ * @author Jakub Sapalski
+ */
 public class PackageTreeItem extends TreeItem<String> {
 	
 	public enum Type {

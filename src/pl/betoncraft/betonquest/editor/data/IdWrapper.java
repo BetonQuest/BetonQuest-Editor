@@ -79,10 +79,16 @@ public class IdWrapper<T extends ID> implements ID {
 		return null; // wrappers do not have their own list in the package
 	}
 	
+	/**
+	 * @return the wrapped object
+	 */
 	public T get() {
 		return object;
 	}
 	
+	/**
+	 * @param object object to wrap
+	 */
 	public void set(T object) {
 		this.object = object;
 	}

@@ -19,6 +19,9 @@ package pl.betoncraft.betonquest.editor.data;
 
 public interface Validatable extends ID {
 	
+	/**
+	 * @return true if this object has no errors, false otherwise
+	 */
 	public boolean isValid();
 
 }

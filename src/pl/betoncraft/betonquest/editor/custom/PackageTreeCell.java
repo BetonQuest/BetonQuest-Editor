@@ -24,6 +24,11 @@ import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.controller.RootController;
 import pl.betoncraft.betonquest.editor.custom.PackageTreeItem.Type;
 
+/**
+ * Custom TreeCell with dynamic context menu and background color based on selected package.
+ * 
+ * @author Jakub Sapalski
+ */
 public class PackageTreeCell extends TreeCell<String> {
 	
 	@Override

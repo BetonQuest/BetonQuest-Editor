@@ -34,14 +34,23 @@ public class ConditionWrapper extends IdWrapper<Condition> {
 		super(pack, object);
 	}
 	
+	/**
+	 * @return current negated state of this condition
+	 */
 	public boolean getNegated() {
 		return negated;
 	}
 	
+	/**
+	 * @param negated new negated state of this condition
+	 */
 	public void setNegated(boolean negated) {
 		this.negated = negated;
 	}
 	
+	/**
+	 * Returns relative name of this condition, prefixed with negation character if needed.
+	 */
 	public String getRelativeNegatedName(QuestPackage pack) {
 		return (negated ? "!" : "") + getRelativeName(pack);
 	}
