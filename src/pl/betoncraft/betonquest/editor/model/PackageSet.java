@@ -57,6 +57,7 @@ public class PackageSet {
 	private List<QuestPackage> packages = new LinkedList<>();
 	private SaveType saveType;
 	private File file;
+	private boolean root = false; // tells if the package was found directly in selected file
 	
 	public enum SaveType {
 		DIR, ZIP, NONE
@@ -168,8 +169,8 @@ public class PackageSet {
 	public static PackageSet loadFromDirectory(File file) throws IOException {
 		HashMap<String, HashMap<String, InputStream>> setMap = new HashMap<>();
 		String setName = file.getName().substring(file.getName().lastIndexOf(File.separatorChar) + 1);
-		searchFiles("", file.listFiles(), setMap);
 		PackageSet set = new PackageSet(file, SaveType.DIR, setName);
+		searchFiles("", file.listFiles(), setMap, set);
 		parseStreams(set, setMap);
 		if (set.getPackages().isEmpty()) {
 			BetonQuestEditor.showError("no-package-in-directory");
@@ -180,10 +181,10 @@ public class PackageSet {
 		return set;
 	}
 	
-	private static void searchFiles(String prefix, File[] files, HashMap<String, HashMap<String, InputStream>> setMap) throws IOException {
+	private static void searchFiles(String prefix, File[] files, HashMap<String, HashMap<String, InputStream>> setMap, PackageSet set) throws IOException {
 		for (File file : files) {
 			if (file.isDirectory()) {
-				searchFiles(prefix + file.getName() + '-', file.listFiles(), setMap);
+				searchFiles(prefix + file.getName() + '-', file.listFiles(), setMap, set);
 			} else {
 				if (!file.getName().endsWith(".yml")) {
 					return;
@@ -200,7 +201,9 @@ public class PackageSet {
 					}
 				}
 				if (prefix.isEmpty()) {
+					// prefix is empty when the package files are directly in the selected directory
 					prefix = file.getParentFile().getName() + "-";
+					set.root = true;
 				}
 				packName = prefix.substring(0, prefix.length() - 1);
 				HashMap<String, InputStream> packMap = setMap.get(packName);
@@ -327,13 +330,15 @@ public class PackageSet {
 
 	public void saveToDirectory(File file) {
 		try {
+			// if the package was directly in the directory the real root is the parent
+			if (root) {
+				file = file.getParentFile();
+			}
 			// save to directory
 			for (QuestPackage pack : packages) {
 				String path = pack.getName().get().replace('-', File.separatorChar);
 				File dir = new File(file, path);
-				if (!dir.mkdirs()) {
-					throw new Exception("Could not create directories");
-				}
+				dir.mkdirs();
 				// save main file
 				File main = new File(dir, "main.yml");
 				main.createNewFile();
