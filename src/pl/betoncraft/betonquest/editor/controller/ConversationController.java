@@ -67,6 +67,8 @@ public class ConversationController {
 	private static ConversationController instance;
 	
 	@FXML private ChoiceBox<Conversation> conversation;
+	@FXML private Button editConv;
+	@FXML private Button delConv;
 	@FXML private GridPane conversationPane;
 	@FXML private HBox stopPane;
 	@FXML private GridPane optionPane;
@@ -108,6 +110,9 @@ public class ConversationController {
 	 */
 	public static void setConversations(ObservableList<Conversation> conversations) {
 		instance.conversation.setItems(conversations);
+		instance.conversation.setDisable(conversations.isEmpty());
+		instance.editConv.setDisable(conversations.isEmpty());
+		instance.delConv.setDisable(conversations.isEmpty());
 		if (instance.currentConversation != null && conversations.contains(instance.currentConversation)) {
 			instance.displayConversation(instance.currentConversation);
 		} else {
@@ -557,10 +562,12 @@ public class ConversationController {
 			if (name == null || name.isEmpty()) {
 				return;
 			}
-			for (Conversation conv : currentConversation.getPack().getConversations()) {
-				if (name.equals(conv.getId().get())) {
-					BetonQuestEditor.showError("conversation-exists");
-					return;
+			if (currentConversation != null) {
+				for (Conversation conv : currentConversation.getPack().getConversations()) {
+					if (name.equals(conv.getId().get())) {
+						BetonQuestEditor.showError("conversation-exists");
+						return;
+					}
 				}
 			}
 			Conversation conv = new Conversation(BetonQuestEditor.getInstance().getDisplayedPackage(), name);
