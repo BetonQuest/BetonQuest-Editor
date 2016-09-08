@@ -18,9 +18,7 @@
 package pl.betoncraft.betonquest.editor.model;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleInstruction;
 
 /**
@@ -29,17 +27,15 @@ import pl.betoncraft.betonquest.editor.data.SimpleInstruction;
  * @author Jakub Sapalski
  */
 public class GlobalVariable extends SimpleInstruction {
-
-	private StringProperty value = new SimpleStringProperty();
 	
 	public GlobalVariable(QuestPackage pack, String id) {
-		this.pack = ID.parsePackage(pack, id);
-		this.id = new SimpleStringProperty(ID.parseId(id));
+		this.pack = pack;
+		this.id = new SimpleStringProperty(id);
 	}
 	
 	public GlobalVariable(QuestPackage pack, String id, String value) {
 		this(pack, id);
-		this.value.set(value);
+		instruction.set(value);
 	}
 
 	@Override

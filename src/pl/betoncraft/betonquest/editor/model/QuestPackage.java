@@ -496,6 +496,9 @@ public class QuestPackage implements Editable {
 			}
 			// extract tags and points
 			for (Condition condition : conditions) {
+				if (condition.getInstruction().get() == null) {
+					continue;
+				}
 				if (condition.getInstruction().get().startsWith("tag ")) {
 					String[] parts = condition.getInstruction().get().split(" ");
 					if (parts.length > 1) {
@@ -509,6 +512,9 @@ public class QuestPackage implements Editable {
 				}
 			}
 			for (Event event : events) {
+				if (event.getInstruction().get() == null) {
+					continue;
+				}
 				if (event.getInstruction().get().startsWith("tag ")) {
 					String[] parts = event.getInstruction().get().split(" ");
 					if (parts.length > 2) {
