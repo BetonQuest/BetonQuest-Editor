@@ -61,7 +61,7 @@ public class AboutController {
 	public static void display() {
 		try {
 			AboutController controller = (AboutController) BetonQuestEditor.createWindow("view/window/AboutWindow.fxml",
-					"about", 600, 200);
+					"about-title", 600, 200);
 			controller.stage = (Stage) controller.root.getScene().getWindow();
 			controller.image.setImage(new Image(BetonQuestEditor.class.getResourceAsStream("resource/icon.png")));
 			Text title = new Text(BetonQuestEditor.getInstance().getLanguage().getString("betonquest-editor")
