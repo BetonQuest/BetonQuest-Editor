@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -83,6 +84,7 @@ public class BetonQuestEditor extends Application {
 	 * Parses the arguments and starts the application.
 	 */
 	public static void main(String[] args) {
+		Locale.setDefault(Locale.GERMAN);
 		if (args.length > 2) {
 			autoLoadPackage = new File(args[0]);
 			if (!autoLoadPackage.exists() || !autoLoadPackage.getName().endsWith(".zip")) {
