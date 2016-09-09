@@ -22,6 +22,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleInstruction;
+import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Represents a BetonQuest condition. 
@@ -32,12 +33,15 @@ public class Condition extends SimpleInstruction {
 
 	private StringProperty instruction = new SimpleStringProperty();
 	
-	public Condition(QuestPackage pack, String id) {
+	public Condition(QuestPackage pack, String id) throws PackageNotFoundException {
+		if (pack == null) {
+			throw new PackageNotFoundException();
+		}
 		this.pack = ID.parsePackage(pack, id);
 		this.id = new SimpleStringProperty(ID.parseId(id));
 	}
 	
-	public Condition(QuestPackage pack, String id, String instruction) {
+	public Condition(QuestPackage pack, String id, String instruction) throws PackageNotFoundException {
 		this(pack, id);
 		this.instruction.set(instruction);
 	}

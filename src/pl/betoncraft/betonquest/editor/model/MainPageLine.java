@@ -29,6 +29,7 @@ import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
 import pl.betoncraft.betonquest.editor.data.Translatable;
+import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Represents a single line on main page in a journal.
@@ -41,7 +42,10 @@ public class MainPageLine extends SimpleID implements Translatable {
 	private ObservableList<ConditionWrapper> conditions = FXCollections.observableArrayList();
 	private IntegerProperty priority = new SimpleIntegerProperty();
 	
-	public MainPageLine(QuestPackage pack, String id) {
+	public MainPageLine(QuestPackage pack, String id) throws PackageNotFoundException {
+		if (pack == null) {
+			throw new PackageNotFoundException();
+		}
 		this.pack = ID.parsePackage(pack, id);
 		this.id = new SimpleStringProperty(ID.parseId(id));
 		text = new TranslatableText(this);

@@ -21,6 +21,7 @@ package pl.betoncraft.betonquest.editor.data;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
+import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Represents a model object with ID.
@@ -81,8 +82,11 @@ public interface ID extends Editable {
 	 * @param id
 	 *            ID string to parse
 	 * @return the package defined in the ID string, "def" package or null.
+	 * 
+	 * @throws PackageNotFoundException
+	 *             if the specified package is not loaded
 	 */
-	public static QuestPackage parsePackage(QuestPackage def, String id) {
+	public static QuestPackage parsePackage(QuestPackage def, String id) throws PackageNotFoundException {
 		if (id.contains(".")) {
 			String packName = id.split("\\.")[0];
 			for (QuestPackage pack : def.getSet().getPackages()) {
@@ -90,7 +94,7 @@ public interface ID extends Editable {
 					return pack;
 				}
 			}
-			return null;
+			throw new PackageNotFoundException(packName);
 		} else {
 			return def;
 		}

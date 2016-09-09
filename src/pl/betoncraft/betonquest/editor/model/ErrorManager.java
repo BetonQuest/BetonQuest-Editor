@@ -17,35 +17,33 @@
  */
 package pl.betoncraft.betonquest.editor.model;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
-import pl.betoncraft.betonquest.editor.data.SimpleInstruction;
-import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
+import java.util.LinkedList;
 
-/**
- * Represents a variable defined in main.yml file.
- *
- * @author Jakub Sapalski
- */
-public class GlobalVariable extends SimpleInstruction {
+import pl.betoncraft.betonquest.editor.model.LoadingError.ErrorType;
+
+public class ErrorManager {
 	
-	public GlobalVariable(QuestPackage pack, String id) throws PackageNotFoundException {
-		if (pack == null) {
-			throw new PackageNotFoundException();
-		}
+	private LinkedList<LoadingError> errors = new LinkedList<>();
+	private QuestPackage pack;
+	
+	public ErrorManager(QuestPackage pack) {
 		this.pack = pack;
-		this.id = new SimpleStringProperty(id);
 	}
 	
-	public GlobalVariable(QuestPackage pack, String id, String value) throws PackageNotFoundException {
-		this(pack, id);
-		instruction.set(value);
+	public void addError(ErrorType type, String address) {
+		errors.add(new LoadingError(pack, type, address));
+	}
+	
+	public boolean hasErrors() {
+		return !errors.isEmpty();
+	}
+	
+	public String getErrors() {
+		StringBuilder string = new StringBuilder();
+		for (LoadingError error : errors) {
+			string.append(error.getMessage() + System.lineSeparator());
+		}
+		return string.toString();
 	}
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public ObservableList<GlobalVariable> getList() {
-		return pack.getVariables();
-	}
-	
 }

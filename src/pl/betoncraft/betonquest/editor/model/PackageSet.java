@@ -43,6 +43,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLParser;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.controller.ErrorController;
 import pl.betoncraft.betonquest.editor.controller.ExceptionController;
 import pl.betoncraft.betonquest.editor.controller.RootController;
 
@@ -269,6 +270,14 @@ public class PackageSet {
 		for (Entry<QuestPackage, HashMap<String, LinkedHashMap<String, String>>> entry : data.entrySet()) {
 			entry.getKey().setData(entry.getValue());
 		}
+		// display errors found during loading
+		StringBuilder errors = new StringBuilder();
+		for (QuestPackage pack : data.keySet()) {
+			if (pack.getErrorManager().hasErrors()) {
+				errors.append(pack.getErrorManager().getErrors()); 
+			}
+		}
+		ErrorController.display(errors.toString().trim());
 		return set;
 	}
 

@@ -23,6 +23,7 @@ import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.controller.NameEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
+import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Represents a tag.
@@ -31,7 +32,10 @@ import pl.betoncraft.betonquest.editor.data.SimpleID;
  */
 public class Tag extends SimpleID {
 	
-	public Tag(QuestPackage pack, String id) {
+	public Tag(QuestPackage pack, String id) throws PackageNotFoundException {
+		if (pack == null) {
+			throw new PackageNotFoundException();
+		}
 		this.pack = ID.parsePackage(pack, id);
 		this.id = new SimpleStringProperty(ID.parseId(id));
 	}
