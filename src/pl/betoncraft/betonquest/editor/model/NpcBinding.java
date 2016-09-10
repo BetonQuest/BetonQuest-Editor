@@ -25,6 +25,7 @@ import pl.betoncraft.betonquest.editor.controller.NpcBindingEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
 import pl.betoncraft.betonquest.editor.data.Validatable;
+import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Represents an NPC binding with a conversation.
@@ -35,12 +36,15 @@ public class NpcBinding extends SimpleID implements Validatable {
 
 	private ObjectProperty<Conversation> conversation = new SimpleObjectProperty<>();
 	
-	public NpcBinding(QuestPackage pack, String id) {
+	public NpcBinding(QuestPackage pack, String id) throws PackageNotFoundException {
+		if (pack == null) {
+			throw new PackageNotFoundException();
+		}
 		this.pack = ID.parsePackage(pack, id);
 		this.id = new SimpleStringProperty(ID.parseId(id));
 	}
 	
-	public NpcBinding(QuestPackage pack, String id, Conversation conversation) {
+	public NpcBinding(QuestPackage pack, String id, Conversation conversation) throws PackageNotFoundException {
 		this(pack, id);
 		this.conversation.set(conversation);
 	}

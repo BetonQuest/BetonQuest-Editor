@@ -31,7 +31,7 @@ You don't have to install this program. The only thing you need is Java 8 (or ne
 
 ## Usage
 
-To successfully create quests with this editor you need to know basics of BetonQuest. I highly recommend reading its [documentation](http://betonquest.betoncraft.pl/BetonQuestDocumentation.pdf) before, even though it describes editing the files directly. In the future I will probably add built-in tutorials and/or video guides for the editor.
+A detailed manual can be foun on the project [wiki](https://github.com/Co0sh/BetonQuest-Editor/wiki). To successfully create quests with this editor you need to know basics of BetonQuest. I highly recommend reading its [documentation](http://betonquest.betoncraft.pl/BetonQuestDocumentation.pdf) before, even though it describes editing the files directly. In the future I will probably add built-in tutorials and/or video guides for the editor.
 
 ## How to compile?
 

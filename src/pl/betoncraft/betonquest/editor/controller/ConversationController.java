@@ -67,6 +67,8 @@ public class ConversationController {
 	private static ConversationController instance;
 	
 	@FXML private ChoiceBox<Conversation> conversation;
+	@FXML private Button editConv;
+	@FXML private Button delConv;
 	@FXML private GridPane conversationPane;
 	@FXML private HBox stopPane;
 	@FXML private GridPane optionPane;
@@ -111,9 +113,7 @@ public class ConversationController {
 		if (instance.currentConversation != null && conversations.contains(instance.currentConversation)) {
 			instance.displayConversation(instance.currentConversation);
 		} else {
-			if (conversations.size() > 0) {
-				instance.displayConversation(conversations.get(0));
-			}
+			instance.displayConversation();
 		}
 		instance.npc.textProperty().addListener((observable, oldValue, newValue) -> {
 		    if (newValue == null || newValue.isEmpty()) {
@@ -161,6 +161,9 @@ public class ConversationController {
 		}
 		conversationPane.setDisable(false);
 		stopPane.setDisable(false);
+		instance.conversation.setDisable(false);
+		instance.editConv.setDisable(false);
+		instance.delConv.setDisable(false);
 	}
 	
 	/**
@@ -178,9 +181,6 @@ public class ConversationController {
 	 * Removes the current conversation from the view.
 	 */
 	public static void clearConversation() {
-		if (instance.currentConversation == null) {
-			return;
-		}
 		if (instance.boundNPC != null) {
 			instance.npc.textProperty().unbindBidirectional(instance.boundNPC);
 		}
@@ -198,6 +198,9 @@ public class ConversationController {
 		instance.clearOption();
 		instance.conversationPane.setDisable(true);
 		instance.stopPane.setDisable(true);
+		instance.conversation.setDisable(true);
+		instance.editConv.setDisable(true);
+		instance.delConv.setDisable(true);
 	}
 	
 	/**
@@ -269,9 +272,6 @@ public class ConversationController {
 	 * Removes the current option from the view.
 	 */
 	public void clearOption() {
-		if (currentOption == null) {
-			return;
-		}
 		optionType.setText(BetonQuestEditor.getInstance().getLanguage().getString("option"));
 		if (boundText != null) {
 			option.textProperty().unbindBidirectional(boundText);
@@ -557,10 +557,12 @@ public class ConversationController {
 			if (name == null || name.isEmpty()) {
 				return;
 			}
-			for (Conversation conv : currentConversation.getPack().getConversations()) {
-				if (name.equals(conv.getId().get())) {
-					BetonQuestEditor.showError("conversation-exists");
-					return;
+			if (currentConversation != null) {
+				for (Conversation conv : currentConversation.getPack().getConversations()) {
+					if (name.equals(conv.getId().get())) {
+						BetonQuestEditor.showError("conversation-exists");
+						return;
+					}
 				}
 			}
 			Conversation conv = new Conversation(BetonQuestEditor.getInstance().getDisplayedPackage(), name);

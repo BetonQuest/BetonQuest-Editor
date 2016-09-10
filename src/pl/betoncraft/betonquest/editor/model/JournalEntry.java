@@ -10,6 +10,7 @@ import pl.betoncraft.betonquest.editor.controller.JournalEntryEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
 import pl.betoncraft.betonquest.editor.data.Translatable;
+import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Represents an entry in the journal.
@@ -20,7 +21,10 @@ public class JournalEntry extends SimpleID implements Translatable {
 	
 	private TranslatableText text;
 	
-	public JournalEntry(QuestPackage pack, String id) {
+	public JournalEntry(QuestPackage pack, String id) throws PackageNotFoundException {
+		if (pack == null) {
+			throw new PackageNotFoundException();
+		}
 		this.pack = ID.parsePackage(pack, id);
 		this.id = new SimpleStringProperty(ID.parseId(id));
 		text = new TranslatableText(this);

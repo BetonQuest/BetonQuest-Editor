@@ -14,6 +14,7 @@ import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
 import pl.betoncraft.betonquest.editor.data.Translatable;
+import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Represents a quest canceler.
@@ -31,7 +32,10 @@ public class QuestCanceler extends SimpleID implements Translatable {
 	private ObservableList<IdWrapper<JournalEntry>> journal = FXCollections.observableArrayList();
 	private StringProperty location = new SimpleStringProperty();
 	
-	public QuestCanceler(QuestPackage pack, String id) {
+	public QuestCanceler(QuestPackage pack, String id) throws PackageNotFoundException {
+		if (pack == null) {
+			throw new PackageNotFoundException();
+		}
 		this.pack = ID.parsePackage(pack, id);
 		this.id = new SimpleStringProperty(ID.parseId(id));
 		name = new TranslatableText(this);

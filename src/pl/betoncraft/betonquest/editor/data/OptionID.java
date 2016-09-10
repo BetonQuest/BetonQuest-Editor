@@ -18,7 +18,9 @@
 
 package pl.betoncraft.betonquest.editor.data;
 
+import pl.betoncraft.betonquest.editor.controller.ExceptionController;
 import pl.betoncraft.betonquest.editor.model.Conversation;
+import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Represents an ID object, which also has a conversation.
@@ -69,7 +71,14 @@ public interface OptionID extends Translatable {
 					return conv;
 				}
 			}
-			return def.getPack().newByID(packName, name -> new Conversation(def.getPack(), name));
+			try {
+				return def.getPack().newByID(packName, name -> new Conversation(def.getPack(), name));
+			} catch (PackageNotFoundException e) {
+				// this should never happen, def always have a package
+				// error means there is a bug
+				ExceptionController.display(e);
+				return null;
+			}
 		} else {
 			return def;
 		}

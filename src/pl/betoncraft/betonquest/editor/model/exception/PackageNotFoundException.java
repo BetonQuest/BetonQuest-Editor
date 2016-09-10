@@ -25,15 +25,18 @@ package pl.betoncraft.betonquest.editor.model.exception;
 public class PackageNotFoundException extends Exception {
 
 	private static final long serialVersionUID = -3825269103860183870L;
-	private final String message;
+	private final String pack;
 	
-	public PackageNotFoundException(String message) {
-		this.message = message;
+	public PackageNotFoundException() {
+		this.pack = "null";
 	}
 	
-	@Override
-	public String getMessage() {
-		return message;
+	public PackageNotFoundException(String pack) {
+		this.pack = pack;
+	}
+	
+	public String getPackage() {
+		return pack;
 	}
 
 }

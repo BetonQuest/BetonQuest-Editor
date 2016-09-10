@@ -36,6 +36,7 @@ import pl.betoncraft.betonquest.editor.custom.ConditionListCell;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
+import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Controls a pop-up window in which the user can edit a list.
@@ -222,7 +223,8 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 	}
 	
 	public static interface Creator<O> {
-		public O create(String name);
+		// this shouldn't throw any exceptions, packages exist
+		public O create(String name) throws PackageNotFoundException;
 	}
 	
 	public static interface CellFactory<F> {

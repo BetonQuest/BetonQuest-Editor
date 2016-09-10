@@ -36,11 +36,11 @@
 				<Label text="%conversation" id="option-label" />
 				<ChoiceBox fx:id="conversation" onAction="#selectConversation" />
 				<Button text="%add" onAction="#addConversation" />
-				<Button text="%edit" onAction="#renameConversation" />
-				<Button text="%del" onAction="#delConversation" />
+				<Button text="%edit" onAction="#renameConversation" fx:id="editConv" />
+				<Button text="%del" onAction="#delConversation" fx:id="delConv" />
 				<!-- stop option -->
 				<HBox spacing="5" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS"
-					fx:id="stopPane">
+					fx:id="stopPane" disable="true">
 					<Label text="%stop-option" id="option-label" />
 					<CheckBox fx:id="stop" />
 				</HBox>
@@ -48,7 +48,7 @@
 
 			<Separator />
 
-			<GridPane VBox.vgrow="ALWAYS" fx:id="conversationPane">
+			<GridPane VBox.vgrow="ALWAYS" fx:id="conversationPane" disable="true">
 				<columnConstraints>
 					<ColumnConstraints percentWidth="49.5" />
 					<ColumnConstraints percentWidth="1" />

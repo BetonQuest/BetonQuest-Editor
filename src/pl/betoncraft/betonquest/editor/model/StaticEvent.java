@@ -25,6 +25,7 @@ import pl.betoncraft.betonquest.editor.controller.StaticEventEditController;
 import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.SimpleID;
 import pl.betoncraft.betonquest.editor.data.Validatable;
+import pl.betoncraft.betonquest.editor.model.exception.PackageNotFoundException;
 
 /**
  * Represents a static event, which is fired at exact hour each day.
@@ -35,7 +36,10 @@ public class StaticEvent extends SimpleID implements Validatable {
 
 	private ObjectProperty<Event> event = new SimpleObjectProperty<>();
 	
-	public StaticEvent(QuestPackage pack, String time) {
+	public StaticEvent(QuestPackage pack, String time) throws PackageNotFoundException {
+		if (pack == null) {
+			throw new PackageNotFoundException();
+		}
 		this.pack = ID.parsePackage(pack, time);
 		this.id = new SimpleStringProperty(ID.parseId(time));
 	}
