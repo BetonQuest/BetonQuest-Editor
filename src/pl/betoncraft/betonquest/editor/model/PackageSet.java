@@ -300,6 +300,12 @@ public class PackageSet {
 				pack.printMainYAML(out);
 				out.closeEntry();
 				// save conversation files
+				if (pack.getConversations().isEmpty()) {
+					// conversations directory is required, put empty file in it so it's always created
+					ZipEntry emptyFile = new ZipEntry(prefix + "conversations" + File.separator + ".nothing");
+					out.putNextEntry(emptyFile);
+					out.closeEntry();
+				}
 				for (Conversation conv : pack.getConversations()) {
 					ZipEntry conversation = new ZipEntry(
 							prefix + "conversations" + File.separator + conv.getId().get() + ".yml");
