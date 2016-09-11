@@ -278,7 +278,9 @@ public class PackageSet {
 				errors.append(pack.getErrorManager().getErrors()); 
 			}
 		}
-		ErrorController.display(errors.toString().trim());
+		if (errors.length() > 0 ) {
+			ErrorController.display(errors.toString().trim());
+		}
 		return set;
 	}
 
