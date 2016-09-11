@@ -189,7 +189,7 @@ public class PackageSet {
 				searchFiles(prefix + file.getName() + '-', file.listFiles(), setMap, set);
 			} else {
 				if (!file.getName().endsWith(".yml")) {
-					return;
+					continue;
 				}
 				String fileName = file.getName().substring(0, file.getName().length() - 4);
 				String packName = null;
@@ -199,7 +199,7 @@ public class PackageSet {
 				} else {
 					List<String> allowedNames = Arrays.asList(new String[]{"main", "events", "conditions", "objectives", "journal", "items"});
 					if (!allowedNames.contains(fileName)) {
-						return;
+						continue;
 					}
 				}
 				if (prefix.isEmpty()) {
