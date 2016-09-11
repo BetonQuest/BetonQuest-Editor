@@ -89,7 +89,8 @@
 					<Label text="%npc-options" id="option-label"
 						GridPane.rowIndex="2" GridPane.columnIndex="0" />
 					<ListView GridPane.vgrow="ALWAYS" fx:id="npcList" onKeyPressed="#npcKey"
-						GridPane.rowIndex="3" GridPane.columnIndex="0" onMouseClicked="#clickNpcOption" />
+						GridPane.rowIndex="3" GridPane.columnIndex="0" onMouseClicked="#clickNpcOption"
+						onKeyReleased="#clickNpcOption" />
 					<ButtonBar GridPane.rowIndex="4" GridPane.columnIndex="0">
 						<buttons>
 							<Button text="%add" onAction="#addNpcOption" />
@@ -147,7 +148,7 @@
 						GridPane.rowIndex="3" GridPane.columnIndex="0" />
 					<ListView GridPane.vgrow="ALWAYS" fx:id="pointsToList" onKeyPressed="#pointerKey"
 						GridPane.rowIndex="4" GridPane.columnIndex="0" onMouseClicked="#clickPointsTo" />
-					<AutoCompleteTextField maxWidth="9000"
+					<AutoCompleteTextField maxWidth="9000" onAction="#addPointer"
 						GridPane.rowIndex="5" GridPane.columnIndex="0" fx:id="pointsToField" />
 					<Button text="%add" maxWidth="9000" onAction="#addPointer"
 						GridPane.rowIndex="6" GridPane.columnIndex="0" />
