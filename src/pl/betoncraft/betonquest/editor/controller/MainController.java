@@ -22,19 +22,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
-import pl.betoncraft.betonquest.editor.model.Conversation;
-import pl.betoncraft.betonquest.editor.model.Event;
+import pl.betoncraft.betonquest.editor.model.CompassTarget;
 import pl.betoncraft.betonquest.editor.model.GlobalLocation;
 import pl.betoncraft.betonquest.editor.model.GlobalVariable;
 import pl.betoncraft.betonquest.editor.model.MainPageLine;
-import pl.betoncraft.betonquest.editor.model.NpcBinding;
 import pl.betoncraft.betonquest.editor.model.QuestCanceler;
 import pl.betoncraft.betonquest.editor.model.StaticEvent;
 
@@ -47,42 +43,25 @@ public class MainController {
 	
 	private static MainController instance;
 	
-	@FXML private TableView<NpcBinding> npcTable;
-	@FXML private TableColumn<NpcBinding, String> npcName;
-	@FXML private TableColumn<NpcBinding, Conversation> conversation;
-	@FXML private TableView<GlobalVariable> globVarTable;
-	@FXML private TableColumn<GlobalVariable, String> varName;
-	@FXML private TableColumn<GlobalVariable, String> varValue;
-	@FXML private TableView<StaticEvent> staticEventsTable;
-	@FXML private TableColumn<StaticEvent, String> time;
-	@FXML private TableColumn<StaticEvent, Event> event;
+	@FXML private ListView<GlobalVariable> globVarList;
+	@FXML private ListView<StaticEvent> staticEventsList;
 	@FXML private ListView<GlobalLocation> globLocList;
 	@FXML private ListView<QuestCanceler> cancelList;
 	@FXML private ListView<MainPageLine> mainPageList;
+	@FXML private ListView<CompassTarget> compassList;
 	
 	public MainController() {
 		instance = this;
 	}
-
-	public static void setNpcBindings(ObservableList<NpcBinding> bindings) {
-		instance.npcTable.setItems(null);
-		instance.npcTable.setItems(bindings);
-		instance.npcName.setCellValueFactory(cell -> cell.getValue().getId());
-		instance.conversation.setCellValueFactory(cell -> cell.getValue().getConversation());
-	}
 	
 	public static void setGlobVariables(ObservableList<GlobalVariable> globalVariables) {
-		instance.globVarTable.setItems(null);
-		instance.globVarTable.setItems(globalVariables);
-		instance.varName.setCellValueFactory(cell -> cell.getValue().getId());
-		instance.varValue.setCellValueFactory(cell -> cell.getValue().getInstruction());
+		instance.globVarList.setItems(null);
+		instance.globVarList.setItems(globalVariables);
 	}
 	
 	public static void setStaticEvents(ObservableList<StaticEvent> staticEvents) {
-		instance.staticEventsTable.setItems(null);
-		instance.staticEventsTable.setItems(staticEvents);
-		instance.time.setCellValueFactory(cell -> cell.getValue().getId());
-		instance.event.setCellValueFactory(cell -> cell.getValue().getEvent());
+		instance.staticEventsList.setItems(null);
+		instance.staticEventsList.setItems(staticEvents);
 	}
 	
 	public static void setGlobalLocations(ObservableList<GlobalLocation> globalLocations) {
@@ -99,47 +78,60 @@ public class MainController {
 		instance.mainPageList.setItems(null);
 		instance.mainPageList.setItems(mainPageLines);
 	}
-	
-	@FXML private void addNpcBinding() {
-		try {
-			NpcBinding binding = new NpcBinding(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-			if (binding.edit()) {
-				binding.setIndex(npcTable.getItems().size());
-				npcTable.getItems().add(binding);
-			}
-		} catch (Exception e) {
-			ExceptionController.display(e);
-		}
+
+	public static void setCompassTarget(ObservableList<CompassTarget> targets) {
+		instance.compassList.setItems(null);
+		instance.compassList.setItems(targets);
 	}
 	
-	@FXML private void editNpcBinding() {
-		try {
-			NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
-			if (binding != null) {
-				binding.edit();
-			}
-		} catch (Exception e) {
-			ExceptionController.display(e);
-		}
-	}
-	
-	@FXML private void delNpcBinding() {
-		try {
-			NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
-			if (binding != null) {
-				npcTable.getItems().remove(binding);
-			}
-		} catch (Exception e) {
-			ExceptionController.display(e);
-		}
-	}
+//	@FXML private void addNpcBinding() {
+//		try {
+//			NpcBinding binding = new NpcBinding(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
+//			if (binding.edit()) {
+//				binding.setIndex(npcTable.getItems().size());
+//				npcTable.getItems().add(binding);
+//			}
+//		} catch (Exception e) {
+//			ExceptionController.display(e);
+//		}
+//	}
+//	
+//	@FXML private void editNpcBinding() {
+//		try {
+//			NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
+//			if (binding != null) {
+//				binding.edit();
+//			}
+//		} catch (Exception e) {
+//			ExceptionController.display(e);
+//		}
+//	}
+//	
+//	@FXML private void delNpcBinding() {
+//		try {
+//			NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
+//			if (binding != null) {
+//				npcTable.getItems().remove(binding);
+//			}
+//		} catch (Exception e) {
+//			ExceptionController.display(e);
+//		}
+//	}
+//
+//	@FXML public void npcKey(KeyEvent event) {
+//		try {
+//			keyAction(event, () -> addNpcBinding(), () -> editNpcBinding(), () -> delNpcBinding());
+//		} catch (Exception e) {
+//			ExceptionController.display(e);
+//		}
+//	}
 	
 	@FXML private void addVariable() {
 		try {
 			GlobalVariable variable = new GlobalVariable(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (variable.edit()) {
-				variable.setIndex(globVarTable.getItems().size());
-				globVarTable.getItems().add(variable);
+				variable.setIndex(globVarList.getItems().size());
+				globVarList.getItems().add(variable);
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -148,7 +140,7 @@ public class MainController {
 	
 	@FXML private void editVariable() {
 		try {
-			GlobalVariable variable = globVarTable.getSelectionModel().getSelectedItem();
+			GlobalVariable variable = globVarList.getSelectionModel().getSelectedItem();
 			if (variable != null) {
 				variable.edit();
 			}
@@ -159,9 +151,9 @@ public class MainController {
 	
 	@FXML private void delVariable() {
 		try {
-			GlobalVariable variable = globVarTable.getSelectionModel().getSelectedItem();
+			GlobalVariable variable = globVarList.getSelectionModel().getSelectedItem();
 			if (variable != null) {
-				globVarTable.getItems().remove(variable);
+				globVarList.getItems().remove(variable);
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -172,8 +164,8 @@ public class MainController {
 		try {
 			StaticEvent staticEvent = new StaticEvent(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
 			if (staticEvent.edit()) {
-				staticEvent.setIndex(staticEventsTable.getItems().size());
-				staticEventsTable.getItems().add(staticEvent);
+				staticEvent.setIndex(staticEventsList.getItems().size());
+				staticEventsList.getItems().add(staticEvent);
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -182,7 +174,7 @@ public class MainController {
 	
 	@FXML private void editStaticEvent() {
 		try {
-			StaticEvent staticEvent = staticEventsTable.getSelectionModel().getSelectedItem();
+			StaticEvent staticEvent = staticEventsList.getSelectionModel().getSelectedItem();
 			if (staticEvent != null) {
 				staticEvent.edit();
 			}
@@ -193,9 +185,9 @@ public class MainController {
 	
 	@FXML private void delStaticEvent() {
 		try {
-			StaticEvent staticEvent = staticEventsTable.getSelectionModel().getSelectedItem();
+			StaticEvent staticEvent = staticEventsList.getSelectionModel().getSelectedItem();
 			if (staticEvent != null) {
-				staticEventsTable.getItems().remove(staticEvent);
+				staticEventsList.getItems().remove(staticEvent);
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -301,9 +293,34 @@ public class MainController {
 		}
 	}
 
-	@FXML public void npcKey(KeyEvent event) {
+	@FXML public void addCompassTarget() {
 		try {
-			keyAction(event, () -> addNpcBinding(), () -> editNpcBinding(), () -> delNpcBinding());
+			CompassTarget target = new CompassTarget(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
+			if (target.edit()) {
+				compassList.getItems().add(target);
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
+
+	@FXML public void editCompassTarget() {
+		try {
+			CompassTarget target = compassList.getSelectionModel().getSelectedItem();
+			if (target != null) {
+				target.edit();
+			}
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
+
+	@FXML public void delCompassTarget() {
+		try {
+			CompassTarget target = compassList.getSelectionModel().getSelectedItem();
+			if (target != null) {
+				compassList.getItems().remove(target);
+			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
 		}
@@ -348,6 +365,14 @@ public class MainController {
 			ExceptionController.display(e);
 		}
 	}
+
+	@FXML public void compassKey(KeyEvent event) {
+		try {
+			keyAction(event, () -> addCompassTarget(), () -> editCompassTarget(), () -> delCompassTarget());
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
 	
 	private void keyAction(KeyEvent event, Action add, Action edit, Action delete) {
 		if (event.getCode() == KeyCode.DELETE) {
@@ -379,12 +404,12 @@ public class MainController {
 	}
 
 	public static void clear() {
-		instance.npcTable.setItems(FXCollections.observableArrayList());
-		instance.globVarTable.setItems(FXCollections.observableArrayList());
-		instance.staticEventsTable.setItems(FXCollections.observableArrayList());
+		instance.globVarList.setItems(FXCollections.observableArrayList());
+		instance.staticEventsList.setItems(FXCollections.observableArrayList());
 		instance.cancelList.setItems(FXCollections.observableArrayList());
 		instance.globLocList.setItems(FXCollections.observableArrayList());
 		instance.mainPageList.setItems(FXCollections.observableArrayList());
+		instance.compassList.setItems(FXCollections.observableArrayList());
 	}
 	
 }

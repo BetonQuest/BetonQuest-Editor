@@ -69,6 +69,8 @@ public class ConversationController {
 	@FXML private ChoiceBox<Conversation> conversation;
 	@FXML private Button editConv;
 	@FXML private Button delConv;
+	@FXML private Button bindings;
+	@FXML private HBox bindingPane;
 	@FXML private GridPane conversationPane;
 	@FXML private HBox stopPane;
 	@FXML private GridPane optionPane;
@@ -160,6 +162,7 @@ public class ConversationController {
 			displayOption(conversation.getNpcOptions().get(0));
 		}
 		conversationPane.setDisable(false);
+		bindingPane.setDisable(false);
 		stopPane.setDisable(false);
 		instance.conversation.setDisable(false);
 		instance.editConv.setDisable(false);
@@ -198,6 +201,7 @@ public class ConversationController {
 		instance.clearOption();
 		instance.conversationPane.setDisable(true);
 		instance.stopPane.setDisable(true);
+		instance.bindingPane.setDisable(true);
 		instance.conversation.setDisable(true);
 		instance.editConv.setDisable(true);
 		instance.delConv.setDisable(true);
@@ -300,6 +304,10 @@ public class ConversationController {
 		} catch (Exception e) {
 			ExceptionController.display(e);
 		}
+	}
+
+	@FXML public void bindings() {
+		NpcBindingsChooseController.display(currentConversation);
 	}
 	
 	@FXML private void clickNpcOption() {

@@ -38,9 +38,14 @@
 				<Button text="%add" onAction="#addConversation" />
 				<Button text="%edit" onAction="#renameConversation" fx:id="editConv" />
 				<Button text="%del" onAction="#delConversation" fx:id="delConv" />
+				<!-- npc bindings -->
+				<HBox alignment="CENTER" HBox.hgrow="ALWAYS" disable="true"
+					fx:id="bindingPane">
+					<Button text="%npc-bindings" fx:id="bindings" minWidth="300"
+						prefWidth="300" maxWidth="300" onAction="#bindings" />
+				</HBox>
 				<!-- stop option -->
-				<HBox spacing="5" alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS"
-					fx:id="stopPane" disable="true">
+				<HBox spacing="5" fx:id="stopPane" disable="true" alignment="CENTER">
 					<Label text="%stop-option" id="option-label" />
 					<CheckBox fx:id="stop" />
 				</HBox>
@@ -48,7 +53,8 @@
 
 			<Separator />
 
-			<GridPane VBox.vgrow="ALWAYS" fx:id="conversationPane" disable="true">
+			<GridPane VBox.vgrow="ALWAYS" fx:id="conversationPane"
+				disable="true">
 				<columnConstraints>
 					<ColumnConstraints percentWidth="49.5" />
 					<ColumnConstraints percentWidth="1" />
@@ -88,8 +94,9 @@
 					<!-- npc options -->
 					<Label text="%npc-options" id="option-label"
 						GridPane.rowIndex="2" GridPane.columnIndex="0" />
-					<ListView GridPane.vgrow="ALWAYS" fx:id="npcList" onKeyPressed="#npcKey"
-						GridPane.rowIndex="3" GridPane.columnIndex="0" onMouseClicked="#clickNpcOption" />
+					<ListView GridPane.vgrow="ALWAYS" fx:id="npcList"
+						onKeyPressed="#npcKey" GridPane.rowIndex="3" GridPane.columnIndex="0"
+						onMouseClicked="#clickNpcOption" onKeyReleased="#clickNpcOption" />
 					<ButtonBar GridPane.rowIndex="4" GridPane.columnIndex="0">
 						<buttons>
 							<Button text="%add" onAction="#addNpcOption" />
@@ -101,8 +108,9 @@
 					<!-- player options -->
 					<Label text="%player-options" id="option-label"
 						GridPane.rowIndex="2" GridPane.columnIndex="1" />
-					<ListView GridPane.vgrow="ALWAYS" fx:id="playerList" onKeyPressed="#playerKey"
-						GridPane.rowIndex="3" GridPane.columnIndex="1" onMouseClicked="#clickPlayerOption"
+					<ListView GridPane.vgrow="ALWAYS" fx:id="playerList"
+						onKeyPressed="#playerKey" GridPane.rowIndex="3"
+						GridPane.columnIndex="1" onMouseClicked="#clickPlayerOption"
 						onKeyReleased="#clickPlayerOption" />
 					<ButtonBar GridPane.rowIndex="4" GridPane.columnIndex="1">
 						<buttons>
@@ -145,10 +153,12 @@
 					<!-- points to -->
 					<Label id="option-label" fx:id="pointsToLabel"
 						GridPane.rowIndex="3" GridPane.columnIndex="0" />
-					<ListView GridPane.vgrow="ALWAYS" fx:id="pointsToList" onKeyPressed="#pointerKey"
-						GridPane.rowIndex="4" GridPane.columnIndex="0" onMouseClicked="#clickPointsTo" />
+					<ListView GridPane.vgrow="ALWAYS" fx:id="pointsToList"
+						onKeyPressed="#pointerKey" GridPane.rowIndex="4"
+						GridPane.columnIndex="0" onMouseClicked="#clickPointsTo" />
 					<AutoCompleteTextField maxWidth="9000"
-						GridPane.rowIndex="5" GridPane.columnIndex="0" fx:id="pointsToField" />
+						onAction="#addPointer" GridPane.rowIndex="5" GridPane.columnIndex="0"
+						fx:id="pointsToField" />
 					<Button text="%add" maxWidth="9000" onAction="#addPointer"
 						GridPane.rowIndex="6" GridPane.columnIndex="0" />
 					<Button text="%del" maxWidth="9000" onAction="#delPointer"

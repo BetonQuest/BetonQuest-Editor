@@ -35,6 +35,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -109,6 +113,17 @@ public class BetonQuestEditor extends Application {
 			TabsController.setDisabled(true);
 			Scene scene = new Scene(root, 1280, 720);
 			scene.getStylesheets().add(getClass().getResource("resource/style.css").toExternalForm());
+			KeyCombination save = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+			KeyCombination export = new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN);
+			scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+				if (save.match(event)) {
+					event.consume();
+					MainMenuController.getInstance().save();
+				} else if (export.match(event)) {
+					event.consume();
+					MainMenuController.getInstance().export();
+				}
+			});
 			stage.setScene(scene);
 			stage.setTitle(language.getString("betonquest-editor"));
 			stage.getIcons().add(new Image(getClass().getResourceAsStream("resource/icon.png")));
@@ -199,7 +214,7 @@ public class BetonQuestEditor extends Application {
 		currentPackage = pack;
 		currentPackage.sort();
 		RootController.setPackageSets(loadedSets);
-		MainController.setNpcBindings(pack.getNpcBindings());
+		MainController.setCompassTarget(pack.getCompassTargets());
 		MainController.setGlobVariables(pack.getVariables());
 		MainController.setStaticEvents(pack.getStaticEvents());
 		MainController.setGlobalLocations(pack.getLocations());

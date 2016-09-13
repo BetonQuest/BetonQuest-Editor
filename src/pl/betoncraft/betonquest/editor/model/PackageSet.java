@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -188,7 +189,7 @@ public class PackageSet {
 				searchFiles(prefix + file.getName() + '-', file.listFiles(), setMap, set);
 			} else {
 				if (!file.getName().endsWith(".yml")) {
-					return;
+					continue;
 				}
 				String fileName = file.getName().substring(0, file.getName().length() - 4);
 				String packName = null;
@@ -198,7 +199,7 @@ public class PackageSet {
 				} else {
 					List<String> allowedNames = Arrays.asList(new String[]{"main", "events", "conditions", "objectives", "journal", "items"});
 					if (!allowedNames.contains(fileName)) {
-						return;
+						continue;
 					}
 				}
 				if (prefix.isEmpty()) {
@@ -227,7 +228,7 @@ public class PackageSet {
 			for (Entry<String, InputStream> subEntry : entry.getValue().entrySet()) {
 				String name = subEntry.getKey();
 				InputStream stream = subEntry.getValue();
-				YAMLParser parser = new YAMLFactory().createParser(stream);
+				YAMLParser parser = new YAMLFactory().createParser(new InputStreamReader(stream));
 				String currentPath = "";
 				String fieldName = "";
 				while (true) {
@@ -277,7 +278,9 @@ public class PackageSet {
 				errors.append(pack.getErrorManager().getErrors()); 
 			}
 		}
-		ErrorController.display(errors.toString().trim());
+		if (errors.length() > 0 ) {
+			ErrorController.display(errors.toString().trim());
+		}
 		return set;
 	}
 
@@ -297,6 +300,12 @@ public class PackageSet {
 				pack.printMainYAML(out);
 				out.closeEntry();
 				// save conversation files
+				if (pack.getConversations().isEmpty()) {
+					// conversations directory is required, put empty file in it so it's always created
+					ZipEntry emptyFile = new ZipEntry(prefix + "conversations" + File.separator + ".nothing");
+					out.putNextEntry(emptyFile);
+					out.closeEntry();
+				}
 				for (Conversation conv : pack.getConversations()) {
 					ZipEntry conversation = new ZipEntry(
 							prefix + "conversations" + File.separator + conv.getId().get() + ".yml");

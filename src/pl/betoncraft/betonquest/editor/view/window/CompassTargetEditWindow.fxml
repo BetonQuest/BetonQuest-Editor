@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.ColumnConstraints?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root"
+	hgap="5" vgap="5"
+	fx:controller="pl.betoncraft.betonquest.editor.controller.CompassTargetEditController">
+
+	<padding>
+		<Insets top="10" bottom="10" left="10" right="10" />
+	</padding>
+	<columnConstraints>
+		<ColumnConstraints percentWidth="30" />
+		<ColumnConstraints percentWidth="70" />
+	</columnConstraints>
+
+	<Label text="%compass-target" id="option-label"
+		GridPane.rowIndex="0" GridPane.columnIndex="0" GridPane.columnSpan="2" />
+	<Label text="%id" id="option-label" GridPane.rowIndex="1"
+		GridPane.columnIndex="0" />
+	<TextField focusTraversable="true" fx:id="id"
+		GridPane.rowIndex="1" GridPane.columnIndex="1" />
+	<Label text="%name" id="option-label" GridPane.rowIndex="2"
+		GridPane.columnIndex="0" />
+	<TextField focusTraversable="true" fx:id="name"
+		GridPane.rowIndex="2" GridPane.columnIndex="1" />
+	<Label text="%location" id="option-label" GridPane.rowIndex="3"
+		GridPane.columnIndex="0" />
+	<TextField focusTraversable="true" fx:id="loc" GridPane.rowIndex="3"
+		GridPane.columnIndex="1" />
+	<Label text="%item" id="option-label" GridPane.rowIndex="4"
+		GridPane.columnIndex="0" />
+	<ChoiceBox focusTraversable="true" fx:id="item" maxWidth="9000"
+		GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+	<ButtonBar GridPane.rowIndex="5" GridPane.columnIndex="0"
+		GridPane.columnSpan="2">
+		<buttons>
+			<Button focusTraversable="false" text="%ok" onAction="#ok" />
+			<Button focusTraversable="false" text="%cancel" onAction="#cancel" />
+		</buttons>
+	</ButtonBar>
+
+</GridPane>
+

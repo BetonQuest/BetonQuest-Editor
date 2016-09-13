@@ -68,6 +68,10 @@ public class MainMenuController {
 	public static void setPackEnabled(boolean enabled) {
 		instance.pack.setDisable(!enabled);
 	}
+	
+	public static MainMenuController getInstance() {
+		return instance;
+	}
 
 	@FXML private void newSet() {
 		try {
@@ -147,7 +151,7 @@ public class MainMenuController {
 		}
 	}
 	
-	@FXML private void save() {
+	@FXML public void save() {
 		try {
 			PackageSet set = BetonQuestEditor.getInstance().getDisplayedPackage().getSet();
 			if (set.getFile() != null) {
@@ -210,7 +214,7 @@ public class MainMenuController {
 		}
 	}
 	
-	@FXML private void export() {
+	@FXML public void export() {
 		try {
 			File script = new File("export.sh");
 			if (!script.exists()) {
