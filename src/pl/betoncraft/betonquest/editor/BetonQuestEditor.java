@@ -214,7 +214,7 @@ public class BetonQuestEditor extends Application {
 		currentPackage = pack;
 		currentPackage.sort();
 		RootController.setPackageSets(loadedSets);
-		MainController.setNpcBindings(pack.getNpcBindings());
+		MainController.setCompassTarget(pack.getCompassTargets());
 		MainController.setGlobVariables(pack.getVariables());
 		MainController.setStaticEvents(pack.getStaticEvents());
 		MainController.setGlobalLocations(pack.getLocations());

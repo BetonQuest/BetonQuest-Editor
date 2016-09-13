@@ -66,6 +66,7 @@ public class QuestPackage implements Editable {
 	private final ObservableList<QuestCanceler> cancelers = FXCollections.observableArrayList();
 	private final ObservableList<NpcBinding> npcBindings = FXCollections.observableArrayList();
 	private final ObservableList<MainPageLine> mainPage = FXCollections.observableArrayList();
+	private final ObservableList<CompassTarget> compass = FXCollections.observableArrayList();
 	private final ObservableList<Tag> tags = FXCollections.observableArrayList();
 	private final ObservableList<PointCategory> points = FXCollections.observableArrayList();
 
@@ -596,7 +597,7 @@ public class QuestPackage implements Editable {
 						}
 					}
 					// handling journal main page
-					else if (key.startsWith("journal_main_page")) {
+					else if (key.startsWith("journal_main_page.")) {
 						String[] parts = key.split("\\.");
 						if (parts.length > 1) {
 							MainPageLine line = newByID(parts[1], name -> new MainPageLine(this, name));
@@ -650,6 +651,47 @@ public class QuestPackage implements Editable {
 										}
 									}
 									line.getConditions().addAll(conditions);
+									break;
+								}
+							}
+						}
+					}
+					// handle compass targets
+					else if (key.startsWith("compass.")) {
+						String[] parts = key.split("\\.");
+						if (parts.length > 1) {
+							CompassTarget target = newByID(parts[1], name -> new CompassTarget(this, name));
+							if (parts.length > 2) {
+								switch (parts[2]) {
+								case "name":
+									if (parts.length == 4) {
+										target.getText().setLang(parts[3], value);
+									} else if (parts.length == 3) {
+										target.getText().setDef(value);
+									} else {
+										errorManager.addError(ErrorType.LANGUAGE_FORMAT, "main." + key);
+										continue;
+									}
+									break;
+								case "location":
+									if (parts.length > 3) {
+										errorManager.addError(ErrorType.FORMAT_INCORRECT, "main." + key);
+										continue;
+									}
+									target.setLocation(value);
+									break;
+								case "item":
+									if (parts.length > 3) {
+										errorManager.addError(ErrorType.FORMAT_INCORRECT, "main." + key);
+										continue;
+									}
+									try {
+										Item item = newByID(value, name -> new Item(this, name));
+										target.getItem().set(item);
+									} catch (PackageNotFoundException e) {
+										errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, key + ": '" + value + "' (" + e.getPackage() + ")");
+										continue;
+									}
 									break;
 								}
 							}
@@ -788,6 +830,10 @@ public class QuestPackage implements Editable {
 
 	public ObservableList<MainPageLine> getMainPage() {
 		return mainPage;
+	}
+
+	public ObservableList<CompassTarget> getCompassTargets() {
+		return compass;
 	}
 	
 	public ObservableList<Tag> getTags() {
@@ -997,6 +1043,18 @@ public class QuestPackage implements Editable {
 				lines.set(line.getId().get(), node);
 			}
 			root.set("journal_main_page", lines);
+		}
+		// save compass targets
+		if (!compass.isEmpty()) {
+			ObjectNode targets = mapper.createObjectNode();
+			for (CompassTarget target : compass) {
+				ObjectNode node = mapper.createObjectNode();
+				addTranslatedNode(mapper, node, "name", target.getText());
+				node.put("location", target.getLocation());
+				node.put("item", target.getItem().get().getRelativeName(this));
+				targets.set(target.getId().get(), node);
+			}
+			root.set("compass", targets);
 		}
 		// save default language
 		if (translationManager.getDefault() != null) {
