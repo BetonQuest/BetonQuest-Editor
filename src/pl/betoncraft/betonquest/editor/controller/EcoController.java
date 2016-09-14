@@ -87,7 +87,7 @@ public class EcoController {
 			if (focused instanceof ListView<?>) {
 				ListView<?> list = (ListView<?>) focused;
 				Object object = list.getSelectionModel().getSelectedItem();
-				if (object != null) {
+				if (object != null && object instanceof Instruction) {
 					Instruction item = (Instruction) object;
 					String name = null;
 					switch (item.getClass().getSimpleName()) {

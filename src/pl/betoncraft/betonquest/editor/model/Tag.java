@@ -36,8 +36,8 @@ public class Tag extends SimpleID {
 		if (pack == null) {
 			throw new PackageNotFoundException();
 		}
-		this.pack = ID.parsePackage(pack, id);
-		this.id = new SimpleStringProperty(ID.parseId(id));
+		this.pack = ID.parsePackage(pack, id.replace(" ", "_"));
+		this.id = new SimpleStringProperty(ID.parseId(id.replace(" ", "_")));
 	}
 
 	@Override

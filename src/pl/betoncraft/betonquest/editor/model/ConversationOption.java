@@ -41,8 +41,8 @@ public abstract class ConversationOption extends SimpleID implements OptionID {
 	private ObservableList<IdWrapper<ConversationOption>> pointers = FXCollections.observableArrayList();
 
 	public ConversationOption(Conversation conv, String id) {
-		this.conversation = OptionID.parseConversation(conv, id);
-		this.id = new SimpleStringProperty(OptionID.parseId(id));
+		this.conversation = OptionID.parseConversation(conv, id.replace(" ", "_"));
+		this.id = new SimpleStringProperty(OptionID.parseId(id.replace(" ", "_")));
 		text = new TranslatableText(this);
 	}
 

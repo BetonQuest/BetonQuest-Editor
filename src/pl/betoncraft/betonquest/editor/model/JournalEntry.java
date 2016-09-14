@@ -25,8 +25,8 @@ public class JournalEntry extends SimpleID implements Translatable {
 		if (pack == null) {
 			throw new PackageNotFoundException();
 		}
-		this.pack = ID.parsePackage(pack, id);
-		this.id = new SimpleStringProperty(ID.parseId(id));
+		this.pack = ID.parsePackage(pack, id.replace(" ", "_"));
+		this.id = new SimpleStringProperty(ID.parseId(id.replace(" ", "_")));
 		text = new TranslatableText(this);
 	}
 

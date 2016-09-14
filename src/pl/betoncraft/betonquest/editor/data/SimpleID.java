@@ -19,6 +19,8 @@
 package pl.betoncraft.betonquest.editor.data;
 
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
 
@@ -33,8 +35,23 @@ public abstract class SimpleID implements ID {
 	protected QuestPackage pack;
 	protected int index = -1;
 
+	private ChangeListener<String> changeListener;
+	
+	protected SimpleID() {
+		changeListener = new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (newValue.contains(" ")) {
+					id.set(newValue.replace(" ", "_"));
+				}
+			}
+		};
+	}
+
 	@Override
 	public StringProperty getId() {
+		id.removeListener(changeListener);
+		id.addListener(changeListener);
 		return id;
 	}
 	

@@ -37,8 +37,8 @@ public class Condition extends SimpleInstruction {
 		if (pack == null) {
 			throw new PackageNotFoundException();
 		}
-		this.pack = ID.parsePackage(pack, id);
-		this.id = new SimpleStringProperty(ID.parseId(id));
+		this.pack = ID.parsePackage(pack, id.replace(" ", "_"));
+		this.id = new SimpleStringProperty(ID.parseId(id.replace(" ", "_")));
 	}
 	
 	public Condition(QuestPackage pack, String id, String instruction) throws PackageNotFoundException {

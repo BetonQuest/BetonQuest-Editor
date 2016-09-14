@@ -34,7 +34,7 @@ public class GlobalVariable extends SimpleInstruction {
 			throw new PackageNotFoundException();
 		}
 		this.pack = pack;
-		this.id = new SimpleStringProperty(id);
+		this.id = new SimpleStringProperty(id.replace(" ", "_"));
 	}
 	
 	public GlobalVariable(QuestPackage pack, String id, String value) throws PackageNotFoundException {

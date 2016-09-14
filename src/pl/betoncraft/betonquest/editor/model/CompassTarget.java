@@ -41,7 +41,7 @@ public class CompassTarget extends SimpleID implements Translatable {
 			throw new PackageNotFoundException();
 		}
 		super.pack = pack;
-		super.id = new SimpleStringProperty(id);
+		super.id = new SimpleStringProperty(id.replace(" ", "_"));
 		name = new TranslatableText(this);
 	}
 
