@@ -118,6 +118,9 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			W wrapped = wrapper.wrap(object);
 			wrapped.setIndex(chosen.size());
 			chosen.add(wrapped);
+			if (!available.contains(object)) {
+				available.add(object);
+			}
 			refresh();
 		} catch (Exception e) {
 			ExceptionController.display(e);
