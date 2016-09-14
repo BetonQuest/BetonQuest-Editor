@@ -97,6 +97,8 @@ public class ConversationController {
 	private Conversation currentConversation;
 	private ConversationOption currentOption;
 	
+	private ConversationOption lastAdded;
+	
 	private StringProperty boundNPC;
 	private BooleanProperty boundStop;
 	private StringProperty boundText;
@@ -404,6 +406,14 @@ public class ConversationController {
 	@FXML private void addPointer() {
 		try {
 			String name = pointsToField.getText();
+			if (name == null || name.isEmpty()) {
+				if (lastAdded != null) {
+					displayOption(lastAdded);
+					lastAdded = null;
+					option.requestFocus();
+				}
+				return;
+			}
 			pointsToField.clear();
 			ConversationOption option;
 			if (currentOption instanceof NpcOption) {
@@ -419,6 +429,7 @@ public class ConversationController {
 					option.setIndex(currentConversation.getNpcOptions().size() - 1);
 				}
 			}
+			lastAdded = option;
 			IdWrapper<ConversationOption> wrapped = new IdWrapper<>(currentConversation.getPack(), option);
 			wrapped.setIndex(pointsToList.getItems().size());
 			pointsToList.getItems().add(wrapped);
