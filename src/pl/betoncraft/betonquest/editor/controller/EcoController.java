@@ -50,6 +50,7 @@ public class EcoController {
 		instance.eventsList.getSelectionModel().selectedItemProperty().addListener(event -> {
 			instance.update();
 		});
+		instance.update();
 	}
 	
 	/**
@@ -63,6 +64,7 @@ public class EcoController {
 		instance.conditionsList.getSelectionModel().selectedItemProperty().addListener(event -> {
 			instance.update();
 		});
+		instance.update();
 	}
 	
 	/**
@@ -76,6 +78,7 @@ public class EcoController {
 		instance.objectivesList.getSelectionModel().selectedItemProperty().addListener(event -> {
 			instance.update();
 		});
+		instance.update();
 	}
 	
 	@FXML private void update() {
@@ -97,11 +100,18 @@ public class EcoController {
 					case "Objective":
 						name = BetonQuestEditor.getInstance().getLanguage().getString("objective");
 						break;
+					default:
+						name = null;
+						break;
 					}
 					if (name != null) {
 						instruction.setText(name + " '" + item.getId().get() + "': " + item.getInstruction().get());
+					} else {
+						instruction.setText(BetonQuestEditor.getInstance().getLanguage().getString("instruction"));
 					}
 				}
+			} else {
+				instruction.setText(BetonQuestEditor.getInstance().getLanguage().getString("instruction"));
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -167,6 +177,7 @@ public class EcoController {
 			Event event = eventsList.getSelectionModel().getSelectedItem();
 			if (event != null) {
 				event.edit();
+				eventsList.getSelectionModel().select(event);
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -178,6 +189,7 @@ public class EcoController {
 			Condition condition = conditionsList.getSelectionModel().getSelectedItem();
 			if (condition != null) {
 				condition.edit();
+				conditionsList.getSelectionModel().select(condition);
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -189,6 +201,7 @@ public class EcoController {
 			Objective objective = objectivesList.getSelectionModel().getSelectedItem();
 			if (objective != null) {
 				objective.edit();
+				objectivesList.getSelectionModel().select(objective);
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
