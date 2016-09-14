@@ -8,6 +8,8 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.CheckBox?>
 
 <GridPane xmlns:fx="http://javafx.com/fxml/1" fx:id="root"
 	hgap="5" vgap="5"
@@ -33,12 +35,16 @@
 		GridPane.rowIndex="2" GridPane.columnIndex="1" />
 	<Label text="%location" id="option-label" GridPane.rowIndex="3"
 		GridPane.columnIndex="0" />
-	<TextField focusTraversable="true" fx:id="loc" GridPane.rowIndex="3"
-		GridPane.columnIndex="1" />
+	<TextField focusTraversable="true" fx:id="loc"
+		GridPane.rowIndex="3" GridPane.columnIndex="1" />
 	<Label text="%item" id="option-label" GridPane.rowIndex="4"
 		GridPane.columnIndex="0" />
-	<ChoiceBox focusTraversable="true" fx:id="item" maxWidth="9000"
-		GridPane.rowIndex="4" GridPane.columnIndex="1" />
+	<HBox spacing="5" GridPane.rowIndex="4" GridPane.columnIndex="1"
+		alignment="CENTER" GridPane.hgrow="ALWAYS">
+		<CheckBox fx:id="itemCheckBox" selected="false" />
+		<ChoiceBox focusTraversable="true" fx:id="item" maxWidth="9000"
+			disable="true" />
+	</HBox>
 
 	<ButtonBar GridPane.rowIndex="5" GridPane.columnIndex="0"
 		GridPane.columnSpan="2">

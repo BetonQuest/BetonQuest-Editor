@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.CompassTarget;
 import pl.betoncraft.betonquest.editor.model.Item;
+import javafx.scene.control.CheckBox;
 
 /**
  * Controls compass target editing window.
@@ -39,22 +40,24 @@ public class CompassTargetEditController {
 	private CompassTarget target;
 	private boolean result = false;
 	private Stage stage;
-	@FXML Pane root;
-	@FXML TextField id;
-	@FXML TextField name;
-	@FXML TextField loc;
-	@FXML ChoiceBox<Item> item;
+	@FXML private Pane root;
+	@FXML private TextField id;
+	@FXML private TextField name;
+	@FXML private TextField loc;
+	@FXML private ChoiceBox<Item> item;
+	@FXML private CheckBox itemCheckBox;
 	
 	@FXML private void ok() {
 		try {
-			if (id.getText() == null || id.getText().isEmpty() || name.getText() == null || name.getText().isEmpty()) {
+			if (id.getText() == null || id.getText().isEmpty() || name.getText() == null || name.getText().isEmpty()
+					|| loc.getText() == null || loc.getText().isEmpty()) {
 				BetonQuestEditor.showError("name-not-null");
 				return;
 			}
 			target.getId().set(id.getText());
 			target.getText().set(name.getText());
 			target.setLocation(loc.getText());
-			target.getItem().set(item.getValue());
+			target.getItem().set(item.isDisable() ? null : item.getValue());
 			BetonQuestEditor.getInstance().refresh();
 			result = true;
 			stage.close();
@@ -74,7 +77,7 @@ public class CompassTargetEditController {
 	public static boolean display(CompassTarget target) {
 		try {
 			CompassTargetEditController controller = (CompassTargetEditController) BetonQuestEditor
-					.createWindow("view/window/CompassTargetEditWindow.fxml", "npc-bindings", 400, 250);
+					.createWindow("view/window/CompassTargetEditWindow.fxml", "compass-targets", 400, 250);
 			controller.stage = (Stage) controller.root.getScene().getWindow();
 			controller.target = target;
 			controller.id.setText(target.getId().get());
@@ -82,6 +85,10 @@ public class CompassTargetEditController {
 			controller.loc.setText(target.getLocation());
 			controller.item.setItems(target.getPack().getItems());
 			controller.item.getSelectionModel().select(target.getItem().get());
+			controller.itemCheckBox.selectedProperty().addListener(event -> {
+				controller.item.setDisable(!controller.itemCheckBox.isSelected());
+			});
+			controller.itemCheckBox.setSelected(target.getItem().get() != null);
 			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
 				if (event.getCode() == KeyCode.ESCAPE) {
 					controller.cancel();
