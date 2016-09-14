@@ -50,11 +50,12 @@
 						<RowConstraints vgrow="ALWAYS" />
 					</rowConstraints>
 
-					<Label GridPane.halignment="CENTER" GridPane.rowIndex="0" text="%translate"
-						GridPane.columnIndex="0" GridPane.columnSpan="3" fx:id="objectLabel" id="option-label" />
+					<Label GridPane.halignment="CENTER" GridPane.rowIndex="0"
+						text="%translate" GridPane.columnIndex="0" GridPane.columnSpan="3"
+						fx:id="objectLabel" id="option-label" />
 					<TextArea GridPane.rowIndex="1" GridPane.columnIndex="0"
-						prefHeight="120" id="entry-text" GridPane.columnSpan="3" fx:id="original"
-						editable="false" />
+						wrapText="true" prefHeight="120" id="entry-text"
+						GridPane.columnSpan="3" fx:id="original" editable="false" />
 
 					<Button text="%previous" GridPane.rowIndex="2"
 						GridPane.columnIndex="0" fx:id="previous" onAction="#previous"
@@ -66,10 +67,12 @@
 						GridPane.columnIndex="2" fx:id="next" onAction="#next" />
 
 					<Button text="%close" onAction="#close" GridPane.rowIndex="3"
-						GridPane.columnIndex="0" GridPane.columnSpan="3" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM" />
+						GridPane.columnIndex="0" GridPane.columnSpan="3"
+						GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM" />
 
 				</GridPane>
-				<Button fx:id="translate" text="%translate" onAction="#translate" maxHeight="50" maxWidth="200" />
+				<Button fx:id="translate" text="%translate" onAction="#translate"
+					maxHeight="50" maxWidth="200" />
 			</StackPane>
 		</VBox>
 	</ScrollPane>
