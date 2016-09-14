@@ -248,24 +248,31 @@ public class ConversationController {
 		pointsToList.setItems(option.getPointers());
 		ObservableList<? extends ConversationOption> oppositeOptions;
 		if (option instanceof NpcOption) {
-			oppositeOptions = currentConversation.getPack().getAllPlayerOptions();
+			oppositeOptions = currentConversation.getPlayerOptions();
 		} else {
 			oppositeOptions = currentConversation.getPack().getAllNpcOptions();
 		}
-		ObservableList<? extends ConversationOption> notPointers = FXCollections.observableArrayList(oppositeOptions);
 		for (IdWrapper<ConversationOption> o : option.getPointers()) {
-			notPointers.remove(o.get());
+			oppositeOptions.remove(o.get());
 		}
 		SortedSet<String> notPointersSet = new TreeSet<>();
-		for (ConversationOption o : notPointers) {
+		for (ConversationOption o : oppositeOptions) {
 			notPointersSet.add(o.toString());
 		}
 		pointsToField.getEntries().addAll(notPointersSet);
 		ObservableList<IdWrapper<ConversationOption>> pointedByOptions = FXCollections.observableArrayList();
-		for (ConversationOption opposite : oppositeOptions) {
+		ObservableList<? extends ConversationOption> oppositePointers;
+		if (option instanceof NpcOption) {
+			oppositePointers = currentConversation.getPack().getAllPlayerOptions();
+		} else {
+			oppositePointers = currentConversation.getPack().getAllNpcOptions();
+		}
+		loop:
+		for (ConversationOption opposite : oppositePointers) {
 			for (IdWrapper<ConversationOption> pointer : opposite.getPointers()) {
 				if (pointer.get().equals(option)) {
 					pointedByOptions.add(new IdWrapper<>(currentConversation.getPack(), opposite));
+					continue loop;
 				}
 			}
 		}
@@ -417,6 +424,11 @@ public class ConversationController {
 			pointsToField.clear();
 			ConversationOption option;
 			if (currentOption instanceof NpcOption) {
+				// npc options cannot point cross-conversation
+				if (name.contains(".")) {
+					BetonQuestEditor.showError("no-cross-conversation");
+					return;
+				}
 				option = getById(currentConversation.getPack().getAllPlayerOptions(), name);
 				if (option == null) {
 					option = currentConversation.newPlayerOption(name);
@@ -457,6 +469,10 @@ public class ConversationController {
 			if (name.get() == null || name.get().isEmpty()) {
 				return;
 			}
+			if (name.get().contains(".")) {
+				BetonQuestEditor.showError("no-cross-conversation");
+				return;
+			}
 			if (currentConversation.getNpcOption(name.get()) == null) {
 				NpcOption option = currentConversation.newNpcOption(name.get());
 				option.setIndex(currentConversation.getNpcOptions().size() - 1);
@@ -475,7 +491,13 @@ public class ConversationController {
 		try {
 			NpcOption option = npcList.getSelectionModel().getSelectedItem();
 			if (option != null) {
-				NameEditController.display(option.getId());
+				StringProperty id = new SimpleStringProperty(option.getId().get());
+				NameEditController.display(id);
+				if (id.get().contains(".")) {
+					BetonQuestEditor.showError("no-cross-conversation");
+					return;
+				}
+				option.getId().set(id.get());
 				BetonQuestEditor.getInstance().refresh();
 			}
 		} catch (Exception e) {
@@ -492,18 +514,22 @@ public class ConversationController {
 					return;
 				}
 				npcList.getItems().remove(option);
-				for (PlayerOption o : currentConversation.getPlayerOptions()) {
-					for (IdWrapper<ConversationOption> pointer : o.getPointers()) {
-						if (pointer.get().equals(option)) {
-							o.getPointers().remove(pointer);
-							break;
+				for (Conversation conv : currentConversation.getPack().getConversations()) {
+					for (PlayerOption o : conv.getPlayerOptions()) {
+						for (IdWrapper<ConversationOption> pointer : o.getPointers()) {
+							if (pointer.get().equals(option)) {
+								o.getPointers().remove(pointer);
+								break;
+							}
 						}
 					}
 				}
-				for (Iterator<IdWrapper<NpcOption>> iterator = currentConversation.getStartingOptions().iterator();
-						iterator.hasNext();) {
-					if (iterator.next().get().equals(option)) {
-						iterator.remove();
+				for (Conversation conv : currentConversation.getPack().getConversations()) {
+					for (Iterator<IdWrapper<NpcOption>> iterator = conv.getStartingOptions().iterator();
+							iterator.hasNext();) {
+						if (iterator.next().get().equals(option)) {
+							iterator.remove();
+						}
 					}
 				}
 				displayOption((npcList.getItems().get(0)));
@@ -519,6 +545,10 @@ public class ConversationController {
 			StringProperty name = new SimpleStringProperty();
 			NameEditController.display(name);
 			if (name.get() == null || name.get().isEmpty()) {
+				return;
+			}
+			if (name.get().contains(".")) {
+				BetonQuestEditor.showError("no-cross-conversation");
 				return;
 			}
 			if (currentConversation.getPlayerOption(name.get()) == null) {
@@ -539,7 +569,13 @@ public class ConversationController {
 		try {
 			PlayerOption option = playerList.getSelectionModel().getSelectedItem();
 			if (option != null) {
-				NameEditController.display(option.getId());
+				StringProperty id = new SimpleStringProperty(option.getId().get());
+				NameEditController.display(id);
+				if (id.get().contains(".")) {
+					BetonQuestEditor.showError("no-cross-conversation");
+					return;
+				}
+				option.getId().set(id.get());
 				BetonQuestEditor.getInstance().refresh();
 			}
 		} catch (Exception e) {
@@ -557,6 +593,8 @@ public class ConversationController {
 				} else {
 					clearOption();
 				}
+				// search only current conversation
+				// NPC options can't point here from other packages
 				for (NpcOption o : currentConversation.getNpcOptions()) {
 					for (IdWrapper<ConversationOption> pointer : o.getPointers()) {
 						if (pointer.get().equals(option)) {
