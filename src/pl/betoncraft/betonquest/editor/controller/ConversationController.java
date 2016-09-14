@@ -410,11 +410,13 @@ public class ConversationController {
 				option = getById(currentConversation.getPack().getAllPlayerOptions(), name);
 				if (option == null) {
 					option = currentConversation.newPlayerOption(name);
+					option.setIndex(currentConversation.getPlayerOptions().size() - 1);
 				}
 			} else {
 				option = getById(currentConversation.getPack().getAllNpcOptions(), name);
 				if (option == null) {
 					option = currentConversation.newNpcOption(name);
+					option.setIndex(currentConversation.getNpcOptions().size() - 1);
 				}
 			}
 			IdWrapper<ConversationOption> wrapped = new IdWrapper<>(currentConversation.getPack(), option);
