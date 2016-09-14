@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
 import pl.betoncraft.betonquest.editor.data.Instruction;
@@ -50,6 +51,11 @@ public class EcoController {
 		instance.eventsList.getSelectionModel().selectedItemProperty().addListener(event -> {
 			instance.update();
 		});
+		instance.eventsList.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+				instance.editEvent();
+			}
+		});
 		instance.update();
 	}
 	
@@ -64,6 +70,11 @@ public class EcoController {
 		instance.conditionsList.getSelectionModel().selectedItemProperty().addListener(event -> {
 			instance.update();
 		});
+		instance.conditionsList.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+				instance.editCondition();
+			}
+		});
 		instance.update();
 	}
 	
@@ -77,6 +88,11 @@ public class EcoController {
 		instance.objectivesList.setItems(objectives);
 		instance.objectivesList.getSelectionModel().selectedItemProperty().addListener(event -> {
 			instance.update();
+		});
+		instance.objectivesList.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+				instance.editObjective();
+			}
 		});
 		instance.update();
 	}

@@ -26,6 +26,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.CompassTarget;
 import pl.betoncraft.betonquest.editor.model.GlobalLocation;
@@ -57,74 +58,62 @@ public class MainController {
 	public static void setGlobVariables(ObservableList<GlobalVariable> globalVariables) {
 		instance.globVarList.setItems(null);
 		instance.globVarList.setItems(globalVariables);
+		instance.globVarList.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+				instance.editVariable();
+			}
+		});
 	}
 	
 	public static void setStaticEvents(ObservableList<StaticEvent> staticEvents) {
 		instance.staticEventsList.setItems(null);
 		instance.staticEventsList.setItems(staticEvents);
+		instance.staticEventsList.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+				instance.editStaticEvent();
+			}
+		});
 	}
 	
 	public static void setGlobalLocations(ObservableList<GlobalLocation> globalLocations) {
 		instance.globLocList.setItems(null);
 		instance.globLocList.setItems(globalLocations);
+		instance.globLocList.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+				instance.editGlobalLocation();
+			}
+		});
 	}
 	
 	public static void setQuestCancelers(ObservableList<QuestCanceler> questCancelers) {
 		instance.cancelList.setItems(null);
 		instance.cancelList.setItems(questCancelers);
+		instance.cancelList.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+				instance.editQuestCanceler();
+			}
+		});
 	}
 	
 	public static void setMainPageLines(ObservableList<MainPageLine> mainPageLines) {
 		instance.mainPageList.setItems(null);
 		instance.mainPageList.setItems(mainPageLines);
+		instance.mainPageList.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+				instance.editMainPageLine();
+			}
+		});
 	}
 
 	public static void setCompassTarget(ObservableList<CompassTarget> targets) {
 		instance.compassList.setItems(null);
 		instance.compassList.setItems(targets);
+		instance.compassList.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+				instance.editCompassTarget();
+			}
+		});
 	}
-	
-//	@FXML private void addNpcBinding() {
-//		try {
-//			NpcBinding binding = new NpcBinding(BetonQuestEditor.getInstance().getDisplayedPackage(), new String());
-//			if (binding.edit()) {
-//				binding.setIndex(npcTable.getItems().size());
-//				npcTable.getItems().add(binding);
-//			}
-//		} catch (Exception e) {
-//			ExceptionController.display(e);
-//		}
-//	}
-//	
-//	@FXML private void editNpcBinding() {
-//		try {
-//			NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
-//			if (binding != null) {
-//				binding.edit();
-//			}
-//		} catch (Exception e) {
-//			ExceptionController.display(e);
-//		}
-//	}
-//	
-//	@FXML private void delNpcBinding() {
-//		try {
-//			NpcBinding binding = npcTable.getSelectionModel().getSelectedItem();
-//			if (binding != null) {
-//				npcTable.getItems().remove(binding);
-//			}
-//		} catch (Exception e) {
-//			ExceptionController.display(e);
-//		}
-//	}
-//
-//	@FXML public void npcKey(KeyEvent event) {
-//		try {
-//			keyAction(event, () -> addNpcBinding(), () -> editNpcBinding(), () -> delNpcBinding());
-//		} catch (Exception e) {
-//			ExceptionController.display(e);
-//		}
-//	}
 	
 	@FXML private void addVariable() {
 		try {

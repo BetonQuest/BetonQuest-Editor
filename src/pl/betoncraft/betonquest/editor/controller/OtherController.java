@@ -27,6 +27,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
 import pl.betoncraft.betonquest.editor.model.Item;
@@ -56,6 +57,11 @@ public class OtherController {
 		instance.itemsList.getSelectionModel().selectedItemProperty().addListener(name -> {
 			instance.selectItem();
 		});
+		instance.itemsList.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+				instance.renameItem();
+			}
+		});
 	}
 	
 	public static void setJournal(ObservableList<JournalEntry> journal) {
@@ -63,6 +69,11 @@ public class OtherController {
 		instance.journalList.setItems(journal);
 		instance.journalList.getSelectionModel().selectedItemProperty().addListener(event -> {
 			instance.selectEntry();
+		});
+		instance.journalList.setOnMouseClicked(event -> {
+			if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+				instance.editEntry();
+			}
 		});
 	}
 	

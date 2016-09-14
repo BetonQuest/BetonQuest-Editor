@@ -28,6 +28,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
@@ -216,6 +217,11 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			controller.refresher = refresher;
 			controller.stage.setOnCloseRequest(event -> {
 				refresher.refresh();
+			});
+			controller.list.setOnMouseClicked(event -> {
+				if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+					controller.edit();
+				}
 			});
 			controller.root.getScene().addEventFilter(KeyEvent.KEY_PRESSED, event -> controller.key(event));
 			controller.refresh(); // fill the view
