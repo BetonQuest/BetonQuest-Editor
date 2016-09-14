@@ -28,7 +28,7 @@
 	<TextField focusTraversable="true" fx:id="name" GridPane.rowIndex="1"
 		GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
 
-	<Label id="option-label" text="text" GridPane.rowIndex="2"
+	<Label id="option-label" text="%text" GridPane.rowIndex="2"
 		GridPane.columnIndex="0" />
 	<TextField focusTraversable="true" fx:id="text" GridPane.rowIndex="2"
 		GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" />
