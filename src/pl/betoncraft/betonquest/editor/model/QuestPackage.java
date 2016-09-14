@@ -703,63 +703,63 @@ public class QuestPackage implements Editable {
 					}
 				} 
 			}
-			// extract tags and points
-			for (Condition condition : conditions) {
-				if (condition.getInstruction().get() == null) {
-					continue;
-				}
-				if (condition.getInstruction().get().startsWith("tag ")) {
-					String[] parts = condition.getInstruction().get().split(" ");
-					if (parts.length > 1) {
-						try {
-							newByID(parts[1], name -> new Tag(this, name));
-						} catch (PackageNotFoundException e) {
-							errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, "conditions." + condition.getId().get() + ": '" + parts[1] + "' (" + e.getPackage() + ")");
-							continue;
-						}
-					}
-				} else if (condition.getInstruction().get().startsWith("point ")) {
-					String[] parts = condition.getInstruction().get().split(" ");
-					if (parts.length > 1) {
-						try {
-							newByID(parts[1], name -> new PointCategory(this, name));
-						} catch (PackageNotFoundException e) {
-							errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, "conditions." + condition.getId().get() + ": '" + parts[1] + "' (" + e.getPackage() + ")");
-							continue;
-						}
-					}
-				}
-			}
-			for (Event event : events) {
-				if (event.getInstruction().get() == null) {
-					continue;
-				}
-				if (event.getInstruction().get().startsWith("tag ")) {
-					String[] parts = event.getInstruction().get().split(" ");
-					if (parts.length > 2) {
-						try {
-							newByID(parts[2], name -> new Tag(this, name));
-						} catch (PackageNotFoundException e) {
-							errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, "events." + event.getId().get() + ": '" + parts[2] + "' (" + e.getPackage() + ")");
-							continue;
-						}
-					}
-				} else if (event.getInstruction().get().startsWith("point ")) {
-					String[] parts = event.getInstruction().get().split(" ");
-					if (parts.length > 1) {
-						try {
-							newByID(parts[1], name -> new PointCategory(this, name));
-						} catch (PackageNotFoundException e) {
-							errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, "events." + event.getId().get() + ": '" + parts[1] + "' (" + e.getPackage() + ")");
-							continue;
-						}
-					}
-				}
-			}
+			extractTagsAndPoints();
 			// get language
 			translationManager.inferDefaultLanguage();
 		} catch (Exception e) {
 			ExceptionController.display(e);
+		}
+	}
+	
+	public void extractTagsAndPoints() {
+		// extract tags and points
+		for (Condition condition : conditions) {
+			if (condition.getInstruction().get() == null) {
+				continue;
+			}
+			if (condition.getInstruction().get().startsWith("tag ")) {
+				String[] parts = condition.getInstruction().get().split(" ");
+				if (parts.length > 1) {
+					try {
+						newByID(parts[1], name -> new Tag(this, name));
+					} catch (PackageNotFoundException e) {
+						continue;
+					}
+				}
+			} else if (condition.getInstruction().get().startsWith("point ")) {
+				String[] parts = condition.getInstruction().get().split(" ");
+				if (parts.length > 1) {
+					try {
+						newByID(parts[1], name -> new PointCategory(this, name));
+					} catch (PackageNotFoundException e) {
+						continue;
+					}
+				}
+			}
+		}
+		for (Event event : events) {
+			if (event.getInstruction().get() == null) {
+				continue;
+			}
+			if (event.getInstruction().get().startsWith("tag ")) {
+				String[] parts = event.getInstruction().get().split(" ");
+				if (parts.length > 2) {
+					try {
+						newByID(parts[2], name -> new Tag(this, name));
+					} catch (PackageNotFoundException e) {
+						continue;
+					}
+				}
+			} else if (event.getInstruction().get().startsWith("point ")) {
+				String[] parts = event.getInstruction().get().split(" ");
+				if (parts.length > 1) {
+					try {
+						newByID(parts[1], name -> new PointCategory(this, name));
+					} catch (PackageNotFoundException e) {
+						continue;
+					}
+				}
+			}
 		}
 	}
 

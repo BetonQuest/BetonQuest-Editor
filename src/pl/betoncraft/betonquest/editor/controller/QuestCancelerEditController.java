@@ -103,6 +103,7 @@ public class QuestCancelerEditController {
 
 	@FXML private void tag() {
 		try {
+			canceler.getPack().extractTagsAndPoints();
 			SortedChoiceController.display("tags", tagList, BetonQuestEditor.getInstance().getAllTags(),
 					name -> new Tag(canceler.getPack(), name), () -> new DraggableListCell<>(),
 					item -> new IdWrapper<>(canceler.getPack(), item), () -> refresh());
@@ -113,6 +114,7 @@ public class QuestCancelerEditController {
 
 	@FXML private void point() {
 		try {
+			canceler.getPack().extractTagsAndPoints();
 			SortedChoiceController.display("point-categories", pointList, BetonQuestEditor.getInstance().getAllPoints(),
 					name -> new PointCategory(canceler.getPack(), name), () -> new DraggableListCell<>(),
 					item -> new IdWrapper<>(canceler.getPack(), item), () -> refresh());
