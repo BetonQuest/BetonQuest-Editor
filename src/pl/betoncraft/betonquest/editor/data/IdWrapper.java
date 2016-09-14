@@ -44,6 +44,11 @@ public class IdWrapper<T extends ID> implements ID {
 	}
 
 	@Override
+	public boolean needsEditing() {
+		return object.needsEditing();
+	}
+
+	@Override
 	public StringProperty getId() {
 		return object.getId();
 	}

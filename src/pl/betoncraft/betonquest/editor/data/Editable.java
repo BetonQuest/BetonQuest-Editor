@@ -31,5 +31,12 @@ public interface Editable {
 	 * @return true if edition was successful, false otherwise
 	 */
 	public boolean edit();
+	
+	/**
+	 * Checks if the object needs editing (if any required fields are still empty etc).
+	 * 
+	 * @return true if the object should be edited, false otherwise.
+	 */
+	public boolean needsEditing();
 
 }

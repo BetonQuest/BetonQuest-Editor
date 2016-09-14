@@ -39,6 +39,11 @@ public class GlobalLocation implements Editable {
 	public boolean edit() {
 		return GlobalLocationEditController.display(this);
 	}
+
+	@Override
+	public boolean needsEditing() {
+		return objective.get() == null;
+	}
 	
 	public ObjectProperty<Objective> getObjective() {
 		return objective;

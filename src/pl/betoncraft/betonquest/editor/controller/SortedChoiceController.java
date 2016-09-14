@@ -107,7 +107,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			// create one if not
 			if (object == null) {
 				object = (O) creator.create(name);
-				if (object.edit()) {
+				if (!object.needsEditing() || object.edit()) {
 					ObservableList<O> list = object.getList();
 					object.setIndex(list.size());
 					list.add(object);

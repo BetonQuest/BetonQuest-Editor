@@ -41,6 +41,11 @@ public abstract class SimpleInstruction extends SimpleID implements Instruction 
 	}
 
 	@Override
+	public boolean needsEditing() {
+		return super.needsEditing() || instruction.get() == null || instruction.get().isEmpty();
+	}
+
+	@Override
 	public StringProperty getInstruction() {
 		return instruction;
 	}

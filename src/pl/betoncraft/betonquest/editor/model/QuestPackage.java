@@ -767,6 +767,11 @@ public class QuestPackage implements Editable {
 	public boolean edit() {
 		return NameEditController.display(packName);
 	}
+
+	@Override
+	public boolean needsEditing() {
+		return packName == null || packName.get() == null || packName.get().isEmpty();
+	}
 	
 	public PackageSet getSet() {
 		return set;

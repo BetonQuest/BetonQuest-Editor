@@ -62,6 +62,11 @@ public abstract class SimpleID implements ID {
 	public void setIndex(int index) {
 		this.index = index;
 	}
+
+	@Override
+	public boolean needsEditing() {
+		return id == null || id.get() == null || id.get().isEmpty();
+	}
 	
 	@Override
 	public String toString() {
