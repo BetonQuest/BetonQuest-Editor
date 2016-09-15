@@ -2,6 +2,8 @@
 
 This is the official editor for BetonQuest plugin. It was created to speed up the process of writing quests, which can be tedious and error-prone work when editing files directly in a text editor.
 
+![Editor](http://betonquest.betoncraft.pl/editor/conversations.png)
+
 ## Features
 
 * Editing all features of a quest package
