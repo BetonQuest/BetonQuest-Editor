@@ -712,6 +712,8 @@ public class QuestPackage implements Editable {
 	}
 	
 	public void extractTagsAndPoints() {
+		tags.clear();
+		points.clear();
 		// extract tags and points
 		for (Condition condition : conditions) {
 			if (condition.getInstruction().get() == null) {
