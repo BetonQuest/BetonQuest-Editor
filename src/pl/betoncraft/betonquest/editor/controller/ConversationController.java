@@ -248,9 +248,9 @@ public class ConversationController {
 		pointsToList.setItems(option.getPointers());
 		ObservableList<? extends ConversationOption> oppositeOptions;
 		if (option instanceof NpcOption) {
-			oppositeOptions = currentConversation.getPlayerOptions();
+			oppositeOptions = FXCollections.observableArrayList(currentConversation.getPlayerOptions());
 		} else {
-			oppositeOptions = currentConversation.getPack().getAllNpcOptions();
+			oppositeOptions = FXCollections.observableArrayList(currentConversation.getPack().getAllNpcOptions());
 		}
 		for (IdWrapper<ConversationOption> o : option.getPointers()) {
 			oppositeOptions.remove(o.get());
