@@ -21,7 +21,7 @@ You can check out the list of planned features [here](https://github.com/Co0sh/B
 
 ## Where to buy?
 
-_working release coming soon_
+[Store page on Sellfy](https://sellfy.com/p/nE5Y/)
 
 ## Why isn't it free?
 
