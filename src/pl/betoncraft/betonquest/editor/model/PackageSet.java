@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -228,7 +229,7 @@ public class PackageSet {
 			for (Entry<String, InputStream> subEntry : entry.getValue().entrySet()) {
 				String name = subEntry.getKey();
 				InputStream stream = subEntry.getValue();
-				YAMLParser parser = new YAMLFactory().createParser(new InputStreamReader(stream));
+				YAMLParser parser = new YAMLFactory().createParser(new InputStreamReader(stream, Charset.forName("UTF-8")));
 				String currentPath = "";
 				String fieldName = "";
 				while (true) {
