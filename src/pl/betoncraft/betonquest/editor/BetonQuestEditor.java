@@ -70,7 +70,7 @@ import pl.betoncraft.betonquest.editor.model.Tag;
  */
 public class BetonQuestEditor extends Application {
 	
-	private static final String VERSION = "0.1";
+	private static final String VERSION = "0.1.1";
 
 	private static BetonQuestEditor instance;
 	private Stage stage;
