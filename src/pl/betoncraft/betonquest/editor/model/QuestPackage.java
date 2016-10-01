@@ -222,14 +222,15 @@ public class QuestPackage implements Editable {
 							String[] eventNames = subValue.split(",");
 							ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
 							for (int i = 0; i < eventNames.length; i++) {
+								IdWrapper<Event> finalEvent = null;
 								try {
-									IdWrapper<Event> finalEvent = new IdWrapper<>(this, newByID(eventNames[i].trim(), name -> new Event(this, name)));
-									events.add(i, finalEvent);
-									finalEvent.setIndex(i);
+									finalEvent = new IdWrapper<>(this, newByID(eventNames[i].trim(), name -> new Event(this, name)));
 								} catch (PackageNotFoundException e) {
 									errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, key + "." + subKey + ": '" + eventNames[i].trim() + "' (" + e.getPackage() + ")");
-									continue;
+									finalEvent = new IdWrapper<>(this, new Event(this, eventNames[i].trim().replace(".", "-")));
 								}
+								events.add(i, finalEvent);
+								finalEvent.setIndex(i);
 							}
 							conv.getFinalEvents().addAll(events);
 						}
@@ -259,14 +260,15 @@ public class QuestPackage implements Editable {
 										String[] eventNames = subValue.split(",");
 										ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
 										for (int i = 0; i < eventNames.length; i++) {
+											IdWrapper<Event> event = null;
 											try {
-												IdWrapper<Event> event = new IdWrapper<>(this, newByID(eventNames[i].trim(), name -> new Event(this, name)));
-												events.add(i, event);
-												event.setIndex(i);
+												event = new IdWrapper<>(this, newByID(eventNames[i].trim(), name -> new Event(this, name)));
 											} catch (PackageNotFoundException e) {
 												errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, key + "." + subKey + ": '" + eventNames[i].trim() + "' (" + e.getPackage() + ")");
-												continue;
+												event = new IdWrapper<>(this, new Event(this, eventNames[i].trim().replace(".", "-")));
 											}
+											events.add(i, event);
+											event.setIndex(i);
 										}
 										option.getEvents().addAll(events);
 										break;
@@ -281,15 +283,16 @@ public class QuestPackage implements Editable {
 												name = name.substring(1, name.length());
 												negated = true;
 											}
+											ConditionWrapper condition = null;
 											try {
-												ConditionWrapper condition = new ConditionWrapper(this, newByID(name, idString -> new Condition(this, idString)));
-												condition.setNegated(negated);
-												conditions.add(i, condition);
-												condition.setIndex(i);
+												condition = new ConditionWrapper(this, newByID(name, idString -> new Condition(this, idString)));
 											} catch (PackageNotFoundException e) {
 												errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, key + "." + subKey + ": '" + conditionNames[i].trim() + "' (" + e.getPackage() + ")");
-												continue;
+												condition = new ConditionWrapper(this, new Condition(this, conditionNames[i].trim().replace(".", "-")));
 											}
+											conditions.add(i, condition);
+											condition.setIndex(i);
+											condition.setNegated(negated);
 										}
 										option.getConditions().addAll(conditions);
 										break;
@@ -336,14 +339,15 @@ public class QuestPackage implements Editable {
 										String[] eventNames = subValue.split(",");
 										ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
 										for (int i = 0; i < eventNames.length; i++) {
+											IdWrapper<Event> event = null;
 											try {
-												IdWrapper<Event> event = new IdWrapper<>(this, newByID(eventNames[i].trim(), name -> new Event(this, name)));
-												events.add(i, event);
-												event.setIndex(i);
+												event = new IdWrapper<>(this, newByID(eventNames[i].trim(), name -> new Event(this, name)));
 											} catch (PackageNotFoundException e) {
 												errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, key + "." + subKey + ": '" + eventNames[i].trim() + "' (" + e.getPackage() + ")");
-												continue;
+												event = new IdWrapper<>(this, new Event(this, eventNames[i].trim().replace(".", "-")));
 											}
+											events.add(i, event);
+											event.setIndex(i);
 										}
 										option.getEvents().addAll(events);
 										break;
@@ -358,15 +362,16 @@ public class QuestPackage implements Editable {
 												name = name.substring(1, name.length());
 												negated = true;
 											}
+											ConditionWrapper condition = null;
 											try {
-												ConditionWrapper condition = new ConditionWrapper(this, newByID(name, idString -> new Condition(this, idString)));
-												condition.setNegated(negated);
-												conditions.add(i, condition);
-												condition.setIndex(i);
+												condition = new ConditionWrapper(this, newByID(name, idString -> new Condition(this, idString)));
 											} catch (PackageNotFoundException e) {
 												errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, key + "." + subKey + ": '" + conditionNames[i].trim() + "' (" + e.getPackage() + ")");
-												continue;
+												condition = new ConditionWrapper(this, new Condition(this, conditionNames[i].trim().replace(".", "-")));
 											}
+											condition.setNegated(negated);
+											conditions.add(i, condition);
+											condition.setIndex(i);
 										}
 										option.getConditions().addAll(conditions);
 										break;
@@ -466,15 +471,16 @@ public class QuestPackage implements Editable {
 									String[] eventNames = value.split(",");
 									ArrayList<IdWrapper<Event>> events = new ArrayList<>(eventNames.length);
 									for (int i = 0; i < eventNames.length; i++) {
+										IdWrapper<Event> event = null;
 										try {
-											IdWrapper<Event> event = new IdWrapper<>(this,
+											event = new IdWrapper<>(this,
 													newByID(eventNames[i].trim(), name -> new Event(this, name)));
-											events.add(i, event);
-											event.setIndex(i);
 										} catch (PackageNotFoundException e) {
 											errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, "main." + key + ": '" + eventNames[i].trim() + "' (" + e.getPackage() + ")");
-											continue;
+											event = new IdWrapper<>(this, new Event(this, eventNames[i].trim().replace(".", "-")));
 										}
+										events.add(i, event);
+										event.setIndex(i);
 									}
 									canceler.getEvents().addAll(events);
 									break;
@@ -492,16 +498,17 @@ public class QuestPackage implements Editable {
 											name = name.substring(1, name.length());
 											negated = true;
 										}
+										ConditionWrapper condition = null;
 										try {
-											ConditionWrapper condition = new ConditionWrapper(this,
+											condition = new ConditionWrapper(this,
 													newByID(name, idString -> new Condition(this, idString)));
-											condition.setNegated(negated);
-											conditions.add(i, condition);
-											condition.setIndex(i);
 										} catch (PackageNotFoundException e) {
 											errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, "main." + key + ": '" + conditionNames[i].trim() + "' (" + e.getPackage() + ")");
-											continue;
+											condition = new ConditionWrapper(this, new Condition(this, conditionNames[i].trim().replace(".", "-")));
 										}
+										condition.setNegated(negated);
+										conditions.add(i, condition);
+										condition.setIndex(i);
 									}
 									canceler.getConditions().addAll(conditions);
 									break;
@@ -513,15 +520,16 @@ public class QuestPackage implements Editable {
 									String[] objectiveNames = value.split(",");
 									ArrayList<IdWrapper<Objective>> objectives = new ArrayList<>(objectiveNames.length);
 									for (int i = 0; i < objectiveNames.length; i++) {
+										IdWrapper<Objective> wrapper = null;
 										try {
-											IdWrapper<Objective> wrapper = new IdWrapper<>(this,
+											wrapper = new IdWrapper<>(this,
 													newByID(objectiveNames[i].trim(), name -> new Objective(this, name)));
-											objectives.add(i, wrapper);
-											wrapper.setIndex(i);
 										} catch (PackageNotFoundException e) {
 											errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, "main." + key + ": '" + objectiveNames[i].trim() + "' (" + e.getPackage() + ")");
-											continue;
+											wrapper = new IdWrapper<>(this, new Objective(this, objectiveNames[i].trim().replace(".", "-")));
 										}
+										objectives.add(i, wrapper);
+										wrapper.setIndex(i);
 									}
 									canceler.getObjectives().addAll(objectives);
 									break;
@@ -533,15 +541,16 @@ public class QuestPackage implements Editable {
 									String[] tagNames = value.split(",");
 									ArrayList<IdWrapper<Tag>> tags = new ArrayList<>(tagNames.length);
 									for (int i = 0; i < tagNames.length; i++) {
+										IdWrapper<Tag> wrapper = null;
 										try {
-											IdWrapper<Tag> wrapper = new IdWrapper<>(this,
+											wrapper = new IdWrapper<>(this,
 													newByID(tagNames[i].trim(), name -> new Tag(this, name)));
-											tags.add(i, wrapper);
-											wrapper.setIndex(i);
 										} catch (PackageNotFoundException e) {
 											errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, "main." + key + ": '" + tagNames[i].trim() + "' (" + e.getPackage() + ")");
-											continue;
+											wrapper = new IdWrapper<>(this, new Tag(this, tagNames[i].trim().replace(".", "-")));
 										}
+										tags.add(i, wrapper);
+										wrapper.setIndex(i);
 									}
 									canceler.getTags().addAll(tags);
 									break;
@@ -553,15 +562,16 @@ public class QuestPackage implements Editable {
 									String[] pointNames = value.split(",");
 									ArrayList<IdWrapper<PointCategory>> points = new ArrayList<>(pointNames.length);
 									for (int i = 0; i < pointNames.length; i++) {
+										IdWrapper<PointCategory> wrapper = null;
 										try {
-											IdWrapper<PointCategory> wrapper = new IdWrapper<>(this,
+											wrapper = new IdWrapper<>(this,
 													newByID(pointNames[i].trim(), name -> new PointCategory(this, name)));
-											points.add(i, wrapper);
-											wrapper.setIndex(i);
 										} catch (PackageNotFoundException e) {
 											errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, "main." + key + ": '" + pointNames[i].trim() + "' (" + e.getPackage() + ")");
-											continue;
+											wrapper = new IdWrapper<>(this, new PointCategory(this, pointNames[i].trim().replace(".", "-")));
 										}
+										points.add(i, wrapper);
+										wrapper.setIndex(i);
 									}
 									canceler.getPoints().addAll(points);
 									break;
@@ -573,15 +583,16 @@ public class QuestPackage implements Editable {
 									String[] journalNames = value.split(",");
 									ArrayList<IdWrapper<JournalEntry>> journal = new ArrayList<>(journalNames.length);
 									for (int i = 0; i < journalNames.length; i++) {
+										IdWrapper<JournalEntry> wrapper = null;
 										try {
-											IdWrapper<JournalEntry> wrapper = new IdWrapper<>(this,
+											wrapper = new IdWrapper<>(this,
 													newByID(journalNames[i].trim(), name -> new JournalEntry(this, name)));
-											journal.add(i, wrapper);
-											wrapper.setIndex(i);
 										} catch (PackageNotFoundException e) {
 											errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, "main." + key + ": '" + journalNames[i].trim() + "' (" + e.getPackage() + ")");
-											continue;
+											wrapper = new IdWrapper<>(this, new JournalEntry(this, journalNames[i].trim().replace(".", "-")));
 										}
+										journal.add(i, wrapper);
+										wrapper.setIndex(i);
 									}
 									canceler.getJournal().addAll(journal);
 									break;
@@ -639,16 +650,17 @@ public class QuestPackage implements Editable {
 											name = name.substring(1, name.length());
 											negated = true;
 										}
+										ConditionWrapper condition = null;
 										try {
-											ConditionWrapper condition = new ConditionWrapper(this,
+											condition = new ConditionWrapper(this,
 													newByID(name, idString -> new Condition(this, idString)));
-											condition.setNegated(negated);
-											conditions.add(i, condition);
-											condition.setIndex(i);
 										} catch (PackageNotFoundException e) {
 											errorManager.addError(ErrorType.PACKAGE_NOT_FOUND, key + ": '" + conditionNames[i].trim() + "' (" + e.getPackage() + ")");
-											continue;
+											condition = new ConditionWrapper(this, new Condition(this, conditionNames[i].trim().replace(".", "-")));
 										}
+										condition.setNegated(negated);
+										conditions.add(i, condition);
+										condition.setIndex(i);
 									}
 									line.getConditions().addAll(conditions);
 									break;
