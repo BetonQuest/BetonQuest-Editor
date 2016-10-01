@@ -242,6 +242,17 @@ public class ConversationController {
 		}
 		boundText = option.getText().get();
 		this.option.textProperty().bindBidirectional(boundText);
+		boundText.addListener(event -> {
+			if (currentOption instanceof NpcOption) {
+				npcList.setItems(null);
+				npcList.setItems(currentConversation.getNpcOptions());
+				npcList.getSelectionModel().select((NpcOption) currentOption);
+			} else {
+				playerList.setItems(null);
+				playerList.setItems(currentConversation.getPlayerOptions());
+				playerList.getSelectionModel().select((PlayerOption) currentOption);
+			}
+		});
 		conditionsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("conditions") + " (" + option.getConditions().size() + ")");
 		eventsButton.setText(BetonQuestEditor.getInstance().getLanguage().getString("events") + " (" + option.getEvents().size() + ")");
 		pointsToList.setCellFactory(param -> new DraggableListCell<>());
