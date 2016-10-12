@@ -35,6 +35,8 @@ You don't have to install this program. The only thing you need is Java 8 (or ne
 
 A detailed manual can be foun on the project [wiki](https://github.com/Co0sh/BetonQuest-Editor/wiki). To successfully create quests with this editor you need to know basics of BetonQuest. I highly recommend reading its [documentation](http://betonquest.betoncraft.pl/BetonQuestDocumentation.pdf) before, even though it describes editing the files directly. In the future I will probably add built-in tutorials and/or video guides for the editor.
 
+Check out [BetonQuestUploader](https://github.com/Co0sh/BetonQuestUploader), designed as a bridge between the editor and the plugin. It can allow you to let many users design quests without access to FTP.
+
 ## How to compile?
 
 All you need to compile BetonQuest Editor on any platform is copy of the [source code](https://github.com/Co0sh/BetonQuest-Editor/archive/master.zip), installed [JDK 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) and [Maven](https://maven.apache.org/download.cgi) (binary [added to path](https://google.com/search?q=add+file+to+path)). Open system console, navigate to source code folder and issue `mvn package` command. The compiled _.jar_ file will appear in _target/_ directory after a few seconds.
