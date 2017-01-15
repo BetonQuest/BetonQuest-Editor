@@ -189,6 +189,10 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 		}
 	}
 	
+	@FXML private void close() {
+		
+	}
+	
 	public static <O extends ID, W extends IdWrapper<O>, F extends ListCell<W>> void display(String labelText,
 			ObservableList<W> chosen, ObservableList<O> available, Creator<O> creator, CellFactory<F> cellFactory,
 			Wrapper<O, W> wrapper) {

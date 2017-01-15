@@ -194,6 +194,7 @@ public class QuestCancelerEditController {
 			canceler.getConditions().forEach(condition -> {
 				ConditionWrapper wrapper = new ConditionWrapper(condition.getPack(), condition.get());
 				wrapper.setIndex(controller.conditionList.size());
+				wrapper.setNegated(condition.getNegated());
 				controller.conditionList.add(wrapper);
 			});
 			controller.eventList = FXCollections.observableArrayList();

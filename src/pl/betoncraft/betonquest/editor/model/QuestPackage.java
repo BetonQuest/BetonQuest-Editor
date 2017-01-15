@@ -1008,7 +1008,7 @@ public class QuestPackage implements Editable {
 				if (!canceler.getConditions().isEmpty()) {
 					StringBuilder conditions = new StringBuilder();
 					for (ConditionWrapper condition : canceler.getConditions()) {
-						conditions.append(condition.getRelativeName(this) + ',');
+						conditions.append(condition.getRelativeNegatedName(this) + ',');
 					}
 					cancelerNode.put("conditions", conditions.toString().substring(0, conditions.length() - 1));
 				}
@@ -1056,7 +1056,7 @@ public class QuestPackage implements Editable {
 				node.put("priority", line.getPriority().get());
 				StringBuilder conditions = new StringBuilder();
 				for (ConditionWrapper condition : line.getConditions()) {
-					conditions.append(condition.getRelativeName(this) + ',');
+					conditions.append(condition.getRelativeNegatedName(this) + ',');
 				}
 				node.put("conditions", conditions.substring(0, conditions.length() - 1));
 				lines.set(line.getId().get(), node);
