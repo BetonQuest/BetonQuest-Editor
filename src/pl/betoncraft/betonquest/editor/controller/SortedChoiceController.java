@@ -107,7 +107,7 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 			}
 			// create one if not
 			if (object == null) {
-				object = (O) creator.create(name);
+				object = creator.create(name);
 				if (!object.needsEditing() || object.edit()) {
 					ObservableList<O> list = object.getList();
 					object.setIndex(list.size());
@@ -201,9 +201,15 @@ public class SortedChoiceController<O extends ID, W extends IdWrapper<O>, F exte
 		}); 
 	}
 	
-	public static <O extends ID, W extends IdWrapper<O>, F extends ListCell<W>> void display(String labelText,
-			ObservableList<W> chosen, ObservableList<O> available, Creator<O> creator, CellFactory<F> cellFactory,
-			Wrapper<O, W> wrapper, Refresher refresher) {
+	public static <O extends ID, W extends IdWrapper<O>, F extends ListCell<W>> void display(
+			String labelText,
+			ObservableList<W> chosen,
+			ObservableList<O> available,
+			Creator<O> creator,
+			CellFactory<F> cellFactory,
+			Wrapper<O, W> wrapper,
+			Refresher refresher
+	) {
 		try {
 			@SuppressWarnings("unchecked")
 			SortedChoiceController<O, W, F> controller = (SortedChoiceController<O, W, F>) BetonQuestEditor

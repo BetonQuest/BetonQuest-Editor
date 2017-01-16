@@ -20,6 +20,7 @@ package pl.betoncraft.betonquest.editor.data;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import pl.betoncraft.betonquest.editor.controller.InstructionEditController;
+import pl.betoncraft.betonquest.editor.model.UnknownPackage;
 
 /**
  * Basic implementation of Instruction.
@@ -42,7 +43,7 @@ public abstract class SimpleInstruction extends SimpleID implements Instruction 
 
 	@Override
 	public boolean needsEditing() {
-		return super.needsEditing() || instruction.get() == null || instruction.get().isEmpty();
+		return !(pack instanceof UnknownPackage) && (super.needsEditing() || instruction.get() == null || instruction.get().isEmpty());
 	}
 
 	@Override

@@ -23,6 +23,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
+import pl.betoncraft.betonquest.editor.model.UnknownPackage;
 
 /**
  * Basic implementation of ID.
@@ -82,7 +83,7 @@ public abstract class SimpleID implements ID {
 
 	@Override
 	public boolean needsEditing() {
-		return id == null || id.get() == null || id.get().isEmpty();
+		return !(pack instanceof UnknownPackage) && (id == null || id.get() == null || id.get().isEmpty());
 	}
 	
 	@Override
