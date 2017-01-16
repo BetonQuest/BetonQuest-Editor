@@ -41,7 +41,7 @@ public class Conversation extends SimpleID implements Translatable {
 
 	@Override
 	public boolean edit() {
-		return NameEditController.display(id);
+		return NameEditController.display(id, true);
 	}
 
 	@Override

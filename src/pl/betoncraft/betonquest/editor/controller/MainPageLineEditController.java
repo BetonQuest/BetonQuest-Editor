@@ -31,6 +31,7 @@ import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.ConditionListCell;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.MainPageLine;
 
@@ -72,6 +73,10 @@ public class MainPageLineEditController {
 			String id = this.id.getText();
 			if (id == null || id.isEmpty()) {
 				BetonQuestEditor.showError("name-not-null");
+				return;
+			}
+			if (!ID.validate(id)) {
+				BetonQuestEditor.showError("id-format-incorrect");
 				return;
 			}
 			if (priority.getText() == null || priority.getText().isEmpty() || !priority.getText().matches("\\d+")) {

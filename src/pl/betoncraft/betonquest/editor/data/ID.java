@@ -115,4 +115,8 @@ public interface ID extends Editable {
 		}
 	}
 	
+	public static boolean validate(String id) {
+		return !id.contains(".") || id.split("\\.").length == 2;
+	}
+	
 }

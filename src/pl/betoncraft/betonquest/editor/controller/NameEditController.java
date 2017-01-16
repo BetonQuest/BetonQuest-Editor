@@ -26,6 +26,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.ID;
 
 /**
  * Controls the pop-up window for editing a StringProperty.
@@ -37,6 +38,7 @@ public class NameEditController {
 	private Stage stage;
 	private StringProperty name;
 	private boolean result = false;
+	private boolean isID;
 	
 	@FXML private Pane root;
 	@FXML private TextField field;
@@ -49,6 +51,10 @@ public class NameEditController {
 			String text = field.getText();
 			if (text == null || text.isEmpty()) {
 				BetonQuestEditor.showError("name-not-null");
+				return;
+			}
+			if (isID && !ID.validate(text)) {
+				BetonQuestEditor.showError("id-format-incorrect");
 				return;
 			}
 			name.set(text.trim());
@@ -75,14 +81,16 @@ public class NameEditController {
 	 * Displays a window in which the user can edit the StringProperty object.
 	 * 
 	 * @param data StringProperty to edit
+	 * @param id if set to true, the name will be checked if it is a valid ID
 	 */
-	public static boolean display(StringProperty data) {
+	public static boolean display(StringProperty data, boolean id) {
 		try {
 			NameEditController controller = (NameEditController) BetonQuestEditor
 					.createWindow("view/window/NameEditWindow.fxml", "edit-name", 500, 100);
 			if (controller == null) {
 				return false;
 			}
+			controller.isID = id;
 			controller.stage = (Stage) controller.root.getScene().getWindow();
 			controller.name = data;
 			controller.field.setText(data.get());

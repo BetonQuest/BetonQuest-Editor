@@ -97,7 +97,7 @@ public class TranslationController {
 	@FXML public void add() {
 		try {
 			StringProperty lang = new SimpleStringProperty();
-			if (NameEditController.display(lang)) {
+			if (NameEditController.display(lang, true)) {
 				manager.createLanguage(lang.get());
 			}
 		} catch (Exception e) {
@@ -108,7 +108,7 @@ public class TranslationController {
 	@FXML public void convert() {
 		try {
 			StringProperty lang = new SimpleStringProperty();
-			if (NameEditController.display(lang)) {
+			if (NameEditController.display(lang, true)) {
 				manager.convert(lang.get());
 			}
 		} catch (Exception e) {
@@ -119,7 +119,7 @@ public class TranslationController {
 	@FXML public void edit() {
 		try {
 			StringProperty lang = new SimpleStringProperty(manager.getDefault());
-			if (NameEditController.display(lang)) {
+			if (NameEditController.display(lang, true)) {
 				manager.renameLanguage(manager.getDefault(), lang.get());
 			}
 		} catch (Exception e) {
@@ -141,7 +141,7 @@ public class TranslationController {
 	@FXML public void translate() {
 		try {
 			StringProperty lang = new SimpleStringProperty();
-			if (NameEditController.display(lang)) {
+			if (NameEditController.display(lang, true)) {
 				if (!manager.getLanguages().containsKey(lang.get())) {
 					manager.createLanguage(lang.get());
 				}

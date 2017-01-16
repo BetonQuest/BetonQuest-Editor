@@ -48,7 +48,7 @@ public class PointCategory extends SimpleID {
 
 	@Override
 	public boolean edit() {
-		return NameEditController.display(id);
+		return NameEditController.display(id, true);
 	}
 
 }

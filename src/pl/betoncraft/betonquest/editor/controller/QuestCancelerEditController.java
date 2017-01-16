@@ -33,6 +33,7 @@ import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 import pl.betoncraft.betonquest.editor.custom.ConditionListCell;
 import pl.betoncraft.betonquest.editor.custom.DraggableListCell;
 import pl.betoncraft.betonquest.editor.data.ConditionWrapper;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.data.IdWrapper;
 import pl.betoncraft.betonquest.editor.model.Condition;
 import pl.betoncraft.betonquest.editor.model.Event;
@@ -148,6 +149,10 @@ public class QuestCancelerEditController {
 			String idString = name.getText();
 			if (idString == null || idString.isEmpty()) {
 				BetonQuestEditor.showError("name-not-null");
+				return;
+			}
+			if (!ID.validate(idString)) {
+				BetonQuestEditor.showError("id-format-incorrect");
 				return;
 			}
 			String text = this.text.getText();

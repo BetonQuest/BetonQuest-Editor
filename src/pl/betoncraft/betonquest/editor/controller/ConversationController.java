@@ -432,6 +432,10 @@ public class ConversationController {
 				}
 				return;
 			}
+			if (!ID.validate(name)) {
+				BetonQuestEditor.showError("id-format-incorrect");
+				return;
+			}
 			pointsToField.clear();
 			ConversationOption option;
 			if (currentOption instanceof NpcOption) {
@@ -476,7 +480,7 @@ public class ConversationController {
 	@FXML private void addNpcOption() {
 		try {
 			StringProperty name = new SimpleStringProperty();
-			NameEditController.display(name);
+			NameEditController.display(name, true);
 			if (name.get() == null || name.get().isEmpty()) {
 				return;
 			}
@@ -503,7 +507,7 @@ public class ConversationController {
 			NpcOption option = npcList.getSelectionModel().getSelectedItem();
 			if (option != null) {
 				StringProperty id = new SimpleStringProperty(option.getId().get());
-				NameEditController.display(id);
+				NameEditController.display(id, true);
 				if (id.get().contains(".")) {
 					BetonQuestEditor.showError("no-cross-conversation");
 					return;
@@ -554,7 +558,7 @@ public class ConversationController {
 	@FXML private void addPlayerOption() {
 		try {
 			StringProperty name = new SimpleStringProperty();
-			NameEditController.display(name);
+			NameEditController.display(name, true);
 			if (name.get() == null || name.get().isEmpty()) {
 				return;
 			}
@@ -581,7 +585,7 @@ public class ConversationController {
 			PlayerOption option = playerList.getSelectionModel().getSelectedItem();
 			if (option != null) {
 				StringProperty id = new SimpleStringProperty(option.getId().get());
-				NameEditController.display(id);
+				NameEditController.display(id, true);
 				if (id.get().contains(".")) {
 					BetonQuestEditor.showError("no-cross-conversation");
 					return;
@@ -624,9 +628,13 @@ public class ConversationController {
 	@FXML private void addConversation() {
 		try {
 			StringProperty string = new SimpleStringProperty();
-			NameEditController.display(string);
+			NameEditController.display(string, true);
 			String name = string.get();
 			if (name == null || name.isEmpty()) {
+				return;
+			}
+			if (!ID.validate(name)) {
+				BetonQuestEditor.showError("id-format-incorrect");
 				return;
 			}
 			if (currentConversation != null) {
@@ -648,7 +656,7 @@ public class ConversationController {
 	
 	@FXML private void renameConversation() {
 		try {
-			NameEditController.display(currentConversation.getId());
+			NameEditController.display(currentConversation.getId(), true);
 			BetonQuestEditor.getInstance().refresh();
 		} catch (Exception e) {
 			ExceptionController.display(e);

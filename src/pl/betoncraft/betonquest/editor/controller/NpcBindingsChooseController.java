@@ -45,7 +45,7 @@ public class NpcBindingsChooseController {
 	@FXML private void add() {
 		try {
 			StringProperty name = new SimpleStringProperty();
-			if (NameEditController.display(name)) {
+			if (NameEditController.display(name, true)) {
 				if (list.getItems().contains(name.get())) {
 					BetonQuestEditor.showError("already-exists");
 					return;

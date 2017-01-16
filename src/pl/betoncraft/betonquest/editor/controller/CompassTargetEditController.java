@@ -26,6 +26,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.model.CompassTarget;
 import pl.betoncraft.betonquest.editor.model.Item;
 import javafx.scene.control.CheckBox;
@@ -52,6 +53,10 @@ public class CompassTargetEditController {
 			if (id.getText() == null || id.getText().isEmpty() || name.getText() == null || name.getText().isEmpty()
 					|| loc.getText() == null || loc.getText().isEmpty()) {
 				BetonQuestEditor.showError("name-not-null");
+				return;
+			}
+			if (!ID.validate(id.getText())) {
+				BetonQuestEditor.showError("id-format-incorrect");
 				return;
 			}
 			target.getId().set(id.getText());

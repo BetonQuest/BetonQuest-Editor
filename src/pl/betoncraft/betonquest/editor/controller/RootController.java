@@ -158,11 +158,11 @@ public class RootController {
 				case PACKAGE:
 					PackageSet set1 = BetonQuestEditor.getInstance().getSet(item.getParent().getValue());
 					QuestPackage pack = set1.getPackage(item.getValue());
-					NameEditController.display(pack.getName());
+					NameEditController.display(pack.getName(), true);
 					break;
 				case SET:
 					PackageSet set2 = BetonQuestEditor.getInstance().getSet(item.getValue());
-					NameEditController.display(set2.getName());
+					NameEditController.display(set2.getName(), true);
 					break;
 				default:
 					break;

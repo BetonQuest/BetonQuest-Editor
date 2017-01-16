@@ -27,6 +27,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.model.JournalEntry;
 
 /**
@@ -53,6 +54,10 @@ public class JournalEntryEditController {
 			String idString = id.getText();
 			if (idString == null || idString.isEmpty()) {
 				BetonQuestEditor.showError("name-not-null");
+				return;
+			}
+			if (!ID.validate(idString)) {
+				BetonQuestEditor.showError("id-format-incorrect");
 				return;
 			}
 			data.getId().set(idString.trim());

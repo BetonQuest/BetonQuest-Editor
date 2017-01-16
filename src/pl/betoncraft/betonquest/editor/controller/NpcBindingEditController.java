@@ -26,6 +26,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
+import pl.betoncraft.betonquest.editor.data.ID;
 import pl.betoncraft.betonquest.editor.model.Conversation;
 import pl.betoncraft.betonquest.editor.model.NpcBinding;
 
@@ -49,6 +50,10 @@ public class NpcBindingEditController {
 			String idString = field.getText();
 			if (idString == null || idString.isEmpty()) {
 				BetonQuestEditor.showError("identifier-not-null");
+				return;
+			}
+			if (!ID.validate(idString)) {
+				BetonQuestEditor.showError("id-format-incorrect");
 				return;
 			}
 			Conversation conv = conversation.getValue();

@@ -76,7 +76,7 @@ public class MainMenuController {
 	@FXML private void newSet() {
 		try {
 			StringProperty name = new SimpleStringProperty();
-			if (NameEditController.display(name)) {
+			if (NameEditController.display(name, true)) {
 				PackageSet set = new PackageSet(null, SaveType.NONE, name.get());
 				QuestPackage pack = new QuestPackage(set, name.get());
 				set.getPackages().add(pack);
@@ -92,7 +92,7 @@ public class MainMenuController {
 	@FXML private void newPackage() {
 		try {
 			StringProperty name = new SimpleStringProperty();
-			if (NameEditController.display(name)) {
+			if (NameEditController.display(name, true)) {
 				PackageSet set = BetonQuestEditor.getInstance().getDisplayedPackage().getSet();
 				QuestPackage pack = new QuestPackage(set, name.get());
 				set.getPackages().add(pack);

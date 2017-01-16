@@ -779,7 +779,7 @@ public class QuestPackage implements Editable {
 
 	@Override
 	public boolean edit() {
-		return NameEditController.display(packName);
+		return NameEditController.display(packName, true);
 	}
 
 	@Override
