@@ -63,7 +63,18 @@ public abstract class SimpleID implements ID {
 	
 	@Override
 	public String getAbsoluteName() {
-		return pack.getName().get() + "." + id.get();
+		String p, i;
+		if (pack == null || pack.getName() == null || pack.getName().get() == null) {
+			p = "null";
+		} else {
+			p = pack.getName().get();
+		}
+		if (id == null || id.get() == null) {
+			i = "null";
+		} else {
+			i = id.get();
+		}
+		return p + "." + i;
 	}
 
 	@Override
