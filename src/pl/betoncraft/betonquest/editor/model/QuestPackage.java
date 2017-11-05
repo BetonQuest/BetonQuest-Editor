@@ -1054,11 +1054,13 @@ public class QuestPackage implements Editable {
 				ObjectNode node = mapper.createObjectNode();
 				addTranslatedNode(mapper, node, "text", line.getText());
 				node.put("priority", line.getPriority().get());
-				StringBuilder conditions = new StringBuilder();
-				for (ConditionWrapper condition : line.getConditions()) {
-					conditions.append(condition.getRelativeNegatedName(this) + ',');
+				if(!line.getConditions().isEmpty()){
+					StringBuilder conditions = new StringBuilder();
+					for (ConditionWrapper condition : line.getConditions()) {
+						conditions.append(condition.getRelativeNegatedName(this) + ',');
+					}
+					node.put("conditions", conditions.substring(0, conditions.length() - 1));
 				}
-				node.put("conditions", conditions.substring(0, conditions.length() - 1));
 				lines.set(line.getId().get(), node);
 			}
 			root.set("journal_main_page", lines);
