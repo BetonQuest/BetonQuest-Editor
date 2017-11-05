@@ -1058,7 +1058,10 @@ public class QuestPackage implements Editable {
 				for (ConditionWrapper condition : line.getConditions()) {
 					conditions.append(condition.getRelativeNegatedName(this) + ',');
 				}
-				node.put("conditions", conditions.substring(0, conditions.length() - 1));
+				if(conditions.length>0)
+					node.put("conditions", conditions.substring(0, conditions.length() - 1));
+				else
+					node.put("conditions", "");
 				lines.set(line.getId().get(), node);
 			}
 			root.set("journal_main_page", lines);
