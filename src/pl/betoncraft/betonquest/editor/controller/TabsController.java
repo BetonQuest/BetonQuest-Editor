@@ -43,4 +43,8 @@ public class TabsController {
 		instance.root.getSelectionModel().select(index);
 	}
 
+	public static int getSelectedTab() {
+		return instance.root.getSelectionModel().getSelectedIndex();
+	}
+
 }

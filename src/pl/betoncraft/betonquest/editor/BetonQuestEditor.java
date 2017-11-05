@@ -22,8 +22,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -62,6 +64,8 @@ import pl.betoncraft.betonquest.editor.model.PackageSet.SaveType;
 import pl.betoncraft.betonquest.editor.model.PointCategory;
 import pl.betoncraft.betonquest.editor.model.QuestPackage;
 import pl.betoncraft.betonquest.editor.model.Tag;
+import pl.betoncraft.betonquest.editor.persistence.Persistence;
+import pl.betoncraft.betonquest.editor.persistence.PreviousState;
 
 /**
  * Main class of the application.
@@ -78,36 +82,28 @@ public class BetonQuestEditor extends Application {
 	
 	private List<PackageSet> loadedSets = new LinkedList<>();
 	private QuestPackage currentPackage;
-	
-	private static File autoLoadPackage;
-	private static File autoSavePackage;
-	private static int autoSelect = -1;
 
-	/**
-	 * Parses the arguments and starts the application.
-	 */
 	public static void main(String[] args) {
-		if (args.length > 2) {
-			autoLoadPackage = new File(args[0]);
-			if (!autoLoadPackage.exists() || !autoLoadPackage.getName().endsWith(".zip")) {
-				autoLoadPackage = null;
-			}
-			autoSavePackage = new File(args[1]);
-			if (!autoSavePackage.getName().endsWith(".zip")) {
-				autoSavePackage = null;
-			}
-			autoSelect = Integer.parseInt(args[2]);
-		}
 		launch(args);
 	}
 	
 	@Override
 	public void start(Stage primaryStage) {
 		instance = this;
+		
+		// load persistent data
+		try {
+			new Persistence();
+		} catch (IOException e) {
+			ExceptionController.display(e);
+		}
+
+		// create the main stage
 		stage = primaryStage;
 		try {
 			URL location = getClass().getResource("view/Root.fxml");
-			language = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
+			Locale locale = Persistence.getSettings().getLanguage();
+			language = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang", locale);
 			FXMLLoader fxmlLoader = new FXMLLoader(location, language);
 			BorderPane root = (BorderPane) fxmlLoader.load();
 			TabsController.setDisabled(true);
@@ -131,13 +127,35 @@ public class BetonQuestEditor extends Application {
 			stage.setMinWidth(800);
 			stage.setMaximized(true);
 			stage.show();
-			// load package for debugging
-			if (autoLoadPackage != null) {
-				PackageSet set = PackageSet.loadFromZip(autoLoadPackage);
-				display(set);
-			}
-			if (autoSelect > 0) {
-				TabsController.selectTab(autoSelect);
+			// display previous state
+			PreviousState prev = Persistence.getPreviousState();
+			if (!prev.getOpenPackageSets().isEmpty()) {
+				for (String packageAddress : prev.getOpenPackageSets()) {
+					File file = new File(packageAddress);
+					if (!file.exists()) {
+						continue;
+					}
+					if (packageAddress.endsWith(".zip")) {
+						PackageSet.loadFromZip(file);
+					} else {
+						PackageSet.loadFromDirectory(file);
+					}
+				}
+				String setName = prev.getSelectedPackageSet();
+				Optional<PackageSet> set = getSets().stream()
+						.filter(s -> s.getName().get().equals(setName)).findFirst();
+				set.ifPresent(s -> {
+					display(s);
+					String packName = prev.getSelectedPackage();
+					Optional<QuestPackage> pack = s.getPackages().stream().filter(
+							p -> p.getName().get().equals(packName)).findFirst();
+					pack.ifPresent(p -> {
+						display(p);
+					});
+					int tabIndex = prev.getSelectedTab();
+					TabsController.selectTab(tabIndex);
+				});
+				
 			}
 		} catch (Exception e) {
 			ExceptionController.display(e);
@@ -442,11 +460,25 @@ public class BetonQuestEditor extends Application {
 
 	@Override
 	public void stop() throws Exception {
-		if (autoSavePackage != null) try {
-			autoSavePackage.createNewFile();
-			currentPackage.getSet().saveToZip(autoSavePackage);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (!getSets().isEmpty()) {
+			
+			// save current state to a file using PreviousState
+			PreviousState prev = Persistence.getPreviousState();
+			
+			// prepare current state
+			List<String> list = getSets().stream().map(s -> s.getFile().getAbsolutePath()).collect(Collectors.toList());
+			String set = getDisplayedPackage().getSet().getName().get();
+			String pack = getDisplayedPackage().getName().get();
+			int tab = TabsController.getSelectedTab();
+			
+			// set current state in PreviousState
+			prev.setOpenPackageSets(list);
+			prev.setSelectedPackageSet(set);
+			prev.setSelectedPackage(pack);
+			prev.setSelectedTab(tab);
+			
+			// save it to the file
+			prev.save();
 		}
 		super.stop();
 	}
