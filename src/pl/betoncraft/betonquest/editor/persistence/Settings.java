@@ -26,8 +26,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 
 import pl.betoncraft.betonquest.editor.BetonQuestEditor;
 
@@ -42,6 +45,7 @@ public class Settings {
 	private Properties properties;
 
 	private Locale locale;
+	private Set<Locale> availableLocales;
 
 	/**
 	 * Creates new Settings instance by loading properties from the specified file.
@@ -64,7 +68,7 @@ public class Settings {
 
 		// only use the file if persistence is enabled
 		if (Persistence.isEnabled()) {
-			
+
 			// deploy properties file if it doesn't exist
 			if (!file.exists()) {
 				file.createNewFile();
@@ -84,9 +88,22 @@ public class Settings {
 
 	/**
 	 * Loads the properties into this Settings instance.
+	 * 
+	 * @throws IOException
 	 */
-	public void load() {
-		locale = Locale.forLanguageTag(properties.getProperty("language", Locale.getDefault().toString()));
+	public void load() throws IOException {
+		loadAvailableLanguages();
+		locale = Locale.forLanguageTag(properties.getProperty("language", "en"));
+	}
+
+	private void loadAvailableLanguages() throws IOException {
+		availableLocales = new HashSet<>();
+		availableLocales.addAll(Arrays.asList(
+				new Locale("en"),
+				new Locale("pl"),
+				new Locale("fr"),
+				new Locale("de")
+		));
 	}
 
 	/**
@@ -129,9 +146,16 @@ public class Settings {
 	public Locale getLanguage() {
 		return locale;
 	}
-	
+
 	public void setLanguage(Locale locale) {
 		this.locale = locale;
+	}
+
+	/**
+	 * @return the set of available languages
+	 */
+	public Set<Locale> getAvailableLocales() {
+		return availableLocales;
 	}
 
 }

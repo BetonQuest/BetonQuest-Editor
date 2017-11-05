@@ -89,77 +89,87 @@ public class BetonQuestEditor extends Application {
 	
 	@Override
 	public void start(Stage primaryStage) {
-		instance = this;
+		try {
 		
-		// load persistent data
-		try {
+			instance = this;
+			
 			new Persistence();
-		} catch (IOException e) {
-			ExceptionController.display(e);
-		}
 
-		// create the main stage
-		stage = primaryStage;
-		try {
-			URL location = getClass().getResource("view/Root.fxml");
-			Locale locale = Persistence.getSettings().getLanguage();
-			language = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang", locale);
-			FXMLLoader fxmlLoader = new FXMLLoader(location, language);
-			BorderPane root = (BorderPane) fxmlLoader.load();
-			TabsController.setDisabled(true);
-			Scene scene = new Scene(root, 1280, 720);
-			scene.getStylesheets().add(getClass().getResource("resource/style.css").toExternalForm());
-			KeyCombination save = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
-			KeyCombination export = new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN);
-			scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
-				if (save.match(event)) {
-					event.consume();
-					MainMenuController.getInstance().save();
-				} else if (export.match(event)) {
-					event.consume();
-					MainMenuController.getInstance().export();
-				}
-			});
-			stage.setScene(scene);
-			stage.setTitle(language.getString("betonquest-editor"));
-			stage.getIcons().add(new Image(getClass().getResourceAsStream("resource/icon.png")));
-			stage.setMinHeight(600);
-			stage.setMinWidth(800);
-			stage.setMaximized(true);
-			stage.show();
-			// display previous state
-			PreviousState prev = Persistence.getPreviousState();
-			if (!prev.getOpenPackageSets().isEmpty()) {
-				for (String packageAddress : prev.getOpenPackageSets()) {
-					File file = new File(packageAddress);
-					if (!file.exists()) {
-						continue;
-					}
-					if (packageAddress.endsWith(".zip")) {
-						PackageSet.loadFromZip(file);
-					} else {
-						PackageSet.loadFromDirectory(file);
-					}
-				}
-				String setName = prev.getSelectedPackageSet();
-				Optional<PackageSet> set = getSets().stream()
-						.filter(s -> s.getName().get().equals(setName)).findFirst();
-				set.ifPresent(s -> {
-					display(s);
-					String packName = prev.getSelectedPackage();
-					Optional<QuestPackage> pack = s.getPackages().stream().filter(
-							p -> p.getName().get().equals(packName)).findFirst();
-					pack.ifPresent(p -> {
-						display(p);
-					});
-					int tabIndex = prev.getSelectedTab();
-					TabsController.selectTab(tabIndex);
-				});
-				
-			}
+			stage = primaryStage;
+
+			createPrimaryStage();
+			
+			loadPreviousData();
+			
+			displayPreviousData();
+
 		} catch (Exception e) {
 			ExceptionController.display(e);
 		}
+	}
+
+	private void createPrimaryStage() throws IOException {
+		URL location = getClass().getResource("view/Root.fxml");
+		Locale locale = Persistence.getSettings().getLanguage();
+		language = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang", locale);
+		FXMLLoader fxmlLoader = new FXMLLoader(location, language);
+		BorderPane root = (BorderPane) fxmlLoader.load();
+		TabsController.setDisabled(true);
+		Scene scene = new Scene(root, 1280, 720);
+		scene.getStylesheets().add(getClass().getResource("resource/style.css").toExternalForm());
+		KeyCombination save = new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN);
+		KeyCombination export = new KeyCodeCombination(KeyCode.E, KeyCombination.CONTROL_DOWN);
+		scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+			if (save.match(event)) {
+				event.consume();
+				MainMenuController.getInstance().save();
+			} else if (export.match(event)) {
+				event.consume();
+				MainMenuController.getInstance().export();
+			}
+		});
+		stage.setScene(scene);
+		stage.setTitle(language.getString("betonquest-editor"));
+		stage.getIcons().add(new Image(getClass().getResourceAsStream("resource/icon.png")));
+		stage.setMinHeight(600);
+		stage.setMinWidth(800);
+		stage.setMaximized(true);
+		stage.show();
+	}
+	
+	private void loadPreviousData() throws IOException {
+		PreviousState prev = Persistence.getPreviousState();
+		if (!prev.getOpenPackageSets().isEmpty()) {
+			for (String packageAddress : prev.getOpenPackageSets()) {
+				File file = new File(packageAddress);
+				if (!file.exists()) {
+					continue;
+				}
+				if (packageAddress.endsWith(".zip")) {
+					PackageSet.loadFromZip(file);
+				} else {
+					PackageSet.loadFromDirectory(file);
+				}
+			}
+		}
+	}
+	
+	private void displayPreviousData() {
+		PreviousState prev = Persistence.getPreviousState();
+		String setName = prev.getSelectedPackageSet();
+		Optional<PackageSet> set = getSets().stream()
+				.filter(s -> s.getName().get().equals(setName)).findFirst();
+		set.ifPresent(s -> {
+			display(s);
+			String packName = prev.getSelectedPackage();
+			Optional<QuestPackage> pack = s.getPackages().stream().filter(
+					p -> p.getName().get().equals(packName)).findFirst();
+			pack.ifPresent(p -> {
+				display(p);
+			});
+			int tabIndex = prev.getSelectedTab();
+			TabsController.selectTab(tabIndex);
+		});
 	}
 	
 	/**
@@ -167,6 +177,27 @@ public class BetonQuestEditor extends Application {
 	 */
 	public static BetonQuestEditor getInstance() {
 		return instance;
+	}
+	
+	/**
+	 * Reloads the view.
+	 * 
+	 * @throws IOException
+	 */
+	public static void reload() throws IOException {
+		
+		// cache previous window size
+		double width = instance.stage.getWidth();
+		double height = instance.stage.getHeight();
+		
+		// reload the view
+		instance.saveState();
+		instance.createPrimaryStage();
+		instance.displayPreviousData();
+		
+		// restore window size
+		instance.stage.setWidth(width);
+		instance.stage.setHeight(height);
 	}
 
 	/**
@@ -438,7 +469,8 @@ public class BetonQuestEditor extends Application {
 		try {
 			Stage window = new Stage();
 			URL location = BetonQuestEditor.class.getResource(fxml);
-			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang");
+			ResourceBundle resources = ResourceBundle.getBundle("pl.betoncraft.betonquest.editor.resource.lang.lang",
+					Persistence.getSettings().getLanguage());
 			FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
 			Parent root = (Parent) fxmlLoader.load();
 			Scene scene = new Scene(root);
@@ -460,6 +492,11 @@ public class BetonQuestEditor extends Application {
 
 	@Override
 	public void stop() throws Exception {
+		saveState();
+		super.stop();
+	}
+
+	private void saveState() throws IOException {
 		if (!getSets().isEmpty()) {
 			
 			// save current state to a file using PreviousState
@@ -480,6 +517,5 @@ public class BetonQuestEditor extends Application {
 			// save it to the file
 			prev.save();
 		}
-		super.stop();
 	}
 }

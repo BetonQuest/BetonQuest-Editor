@@ -243,6 +243,22 @@ public class MainMenuController {
 		}
 	}
 	
+	@FXML private void settings() {
+		try {
+			SettingsController.display();
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
+	
+	@FXML private void reload() {
+		try {
+			BetonQuestEditor.reload();
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
+	
 	@FXML private void about() {
 		try {
 			AboutController.display();

@@ -18,6 +18,7 @@
 package pl.betoncraft.betonquest.editor.model;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import pl.betoncraft.betonquest.editor.controller.ConversationController;
@@ -90,7 +91,15 @@ public abstract class ConversationOption extends SimpleID implements OptionID {
 	
 	@Override
 	public String toString() {
-		return ConversationController.getDisplayedConversation().equals(conversation) ? id.get() : conversation.getId().get() + "." + id.get();
+		Conversation displayedConversation = ConversationController.getDisplayedConversation();
+		if (displayedConversation != null && displayedConversation.equals(conversation)) {
+			return id.get();
+		} else {
+			StringProperty string = conversation.getId();
+			String a = string.get();
+			String b = id.get();
+			return a + "." + b;
+		}
 	}
 
 }

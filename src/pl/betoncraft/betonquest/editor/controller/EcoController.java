@@ -99,8 +99,8 @@ public class EcoController {
 	
 	@FXML private void update() {
 		try {
-			Node focused = instruction.getScene().getFocusOwner();
-			if (focused instanceof ListView<?>) {
+			Node focused = instruction.getScene() == null ? null : instruction.getScene().getFocusOwner();
+			if (focused != null && focused instanceof ListView<?>) {
 				ListView<?> list = (ListView<?>) focused;
 				Object object = list.getSelectionModel().getSelectedItem();
 				if (object != null && object instanceof Instruction) {

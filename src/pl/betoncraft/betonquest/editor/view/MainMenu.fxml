@@ -29,7 +29,8 @@
 	</Menu>
 
 	<Menu text="%edit">
-
+		<MenuItem text="%settings" onAction="#settings" />
+		<MenuItem text="%reload" onAction="#reload" />
 	</Menu>
 
 	<Menu text="%help">
