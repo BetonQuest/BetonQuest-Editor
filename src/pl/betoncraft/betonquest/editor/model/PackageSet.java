@@ -110,6 +110,18 @@ public class PackageSet {
 		return name.get();
 	}
 	
+	/**
+	 * Checks whenever there's already a set with this name.
+	 * 
+	 * @param name
+	 *            name to check for uniqueness
+	 * @return whenever this name is unique (true if there is no package with this
+	 *         name)
+	 */
+	public static boolean isUnique(String name) {
+		return !BetonQuestEditor.getInstance().getSets().stream().anyMatch(set -> set.getName().get().equals(name));
+	}
+	
 	public static PackageSet loadFromZip(File file) throws IOException {
 		ZipFile zip = new ZipFile(file);
 		HashMap<String, HashMap<String, InputStream>> setMap = new HashMap<>();
@@ -164,6 +176,10 @@ public class PackageSet {
 		PackageSet set = new PackageSet(file, SaveType.ZIP, setName);
 		parseStreams(set, setMap);
 		zip.close();
+		if (!PackageSet.isUnique(set.getName().get())) {
+			BetonQuestEditor.showError("already-exists");
+			return null;
+		}
 		BetonQuestEditor.getInstance().getSets().add(set);
 		RootController.setPackageSets(BetonQuestEditor.getInstance().getSets());
 		return set;
@@ -177,6 +193,10 @@ public class PackageSet {
 		parseStreams(set, setMap);
 		if (set.getPackages().isEmpty()) {
 			BetonQuestEditor.showError("no-package-in-directory");
+			return null;
+		}
+		if (!PackageSet.isUnique(set.getName().get())) {
+			BetonQuestEditor.showError("already-exists");
 			return null;
 		}
 		BetonQuestEditor.getInstance().getSets().add(set);

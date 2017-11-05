@@ -77,6 +77,10 @@ public class MainMenuController {
 		try {
 			StringProperty name = new SimpleStringProperty();
 			if (NameEditController.display(name, true)) {
+				if (!PackageSet.isUnique(name.get())) {
+					BetonQuestEditor.showError("already-exists");
+					return;
+				}
 				PackageSet set = new PackageSet(null, SaveType.NONE, name.get());
 				QuestPackage pack = new QuestPackage(set, name.get());
 				set.getPackages().add(pack);
@@ -118,7 +122,9 @@ public class MainMenuController {
 			if (selectedFile != null) {
 				try {
 					PackageSet set = PackageSet.loadFromZip(selectedFile);
-					instance.display(set);
+					if (set != null) {
+						instance.display(set);
+					}
 				} catch (Exception e) {
 					ExceptionController.display(e);
 				}
