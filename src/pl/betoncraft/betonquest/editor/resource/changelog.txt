@@ -1,0 +1,5 @@
+v0.2.0
+
+- Fixed an error when a main page entry does not have any conditions
+- The editor will now open the same package sets it had before closing it
+- Added persistent settings

@@ -267,6 +267,14 @@ public class MainMenuController {
 		}
 	}
 	
+	@FXML private void changelog() {
+		try {
+			ChangelogController.display();
+		} catch (Exception e) {
+			ExceptionController.display(e);
+		}
+	}
+	
 	@FXML private void docs() {
 		try {
 			Desktop.getDesktop().browse(new URI("http://betonquest.betoncraft.pl/BetonQuestDocumentation.pdf"));

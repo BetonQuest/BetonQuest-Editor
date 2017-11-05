@@ -35,6 +35,7 @@
 
 	<Menu text="%help">
 		<MenuItem text="%about" onAction="#about" />
+		<MenuItem text="%changelog" onAction="#changelog" />
 		<MenuItem text="%docs" onAction="#docs" />
 	</Menu>
 
