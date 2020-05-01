@@ -1,6 +1,9 @@
 # BetonQuest Editor
 
-This is the official editor for BetonQuest plugin. It was created to speed up the process of writing quests, which can be tedious and error-prone work when editing files directly in a text editor.
+**This will most likely not get updates anymore!!**
+
+This is the official **legacy** editor for BetonQuest plugin. It was created to speed up the process of writing quests, which can be tedious and error-prone work when editing files directly in a text editor.
+
 
 ![Editor](http://betonquest.betoncraft.pl/images/editor/conversations.png)
 
