@@ -33,6 +33,7 @@ It is - you can compile it for yourself (details below). But I encourage you to 
 ## Installation
 
 You don't have to install this program. The only thing you need is Java 8 (or newer) installed on your system. If you don't have it (the program doesn't start), you can download it from [here](https://java.com/download). To start the editor simply double-click on its icon. This program works on Windows, Mac and Linux, as long as Java 8 is installed.
+If double clicking doesn't work try creating a .bat file with the command: `java -jar (filename).jar`
 
 ## Usage
 
