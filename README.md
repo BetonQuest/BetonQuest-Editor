@@ -18,20 +18,10 @@ This is the official **legacy** editor for BetonQuest plugin. It was created to 
 * Package exporting with custom shell script (not included of course)
 * Quick translating of a package to another language(s)
 
-## Future updates
-
-You can check out the list of planned features [here](https://github.com/Co0sh/BetonQuest-Editor/milestone/2). If you have any new ideas feel free to open new issue and we'll discuss it together.
-
-## Where to buy?
-
-[Store page on Sellfy](https://sellfy.com/p/nE5Y/)
-
-## Why isn't it free?
-
-It is - you can compile it for yourself (details below). But I encourage you to buy it anyway. That way you don't have to get in this whole compiling mess and can download a nice executable file. Also all future updates will come to you via an e-mail, no need to compile anything here either. And by the way, you're supporting me and giving a little something for all the time spent coding BetonQuest plugin and editor.
 
 ## Installation
 
+Download the programm [here](https://github.com/BetonQuest/BetonQuest-Editor/releases).
 You don't have to install this program. The only thing you need is Java 8 (or newer) installed on your system. If you don't have it (the program doesn't start), you can download it from [here](https://java.com/download). To start the editor simply double-click on its icon. This program works on Windows, Mac and Linux, as long as Java 8 is installed.
 If double clicking doesn't work try creating a .bat file with the command: `java -jar (filename).jar`
 
