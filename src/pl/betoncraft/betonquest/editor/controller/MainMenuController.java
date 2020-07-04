@@ -117,7 +117,7 @@ public class MainMenuController {
 			fc.getExtensionFilters().add(filter);
 			fc.setSelectedExtensionFilter(filter);
 			File desktop = new File(System.getProperty("user.home") + File.separator + "Desktop");
-			if (desktop != null) fc.setInitialDirectory(desktop);
+			if (desktop.isDirectory()) fc.setInitialDirectory(desktop);
 			File selectedFile = fc.showOpenDialog(instance.getPrimaryStage());
 			if (selectedFile != null) {
 				try {
@@ -140,7 +140,7 @@ public class MainMenuController {
 			DirectoryChooser dc = new DirectoryChooser();
 			dc.setTitle(instance.getLanguage().getString("select-folder"));
 			File desktop = new File(System.getProperty("user.home") + File.separator + "Desktop");
-			if (desktop != null) dc.setInitialDirectory(desktop);
+			if (desktop.isDirectory()) dc.setInitialDirectory(desktop);
 			File selectedFile = dc.showDialog(instance.getPrimaryStage());
 			if (selectedFile != null) {
 				try {
@@ -186,7 +186,7 @@ public class MainMenuController {
 			fc.getExtensionFilters().add(filter);
 			fc.setSelectedExtensionFilter(filter);
 			File desktop = new File(System.getProperty("user.home") + File.separator + "Desktop");
-			if (desktop != null) fc.setInitialDirectory(desktop);
+			if (desktop.isDirectory()) fc.setInitialDirectory(desktop);
 			File selectedFile = fc.showSaveDialog(instance.getPrimaryStage());
 			if (selectedFile != null) {
 				PackageSet set = BetonQuestEditor.getInstance().getDisplayedPackage().getSet();
@@ -206,7 +206,7 @@ public class MainMenuController {
 			DirectoryChooser dc = new DirectoryChooser();
 			dc.setTitle(instance.getLanguage().getString("select-directory"));
 			File desktop = new File(System.getProperty("user.home") + File.separator + "Desktop");
-			if (desktop != null) dc.setInitialDirectory(desktop);
+			if (desktop.isDirectory()) dc.setInitialDirectory(desktop);
 			File selectedFile = dc.showDialog(instance.getPrimaryStage());
 			if (selectedFile != null) {
 				PackageSet set = BetonQuestEditor.getInstance().getDisplayedPackage().getSet();
