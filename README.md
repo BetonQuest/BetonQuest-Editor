@@ -1,6 +1,6 @@
 # BetonQuest Editor
 
-**This will most likely not get updates anymore!!**
+**This project will not be updated! It was made for a BetonQuest version from 2017. Usage on your own risk.**
 
 This is the official **legacy** editor for BetonQuest plugin. It was created to speed up the process of writing quests, which can be tedious and error-prone work when editing files directly in a text editor.
 
